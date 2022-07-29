@@ -1,11 +1,12 @@
 % \documentclass[fleqn,usenatbib]{mnras}
 \documentclass[a4paper,11pt]{article}
-\pdfoutput=1
+% \pdfoutput=1
+\usepackage{amsmath, amssymb}
+
 \usepackage{jcappub}
 \usepackage{newtxtext,newtxmath}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
-\usepackage{amsmath}
 \usepackage{hyperref}
 % \usepackage{amssymb}
 % Allow "Thomas van Noord" and alike to be sorted by "N" etc. in the bibliography.
@@ -36,8 +37,11 @@
 \newcommand{\muvec}{\boldsymbol{\mu}}        % GP mean vector
 \newcommand{\Kvec}{\boldsymbol{\mathrm{K}}}  % covariance matrix
 \newcommand{\kvec}{\boldsymbol{k}}           % covariance vector
-\newcommand{\Lya}{Lyman-$\alpha$ Forest}
+\newcommand{\Lya}{Lyman-$\alpha$}
 \newcommand{\astrid}{\texttt{ASTRID}}
+\newcommand{\nat}{Nature}
+
+\newcommand{\uniform}{\mathcal{U}}
 
 \newcommand{\apjs}{ApJ Supplement}
 \newcommand{\apj}{ApJ}
@@ -91,13 +95,13 @@
 
 \author[a,1]{Martin Fernandez,\note{Corresponding author}}
 \author[a]{Simeon Bird,}
-\affiliation[a]{Department of Physics \& Astronomy, University of California, Riverside,\\900 University Avenue, Riverside, CA 92521, USA}
+\affiliation[a]{Department of Physics \& Astronomy, University of California  Riverside,\\900 University Avenue, Riverside, CA 92521, USA}
 
 \emailAdd{mfern027@ucr.edu}
 \emailAdd{sbird@ucr.edu}
 
 \abstract{
-We present a new suite of $42$ simulations of the Lyman-$\alpha$ forest, spanning an $8$-dimensional parameter space with $3$ cosmological parameters and $5$ astrophysical/thermal parameters. These simulations advance on earlier simulations suites by larger particle loads, by incorporating new physical models for hydrogen and helium reionization, and by self-consistently incorporating a model for AGN feedback. Parameters are chosen based on a Latin hypercube design and a Gaussian process is used to interpolate to arbitrary parameter combinations. Our simulation suite will be used to interpret existing Lyman-$\alpha$ forest 1D flux power spectra from SDSS and future DESI data releases.
+We present a new suite of $43$ simulations of the Lyman-$\alpha$ forest, spanning a $9$-dimensional parameter space, including $4$ cosmological parameters and $5$ astrophysical/thermal parameters. These simulations advance on earlier simulations suites by larger particle loads, by incorporating new physical models for hydrogen and helium reionization, and by self-consistently incorporating a model for AGN feedback. Parameters are chosen based on a Latin hypercube design and a Gaussian process is used to interpolate to arbitrary parameter combinations. Our simulation suite will be used to interpret existing Lyman-$\alpha$ forest 1D flux power spectra from SDSS and future DESI data releases.
 }
 
 \begin{document}
@@ -108,19 +112,70 @@ We present a new suite of $42$ simulations of the Lyman-$\alpha$ forest, spannin
 
 Introduce the problem. Cite the previous simulation suites for the Lyman alpha forest. The purpose of a simulation suite is to compare to observational measurements. The main output of our suite is a set of medium resolution artificial flux power spectra, from which the flux power spectrum may be generated. In this paper we describe the simulation suite we have run and defer description of the likelihood function to upcoming work.
 
-\section{Simulation Parameters}
+\section{Simulations}
 
-We use a suite of full physics simulations with star formation, stellar winds and AGN feedback. Our simulations are based on the model used in the \astrid~simulation described in \cite{Bird:2022}. In this Section we describe the various models, focussing on places where we have modified the model from that described in \cite{Bird:2022}. We discuss the models of hydrogen reionization, helium reionization, AGN feedback and star formation.
+Simulations are run using \mpgadget~\cite{MPGadget2018, Bird:2022}, a massively scalable version of the cosmological structure formation code Gadget-3 \cite{Springel:2005}. \mpgadget~was recently used to perform the \texttt{ASTRID} simulation, and most of our parameters are as detailed in Refs.~\cite{Bird:2022, Ni:2021}. Here we summarise the main features of the model, explaining where the parameters chosen differ from those used in \cite{Bird:2022}. \mpgadget~contains comprehensive well-tested modules for gravity, hydrodynamics and galaxy formation.
 
-We use full physics simulations primarily because it allows us to incorporate our AGN feedback model self-consistently into the code, rather than with a post-processing correction. This allows us to ensure that potential parameter degeneracies between AGN feedback and cosmological parameters are included. Ref~\cite{find} has shown that the main degeneracy for the matter power spectrum is between AGN feedback and the fraction of matter in baryons, $\Omega_b / \Omega_0$. However, our main observable is the \Lya~forest which is sensitive to the thermal state of the gas and thus the heating effect of the AGN feedback rather than its ability to remove gas from the halo. It also allows us to self-consistently include the effect of self-shielded gas in the modelling, by producing DLAs in our spectral code and removing them, as in the observational analysis. We stress that these are likely small effects and we certainly do not wish to imply that quick \Lya~models are inadequate for current data. However, with current simulation codes the speed difference between the quick \Lya~and full physics simulations is not as significant as in earlier simulations, and is less than a factor of $2$ (dependent somewhat on cosmological parameters). Furthermore, using full physics simulations allows our suite to be used for other applications in future.
+As for \texttt{ASTRID}, we use a suite of full physics simulations with star formation, stellar winds and AGN feedback as well as explicit subgrid models for hydrogen and helium reionization. In this Section we describe the various models, focussing on places where we have modified the model from that described in \cite{Bird:2022}. We discuss the models of hydrogen reionization, helium reionization, AGN feedback and star formation.
 
-We also include models for hydrogen and helium reionization.
+We use full physics simulations primarily because it allows us to incorporate our AGN feedback model self-consistently into the code, rather than with a post-processing correction. AGN feedback has been shown to influence the \Lya~forest flux power spectrum \cite{Viel:2013, Chabanier:2020}. Full-physics simulations also allow us to self-consistently include the effect of self-shielded gas in the modelling, by producing DLAs in our spectral code and removing them, as in the observational analysis. We stress that these are likely small effects and we do not wish to imply that quick \Lya~models are inadequate for current data. However, with current simulation codes the speed difference between the quick \Lya~and full physics simulations is only $\sim 30\%$, and so the cost is relatively small. Furthermore, using full physics simulations allows our suite to be used for other applications in future.
+
+The main changes from the model of Ref.~\cite{Bird:2022} are:
+\begin{enumerate}
+\item A cubic, rather than quintic, density kernel for SPH.
+\item A minimum wind velocity of $100$ km/s.
+\item A temperature boost to $15000$ K when a particle experiences Hydrogen reionization.
+\item One star is created per gas particle, rather than $4$.
+\item Metal line cooling is disabled.
+\item Metal return from stars to the gas is disabled.
+\end{enumerate}
+
+%The initial conditions include separate transfer functions for baryons and cold dark matter. The initial distribution of cold dark matter particles is a grid, and the initial distribution of baryons is a Lagrangian glass, as recommended by \cite{Bird:2020} to reduce particle transients. First-order Lagrangian perturbation theory \citep{Zeldovich:1970, Crocce:2006} is used to initialise particle positions and velocities. Second-order terms are not included as they are difficult to model when the initial transfer functions for baryons and cold dark matter are different. Radiation density is included in the cosmological background evolution.
+%, a $10\%$ contribution to the Hubble expansion at $z=100$ that affects the total integrated growth rate at the $10\%$ level by $z=10$.
 
 \subsection{Gravity and Hydrodynamics}
 
-\subsection{Helium and Hydrogen Reionization}
+%The gravity solver in MP-Gadget uses the same basic algorithms as Gadget-3.
+We use the same gravity model described in Ref.~\cite{Bird:2022} and references therein. Long range gravitational forces are computed in Fourier space using a particle-mesh algorithm. Short-range forces, below the resolution of the particle grid, are computed using a hierarchical multipole expansion of the gravitational field, leading to a uniformly high force resolution throughout the computational volume. The default accuracy parameters of the gravitational algorithm has been increased and \mpgadget~is able to reproduce the matter power spectrum output by PKDGRAV3 to $<1\%$ \cite{Schneider:2016}.
 
-Mean temperature plot for the helium reionization model parameters.
+We adopt the pressure-entropy formulation of smoothed particle hydrodynamics (pSPH) to solve the Euler equations \citep{Hopkins:2013,Read:2010} as implemented by \cite{Feng:2014}. %The density estimator uses a quintic density kernel to reduce noise in SPH density and gradient estimation \citep{2012JCoPh.231..759P}.
+We use a more traditional cubic density kernel, rather than the quintic kernel, as the reduced number of neighbours improves resolution in the \Lya~forest. This comes at the cost of increased noise in dense regions, but that is not important for our use case
+Gas is allowed to cool radiatively following \citep{Katz:1996}. The UV background used is that from \cite{FG2020}.
+We have used the updated cooling coefficients summarised in \cite{Bolton:2017}, the recombination rates from \cite{Verner:1996} and collisional ionization rates from \cite{Voronov:1997}. Self-shielding of neutral hydrogen is included following the fitting function of \cite{Rahmati:2013}.
+
+\subsection{Hydrogen Reionization}
+\label{sec:hydrogen}
+
+We model patchy reionization with a spatially varying ultra-violet background using a semi-analytic method based on hydrodynamic simulations performed with radiative transfer \cite{Battaglia:2013}. The radiative transfer simulation is used to correlate reionization redshift with overdensity:  larger overdensities are assumed to contain more sources and hence reionize earlier. We generate a reionization redshift field in advance of the simulation using an approximate overdensity field computed from the initial conditions using FastPM \citep{2016MNRAS.463.2273F}. The reionization redshift is stored on a grid with a resolution of $1$ Mpc/h. During the simulation, each particle's position is checked against this grid to determine the reionization redshift.
+
+If the current time is earlier than this redshift, the photon background is set to zero and the particle remains neutral. In regions that have been reionized, we assume the UV background estimated by \cite{2020MNRAS.493.1614F}. We use the optically thin version, as the attenuating effects of reionization are included by our explicit reionization model.
+%We do not boost the gas temperature to account for the passage of ionization fronts \citep{2019ApJ...874..154D}.
+
+Our fiducial reionization model has a median reionization redshift of $z \sim 7.5$, as suggested by the optical depth measurement of \cite{Planck}. Figure \ref{fig:reion_hist} shows the reionization history as a function of redshift. Although small parts of the box reionize early, the photon background is assumed to be zero at $z>10$ so this has no dynamic effect. Note that $10\%$ of the volume is neutral at $z=6.5$ and a small tail of gas remains neutral until $z < 6$. The right panel of figure~\ref{fig:reion_hist} shows the reionization redshift in a 2D slice of the box, the morphology of reionization in our model.
+
+\subsection{Helium Reionization}
+\label{sec:helium}
+
+Thermal histories are marginalised by varying the free parameters of the model, described in Eq.~\ref{eq:prior_reion_volume}. Reionized bubbles of $20$ Mpc/h across are placed around randomly chosen quasar-hosting halos, matching the results of radiative transfer simulations \citep{McQuinn:2009}.
+
+We include a model for spatially inhomogeneous helium reionization following \cite{UptonSanderbeck:2020}. Helium reionization begins at $z=4.4$ and finishes at $z=2.8$, with a linearly increasing reionization volume fraction. Reionized bubbles are placed around randomly chosen halos with mass $M_{\rm halo}\geq 10^{12}$M$_{\odot}$, chosen to have a reasonable chance of hosting a quasar. Bubbles are $20$ Mpc/h across, matching the mean bubble size found in radiative transfer simulations \citep{McQuinn:2009}. Inside this bubble a quasar radiation field is assumed with a spectral index of $\alpha_q$, which we vary in our simulation suite.
+
+The model creates a split between photons with a mean free path larger than this bubble size, whose heating is handled homogeneously, and photons with a mean free path shorter than this bubble size, which instantaneously ionize the intergalactic gas. Particles are marked as ionized, and abruptly heated. Once marked they see the same homogeneous UVB as would be visible with the helium reionization model off.
+
+Our model includes the patchiness of helium reionization and the resulting fluctuations in temperature, ionization state, and pressure smoothing. A consequence is that there is no unique temperature-density relation in our simulations, but a range of temperature-density relations depending on the time at which a given part of the simulation reionized.
+
+\subsection{Helium and Hydrogen Reionization}
+\label{sec:helium}
+
+A novel feature of our suite is that it includes explicit subgrid models for both hydrogen and helium reionization. This ensures that each simulation contains a physically consistent thermal history for the gas.  Inside this bubble a quasar radiation field instantaneously heats the gas.
+%Once ionized, particles see the same homogeneous UVB as would be visible with the helium reionization model off.
+Bubbles are placed until the ionized gas fraction in the box matches a pre-computed value, which increases linearly with scale factor.  Our model includes the patchiness of helium reionization and the resulting fluctuations in temperature, ionization state, and pressure smoothing. %It captures the true scatter in the intergalactic medium temperature-density relation from helium reionization.
+
+We model patchy hydrogen reionization with a spatially varying ultra-violet background using a semi-analytic method based on hydrodynamic simulations performed with radiative transfer \citep[for more details see][]{Battaglia:2013, Bird:2022}. Reionization redshift is correlated with overdensity:  larger overdensities contain more sources and hence reionize earlier.
+%We generate a reionization redshift field smoothed on $1$ Mpc/h scales in advance, using an approximate overdensity field computed from the initial conditions using FastPM \citep{FASTPM}. During the simulation, each particle's position is checked against this grid to determine the reionization redshift. Prior to reionization, the photon background is set to zero.
+At the timestep of reionization, we boost the gas temperature in each particle to $15,000$K to account for the passage of ionization fronts \citep{DAloisio:2019}.
+
+\spb{Mean temperature plot for the helium reionization model parameters.}
 
 \begin{figure*}
 \includegraphics[width=0.45\textwidth]{figures/temp_observed.pdf}
@@ -143,9 +198,36 @@ Mean temperature plot for the helium reionization model parameters.
 
 \subsection{Star Formation and Stellar Feedback}
 
+A stellar wind feedback model is included following Ref.~\citep{Okamoto:2010} and Ref.~\cite{Bird:2022}. Wind speeds are proportional to the local one dimensional dark matter velocity dispersion $\sigma_\mathrm{DM}$:
+\begin{equation}
+v_w = \kappa_w \sigma_\mathrm{DM} \,,
+\end{equation}
+where $v_w$ is the wind speed. $\kappa_w$ is a dimensionless parameter, which we take to be $3.7$ following \cite{Vogelsberger:2013}. We have mildly altered the model from \cite{Bird:2022} by implementing a minimum wind velocity, $v_w \geq 100$ km/s, in order to improve convergence with resolution.
+
+Winds are sourced by newly formed star particles, which randomly pick gas particles from within their SPH smoothing length to become wind particles. The total mass loading is $(v_w/ 350 \mathrm{km/s})^{-2}$ where $350$ km/s is in physical units. Particles recouple when their surrounding density drops by a factor of $10$, or after $60$ Myr.\footnote{In Ref.~\cite{Bird:2022} we had a subdominant recoupling condition: gas would recouple after $20 \mathrm{kpc} / v_w$. In practice this affected only a small fraction of the wind, as for a typical star forming halo with a virial velocity of $200$ km/s the recoupling time was $100$ Myr, and gas always recoupled after $60$ Myr. We have thus removed this condition for model simplicity.} Particles in the wind cool, but do not experience or produce pressure forces, nor may they be accreted onto a black hole. However, to enhance the stability of the SPH density estimates, they are included when computing SPH smoothing lengths.
+
+We conducted an early test emulator using small boxes where the dimensionless supernova wind velocity, $\kappa_w$, was a free parameter of the model. However, we found that this free parameter was essentially unconstrained by the \Lya~forest data and so opted not to vary it in the full emulator run. Ref.~\cite{Bolton:2017} showed that supernova winds increased the \Lya~flux power on large scales, $k < 10^{-2}$ s/km, at $z < 3$, by around $10\%$, due to the presence of additional high column density systems\footnote{Ref.~\cite{Viel:2013} found that the \Lya~flux power spectrum was increased only for $ k > 0.04$ s/km (scales smaller than those measured by BOSS), but their simulations did not include self-shielding and so did not contain high column density absorbers.}. We remove high column density systems from our simulated spectra to match the observational procedure, and thus changes to the supernova wind model do not affect the \Lya~flux power spectrum. As shown in Figure~\ref{fig:DLACDDF}, our supernova simulation model parameters have been chosen to match the observed galaxy stellar mass function and thus the distribution of high column density absorbers. This good agreement can be taken as a strong prior on the supernova wind parameters and justifies our choice to fix the wind model in our emulator.
+
+\begin{figure*}
+% \includegraphics[width=1.\textwidth]{figures/cddf.pdf}
+ \caption{CDDF of high column density absorbers from our simulation at $z=2$.}
+ \label{fig:DLACDDF}
+\end{figure*}
+
 \subsection{AGN Feedback}
 
-Plot of the effect of the AGN feedback parameter. Ideally I would compare this to the correction factor from Chabanier et al.
+We include the effect of thermal AGN feedback in our simulations. We use the model of AGN feedback described in Ref.~\cite{Bird:2022}
+
+Ref.~\cite{Viel:2013} showed an effect of AGN feedback which rises to $10\%$ at $z=2$, while Ref.~\cite{Chabanier:2020} found $8\%$ at $z=2$ and $k = 0.005$ s/km. Both simulations use AGN feedback models with parameters tuned to match the properties of galaxies at $z=0$. However, the implementations are different. Ref.~\cite{Chabanier:2020} uses the Horizon-AGN simulation \cite{Dubois:2016}. The AGN feedback model has two modes, one thermal and one kinetic, with the kinetic mode dominating at low accretion rates. Ref.~\cite{Viel:2013} uses the OWLS simulation suite, and delivers AGN feedback energy thermally, once black hole accretion has accumulated enough energy to heat a nearby gas particle to $10^8$ K. Despite the different implementations, the two codes agree reasonably well as to the effect of AGN feedback on the \Lya~forest.
+
+\cite{Giri:2021} show that the effect is well described by the halo scale at which AGN feedback starts to remove the gas.
+
+%Since the level of AGN feedback present in simulations is currently uncertain, we vary the strength of thermal feedback in our emulator.
+
+
+This allows us to ensure that potential parameter degeneracies between AGN feedback and cosmological parameters are included. Ref~\cite{Schneider:2015} has shown that the main degeneracy for the matter power spectrum is between AGN feedback and the fraction of matter in baryons, $\Omega_b / \Omega_0$, as the AGN feedback . However, our main observable is the \Lya~forest which is sensitive to the thermal state of the gas and thus the heating effect of the AGN feedback as well as its ability to remove gas from the halo may be relevant.
+
+\spb{Plot of the effect of the AGN feedback parameter. Ideally I would compare this to the correction factor from Chabanier et al.}
 
 \begin{figure*}
 \includegraphics[width=1.\textwidth]{figures/comp-temps_fq.pdf}
@@ -168,12 +250,47 @@ Describe the resolution and box size of the simulation. Justify this by citing t
 \begin{figure*}
 \includegraphics[width=1.\textwidth]{figures/comp-temps_fq.pdf}
  \caption{Temperature variations at different densities for different resolutions. Shows how the convergence changes with redshift.}
- \label{fig:AGNtemp}
+ \label{fig:resolutiontemp}
 \end{figure*}
 
 \section{Simulation Suite Parameters and Experimental Design}
 
-Describe the chosen cosmological parameters. Add a plot as Figure 3 of the multi-fidelity paper. Explain why these parameters are chosen. We use a Latin Hypercube design. Outputs are every $\Delta z=0.2$ from $z=5.4$ to $z=2.0$.
+% Describe the chosen cosmological parameters. Add a plot as Figure 3 of the multi-fidelity paper. Explain why these parameters are chosen. We use a Latin Hypercube design. Outputs are every $\Delta z=0.2$ from $z=5.4$ to $z=2.0$.
+
+The model runs simulations varying a total of $9$ parameters. These include $4$ cosmological parameters, $3$ parameters for the helium reionization model \cite{UptonSanderbeck:2020}, $1$ parameter for hydrogen reionization, and $1$ parameter for the strength of AGN feedback. Cosmological parameters and prior ranges are:
+\begin{align}
+      n_s      &\sim \uniform[0.8, 0.995]; \\
+      A_P      &\sim \uniform[1.2\times10^{-9}, 2.6\times10^{-9}];\\
+      h        &\sim \uniform[0.65, 0.75]; \\
+      \Omega_0 h^2 &\sim \uniform[0.14, 0.146];\\
+   \label{eq:prior_cos_volume}
+\end{align}
+$A_p$ is the amplitude of perturbations at $k = 0.78$ h/Mpc, chosen to be in the middle of the range probed by the \Lya~forest and thus reduce artificial correlation between $n_s$ and $A_P$ \cite{Bird:2019}. $n_s$ is the spectral index. The primordial power spectrum is thus:
+\begin{equation}
+ P(k) = A_P \left(\frac{k}{ 0.78}\right)^{n_s-1}\,.
+ \label{eq:pk}
+\end{equation}
+We have chosen the prior ranges for $A_P$ to include the posterior constraint from Planck, measured on larger scales \cite{Planck:2018}.
+%This pivot scale is not the same as used in the CMB and thus scalar amplitude $A_P$ is not directly comparable to $A_s$ as measured on larger scales. However, w
+$h$ is the Hubble parameter, and $\Omega_0 h^2$ controls the growth rate. We do not vary $\Omega_b$ as it is degenerate with the ionization fraction of the gas. It is not necessary to include an explicit parameter for neutrino mass as the effect of neutrino mass on the forest is degenerate with $A_P$. Schematically, neutrino mass constraints come from measuring different power spectrum amplitudes on CMB and \Lya~scales \cite{Pedersen:2021}.
+
+%In practice both $h$ and $\Omega_0 h^2$ do not strongly influence the final \Lya~forest posteriors in our current analysis, and so is not strongly constrained by the \Lya~forest and we
+%It affects the gas temperature but does not affect the gravitational clustering.
+
+The distribution of \Lya~forest gas is influenced by the temperature and temperature-density relation of the IGM. My approach includes physical (subgrid) models for helium and hydrogen reionization and AGN feedback, with parameters:
+\begin{align}
+      z_{Hei}        &\sim \uniform[3.5, 4.1]; \\
+      z_{Hef}        &\sim \uniform[2.6, 3.2]; \\
+      \alpha_q      &\sim \uniform[1.6, 2.5]; \\
+      z_{Hi}        &\sim \uniform[6.5, 8]; \\
+   \label{eq:prior_reion_volume}
+\end{align}
+$\epsilon_{AGN} \sim \uniform[0.03, 0.07]$
+
+$z_{Hei}$ and $z_{Hef}$ are the start and end redshifts, respectively, of helium reionization. $z_{Hi}$ is the midpoint redshift of hydrogen reionization. $\alpha_q$ is the quasar emissivity spectral index, which controls the peak IGM temperature during helium reionization. $\epsilon_{AGN}$ is the efficiency of the black hole thermal feedback mode, varied over a range which produces a good match to the galaxy stellar mass function \cite{Ni:2021}.
+%Note that the emissivity is as $-\alpha_q$, so that larger values indicate a lower maximum IGM temperature.
+
+Several additional nuisance parameters are included in the likelihood function. These parameters, modelled by post-processing spectra, are: a) $4$ parameters modelling different classes of high column density absorbers remaining in the SDSS dataset, following the model of \cite{Rogers:2017}. b) $1$ parameter for the amplitude of SiIII absorption following \cite{McDonald:2004data}. c) Most importantly, $2$ parameters for the amplitude of the uncertain mean optical depth in the \Lya~forest, $\tau_0$ and derivative $d\tau_0$, following the models in \cite{Viel:2006, Bird:2019}. The mean optical depth $\tau_0$ behaves similarly to the linear bias in galaxy surveys. As these parameters can be included in post-processing, they do not require extra simulation, but can be marginalised over when obtaining posterior constraints.
 
 \begin{figure}
     \centering
@@ -181,11 +298,11 @@ Describe the chosen cosmological parameters. Add a plot as Figure 3 of the multi
     \caption{Simulation parameter limits, and samples used to construct the emulators presented.
     Parameters for the low resolution simulations (crosses) were determined by filling a Latin hypercube.
     From the low resolution set, the optimal high resolution set is determined, and these are shown as red circles.
-    Initially, $30$ low resolution samples were generated, then an additional $10$ were added while maintaining the Latin hypercube method, hence the non-uniform spacing for the low resolution samples.}
+    Initially, $30$ low resolution samples were generated, then an additional $10$ were added while maintaining the Latin hypercube method, hence the non-uniform spacing for the low resolution samples. \spb{Martin please remake}}
     \label{fig:samples}
 \end{figure}
 
-The emulator construction follows \cite{2019JCAP...02..050B}.
+The emulator construction follows \cite{Bird:2019}.
 
 \section{Results}
 
@@ -207,7 +324,7 @@ MAF is supported by a National Science Foundation Graduate Research Fellowship u
 MFH is supported by a National Aeronautics and Space Administration FINESST under grant No. ASTRO20-0022.
 SB is supported by NSF grant AST-1817256.
 
-Computing resources were provided by NSF XSEDE allocation AST21005.
+Computing resources were provided by Frontera LRAC AST21005.
 The authors acknowledge the Frontera computing project at the Texas Advanced Computing Center (TACC) for providing HPC and storage resources that have contributed to the research results reported within this paper.
 Frontera is made possible by National Science Foundation award OAC-1818253.
 URL: \url{http://www.tacc.utexas.edu}
@@ -217,6 +334,7 @@ Flux power spectra generated from the low resolution, high resolution, and testi
 Both HDF5 and plain text (appropriate for multi-fidelity emulation) formats are available.
 Single- and multi-fidelity emulator predictions for the $10$ testing simulations are also available from the same repository.
 The spectra underlying the flux power are available upon request.
+\spb{We should try to make the spectra and flux power available for this one, but only after the likelihood paper is written.}
 
 \bibliographystyle{JHEP}
 \bibliography{refs}
