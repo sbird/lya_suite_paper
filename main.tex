@@ -291,30 +291,33 @@ Our emulator design also allows us to measure parameter degeneracies between AGN
 \subsection{Generation of Spectra}
 \label{sec:spectra}
 
+We generate artificial spectra and compute the flux power spectrum as described in \cite{Bird:2019}. Each simulation generates output snapshots evenly spaced every $\Delta z = 0.2$ between $z = 5.2$ and $z = 2$. Spectra are generated using ``fake\_spectra'' \footnote{\url{https://github.com/sbird/fake_spectra}} \cite{FSFE:2017}. We generate $32000$
+\Lya~absorption spectra at random (but consistent between snapshots) positions. The
+pixel width is $10$ km/s, finer than either the BOSS or DESI spectrograph. Flux power spectra are generated in h/Mpc units, with the natural Fourier bins of the box, and transformed to velocity units after emulation. The flux power spectrum is generated as average of the 1D Fourier transform along each sightline.
+
+We rescale our simulated spectra to match a desired mean optical depth. As in \cite{Bird:2019}, our emulator has the ability to generate flux power spectra for arbitrary input mean optical depth $\tau$. This is achieved by rescaling the spectra in post-processing: no extra simulations are needed. We are thus able to dramatically over-sample the mean optical depth as an input parameter, generating a dense grid of $10$ optical depth samples per redshift per cosmological simulation. As explained in \cite{Bird:2019}, we generate one Gaussian Process emulator for every redshift bin, each emulator taking the mean optical depth at that redshift as an input parameter. We would thus be able to use very general redshift variations of the mean optical depth if supported by observational data.
+
+% This is done because for any given redshift bin there is a degeneracy between $\tau_0$ and $d\tau_0$. Computing the mean flux in each redshift bin separately breaks this degeneracy and avoids duplicate spectra.
+
+
 \subsection{Experimental Design}
 \label{sec:latinhypercube}
-
-% Describe the chosen cosmological parameters. Add a plot as Figure 3 of the multi-fidelity paper. Explain why these parameters are chosen. We use a Latin Hypercube design. Outputs are every $\Delta z=0.2$ from $z=5.4$ to $z=2.0$.
-
-We vary a total of $9$ parameters. These include $4$ cosmological parameters, $3$ parameters for the helium reionization model, $1$ parameter for hydrogen reionization, and $1$ parameter for the strength of AGN feedback.
-
-\spb{Latin hypercube design and Bayesian optimisation. Parameters which do not really influence the \Lya~forest are basically free with a LH.}
-
-%Note that the emissivity is as $-\alpha_q$, so that larger values indicate a lower maximum IGM temperature.
-
-Our emulator includes two additional parameters, modelled by post-processing spectra, are $2$ parameters for the amplitude of the uncertain mean optical depth in the \Lya~forest, $\tau_0$ and derivative $d\tau_0$, varying as a power law \spb{Copy from older emulator paper} As these parameters can be included in post-processing, they do not require extra simulations, but they are included as input parameters in our emulator. Note that our emulator is constructed so that we could easily use more general forms for the redshift variation of the mean optical depth if supported by observational data. \spb{Describe sampling}
 
 \begin{figure}
     \centering
 	\includegraphics[width=0.5\columnwidth]{figures/120box_42samples.pdf}
-    \caption{Simulation parameter limits, and samples used to construct the emulators presented. Shown as crosses are the initial Latin hypercube simulations, while the squares are the
-    Parameters for the low resolution simulations (crosses) were determined by filling a Latin hypercube.
-    From the low resolution set, the optimal high resolution set is determined, and these are shown as red circles.
-    Initially, $30$ low resolution samples were generated, then an additional $10$ were added while maintaining the Latin hypercube method, hence the non-uniform spacing for the low resolution samples. \spb{Martin please remake}}
+    \caption{Simulation parameter limits, and parameters simulated. Shown as crosses are the $30$ initial simulations chosen from a Latin hypercube, while the squares show the secondary set of $13$ simulations chosen using Bayesian optimisation.
+    }
     \label{fig:samples}
 \end{figure}
 
-The emulator construction follows \cite{Bird:2019}.
+% Describe the chosen cosmological parameters. Add a plot as Figure 3 of the multi-fidelity paper. Explain why these parameters are chosen. We use a Latin Hypercube design. Outputs are every $\Delta z=0.2$ from $z=5.4$ to $z=2.0$.
+
+Our emulator includes a total of $10$ parameters at each redshift. One parameter, the mean flux, is generated in post-processing, meaning that we run simulations covering a $9$-dimensional parameter space, summarised in Table~\ref{tab:emulatorparams}.
+
+We generate simulations at specific points in parameter space using a Latin Hypercube design, following the description in \cite{Bird:2019}. Latin Hypercubes are generated at random on a normalised unit cube, and the design which maximises the spread between parameter points is chosen for the final emulator. We ran $30$ simulations in our initial Latin Hypercube design. We supplemented these simulations with $13$ chosen by Bayesian optimisation, as described in \cite{Rogers:2019}. \spb{What was the acquisition function used?} The parameters simulated are shown in Figure~\ref{fig:samples}, which demonstrates that both sets efficiently cover parameter space.
+
+Finally, we construct a Gaussian Process emulator construction following \cite{Bird:2019}. The covariance kernel is the combination of a radial basis function and a dot kernel. The length-scale of the radial basis function for each parameter is a hyper-parameter chosen by optimisation.
 
 \section{Results}
 
