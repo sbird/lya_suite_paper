@@ -3,6 +3,7 @@
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
+from lyaemu.coarse_grid import Emulator
 
 def make_res_convergence(convfile):
     """Make a plot showing the convergence of the flux power spectrum with resolution."""
@@ -102,6 +103,67 @@ def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolutio
     plt.xlabel("z")
     plt.ylabel(r"$T_0$ ($10^4$ K)")
     plt.savefig("../figures/mean-temperature.pdf")
+
+def get_predicted(params, gpemu):
+    """Helper function to get the predicted flux power spectrum and error, rebinned to match the desired kbins."""
+    nparams = params
+    # tau_0_i[z] @dtau_0 / tau_0_i[z] @[dtau_0 = 0]
+    # Divided by lowest redshift case
+    tau0_fac = mflux.mean_flux_slope_to_factor(self.zout, params[0])
+    nparams = params[1:] #Keep only t0 sampling parameter (of mean flux parameters)
+    # .predict should take [{list of parameters: t0; cosmo.; thermal},]
+    # Here: emulating @ cosmo.; thermal; sampled t0 * [tau0_fac from above]
+    predicted_nat, std_nat = gpemu.predict(np.array(nparams).reshape(1, -1), tau0_factors=tau0_fac)
+    return gpemu.kf, predicted_nat, std_nat
+
+def single_parameter_plot(plotdir='plots'):
+    """Plot change in each parameter of an emulator from direct simulations."""
+    emulatordir = path.join(path.dirname(__file__), "emu_full_extend")
+    mf = MeanFluxFactor()
+    dist_col = dc.get_distinct(12)
+    emu = Emulator(emulatordir, mf=mf)
+    emu.load()
+    gpemu = emu.get_emulator(max_z=3, min_z=2.2)
+    plimits = emu.get_param_limits(include_dense=True)
+    means = np.mean(plimits, axis=1)
+    defaultfv = get_predicted(means, gpemu)
+    for (name, index) in mf.dense_param_names.items():
+        ind = np.where(par[:,index] != defpar[index])
+        for i in np.ravel(ind):
+            if i % 2 == 0 or i > 7:
+                continue
+            tp = par[i,index]
+            fp = (flux_vectors[i]/deffv)
+            plt.semilogx(kfs[i][0], fp[0:np.size(kfs[i][0])], label=r"$\tau_0=%.2g$ ($z=4.2$)" % tp, color=dist_col[i])
+            plt.semilogx(kfs[i][-1], fp[np.size(kfs[i][-1]):2*np.size(kfs[i][-1])], label=r"$\tau_0=%.2g$ ($z=2.2$)" % tp, ls="--", color=dist_col[i+1])
+        plt.xlim(1e-3,2e-2)
+        plt.ylim(bottom=0.2, top=1.3)
+        plt.xlabel(r"$k_F$")
+        plt.ylabel(r"$\Delta P_F(k)$")
+        plt.legend(loc="lower left", ncol=2,fontsize=10)
+        plt.tight_layout()
+        plt.savefig(path.join(plotdir,"single_param_"+name+".pdf"))
+        plt.clf()
+    pnames = [r"n_s", r"A_\mathrm{P}", r"H_S", r"H_A", r"h"]
+    for (name, index) in emu.param_names.items():
+        dn = len(mf.dense_param_names)
+        index += dn
+        ind = np.where(par[:,index] != defpar[index])
+        cc = 0
+        for i in np.ravel(ind):
+            tp = par[i,index]
+            fp = (flux_vectors[i]/deffv)
+            plt.semilogx(kfs[i][0], fp[0:np.size(kfs[i][0])], label=r"$%s=%.2g$ ($z=4.2$)" % (pnames[index-dn], tp), color=dist_col[2*cc])
+            plt.semilogx(kfs[i][-1], fp[np.size(kfs[i][-1]):2*np.size(kfs[i][-1])], label=r"$%s=%.2g$ ($z=2.2$)" % (pnames[index-dn], tp), ls="--", color=dist_col[2*cc+1])
+            cc+=1
+        plt.xlim(1e-3,2e-2)
+        plt.ylim(bottom=0.8, top=1.1)
+        plt.xlabel(r"$k_F$")
+        plt.ylabel(r"$\Delta P_F(k)$")
+        plt.legend(loc="lower left", ncol=2,fontsize=10)
+        plt.tight_layout()
+        plt.savefig(path.join(plotdir,"single_param_"+name+".pdf"))
+        plt.clf()
 
 if __name__ == "__main__":
     make_temperature_variation("emulator_meanT.hdf5-40")
