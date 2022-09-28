@@ -104,18 +104,18 @@ def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolutio
     plt.ylabel(r"$T_0$ ($10^4$ K)")
     plt.savefig("../figures/mean-temperature.pdf")
 
-def save_fig(name, zz, plotdir):
+def save_fig(name, plotdir):
     """Format and save a figure"""
     plt.xlim(1e-3,2e-2)
-    plt.ylim(bottom=0.9, top=1.1)
+    #plt.ylim(bottom=0.9, top=1.1)
     plt.xlabel(r"$k_F$")
-    plt.ylabel(r"$\Delta P_F(k)$ ($z = %.1f$)" % zz)
-    plt.legend(loc="lower left", ncol=2,fontsize=10)
+    plt.ylabel(r"$\Delta P_F(k)$ ($%s$)" % name[1])
+    plt.legend(loc="lower left", ncol=3,fontsize=10)
     plt.tight_layout()
-    plt.savefig(os.path.join(plotdir,"single_param_%.2g_%s.pdf" % (zz, name[0])))
+    plt.savefig(os.path.join(plotdir,"single_param_%s.pdf" % name[0]))
     plt.clf()
 
-def single_parameter_plot(zz=2.2, plotdir='../figures'):
+def single_parameter_plot(zzs=None, plotdir='../figures'):
     """Plot change in each parameter of an emulator from direct simulations."""
     emulatordir = os.path.join(os.path.dirname(__file__), "emu_full_extend")
     like = LikelihoodClass(basedir=emulatordir, data_corr=False, tau_thresh=1e6)
@@ -123,26 +123,26 @@ def single_parameter_plot(zz=2.2, plotdir='../figures'):
     means = np.mean(plimits, axis=1)
     okf, defaultfv, _ = like.get_predicted(means)
     pnames = like.get_pnames()
-    zind = np.argmin(np.abs(like.zout - zz))
-    okf = okf[zind]
-    defaultfv = defaultfv[zind]
+    if zzs is None:
+        zzs = np.array([2.2, 3.0, 4.4])
     assert len(pnames) == np.size(means)
     dist_col = dc.get_distinct(12)
     for (i, name) in enumerate(pnames):
         upper = np.array(means)
         upper[i] = plimits[i,1]
         okf2, upperfv, _ = like.get_predicted(upper)
-        assert np.all(np.abs(okf / okf2[zind] -1) < 1e-3)
+        assert np.all(np.abs(okf[0] / okf2[0] -1) < 1e-3)
         lower = np.array(means)
         lower[i] = plimits[i,0]
         okf2, lowerfv, _ = like.get_predicted(lower)
-        assert np.all(np.abs(okf / okf2[zind] -1) < 1e-3)
-        plt.semilogx(okf, upperfv[zind]/defaultfv, label=r"$%s=%.2g$" % (name[1], upper[i]), color=dist_col[2*i % 12])
-        plt.semilogx(okf, lowerfv[zind]/defaultfv, label=r"$%s=%.2g$" % (name[1], lower[i]), ls="--", color=dist_col[(2*i+1) %12])
-        if i in (1, 3, 6):
-            save_fig(name, zz, plotdir)
-    save_fig(pnames[-1], zz, plotdir)
+        assert np.all(np.abs(okf[-1] / okf2[-1] -1) < 1e-3)
+        for (j,zz) in enumerate(zzs):
+            zind = np.argmin(np.abs(like.zout - zz))
+            plt.semilogx(okf[zind], upperfv[zind]/defaultfv[zind], label=r"$%s=%.2g$, $z=%.2g$" % (name[1], upper[i], zz), color=dist_col[2*j % 12])
+            plt.semilogx(okf[zind], lowerfv[zind]/defaultfv[zind], label=r"$%s=%.2g$, $z=%.2g$" % (name[1], lower[i], zz), ls="--", color=dist_col[(2*j+1) %12])
+        save_fig(name, plotdir)
 
 if __name__ == "__main__":
     make_temperature_variation("emulator_meanT.hdf5-40")
     make_res_convergence("fluxpower_converge.hdf5")
+    single_parameter_plot()
