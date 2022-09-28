@@ -112,7 +112,7 @@ def save_fig(name, zz, plotdir):
     plt.ylabel(r"$\Delta P_F(k)$ ($z = %.1f$)" % zz)
     plt.legend(loc="lower left", ncol=2,fontsize=10)
     plt.tight_layout()
-    plt.savefig(os.path.join(plotdir,"single_param_"+name[0]+".pdf"))
+    plt.savefig(os.path.join(plotdir,"single_param_%.2g_%s.pdf" % (zz, name[0])))
     plt.clf()
 
 def single_parameter_plot(zz=2.2, plotdir='../figures'):
