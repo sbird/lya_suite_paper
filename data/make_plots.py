@@ -114,20 +114,20 @@ def single_parameter_plot(zz=2.2, plotdir='plots'):
     okf, defaultfv, _ = like.get_predicted(means)
     pnames = like.get_pnames()
     zind = np.argmin(np.abs(like.zout - zz))
+    okf = okf[zind]
+    defaultfv = defaultfv[zind]
     assert len(pnames) == np.size(means)
     for (i, name) in enumerate(pnames):
         upper = np.array(means)
         upper[i] = plimits[i,1]
         okf2, upperfv, _ = like.get_predicted(upper)
-        assert np.all(np.abs(okf / okf2 -1) < 1e-3)
+        assert np.all(np.abs(okf / okf2[zind] -1) < 1e-3)
         lower = np.array(means)
         lower[i] = plimits[i,0]
         okf2, lowerfv, _ = like.get_predicted(lower)
-        assert np.all(np.abs(okf / okf2 -1) < 1e-3)
-        upperfv = (upperfv/defaultfv).reshape((np.size(okf[0]), -1))
-        lowerfv = (lowerfv/defaultfv).reshape((np.size(okf[0]),-1))
-        plt.semilogx(okf[zind], upperfv[:, zind], label=r"$%s=%.2g$" % (name[1], upper[i]), color=dist_col[2*i])
-        plt.semilogx(okf[zind], lowerfv[:, zind], label=r"$%s=%.2g$" % (name[1], lower[i]), ls="--", color=dist_col[2*i+1])
+        assert np.all(np.abs(okf / okf2[zind] -1) < 1e-3)
+        plt.semilogx(okf, upperfv[zind]/defaultfv, label=r"$%s=%.2g$" % (name[1], upper[i]), color=dist_col[2*i])
+        plt.semilogx(okf, lowerfv[zind]/defaultfv, label=r"$%s=%.2g$" % (name[1], lower[i]), ls="--", color=dist_col[2*i+1])
         plt.xlim(1e-3,2e-2)
         plt.ylim(bottom=0.8, top=1.1)
         plt.xlabel(r"$k_F$")
