@@ -104,6 +104,17 @@ def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolutio
     plt.ylabel(r"$T_0$ ($10^4$ K)")
     plt.savefig("../figures/mean-temperature.pdf")
 
+def save_fig(name, zz, plotdir):
+    """Format and save a figure"""
+    plt.xlim(1e-3,2e-2)
+    plt.ylim(bottom=0.9, top=1.1)
+    plt.xlabel(r"$k_F$")
+    plt.ylabel(r"$\Delta P_F(k)$ ($z = %.1f$)" % zz)
+    plt.legend(loc="lower left", ncol=2,fontsize=10)
+    plt.tight_layout()
+    plt.savefig(os.path.join(plotdir,"single_param_"+name[0]+".pdf"))
+    plt.clf()
+
 def single_parameter_plot(zz=2.2, plotdir='../figures'):
     """Plot change in each parameter of an emulator from direct simulations."""
     emulatordir = os.path.join(os.path.dirname(__file__), "emu_full_extend")
@@ -116,7 +127,7 @@ def single_parameter_plot(zz=2.2, plotdir='../figures'):
     okf = okf[zind]
     defaultfv = defaultfv[zind]
     assert len(pnames) == np.size(means)
-    dist_col = dc.get_distinct(2*len(pnames))
+    dist_col = dc.get_distinct(12)
     for (i, name) in enumerate(pnames):
         upper = np.array(means)
         upper[i] = plimits[i,1]
@@ -126,16 +137,11 @@ def single_parameter_plot(zz=2.2, plotdir='../figures'):
         lower[i] = plimits[i,0]
         okf2, lowerfv, _ = like.get_predicted(lower)
         assert np.all(np.abs(okf / okf2[zind] -1) < 1e-3)
-        plt.semilogx(okf, upperfv[zind]/defaultfv, label=r"$%s=%.2g$" % (name[1], upper[i]), color=dist_col[2*i])
-        plt.semilogx(okf, lowerfv[zind]/defaultfv, label=r"$%s=%.2g$" % (name[1], lower[i]), ls="--", color=dist_col[2*i+1])
-    plt.xlim(1e-3,2e-2)
-    plt.ylim(bottom=0.9, top=1.1)
-    plt.xlabel(r"$k_F$")
-    plt.ylabel(r"$\Delta P_F(k)$ ($z = %.1f$)" % zz)
-    plt.legend(loc="lower left", ncol=2,fontsize=10)
-    plt.tight_layout()
-    plt.savefig(os.path.join(plotdir,"single_param_"+name[0]+".pdf"))
-    plt.clf()
+        plt.semilogx(okf, upperfv[zind]/defaultfv, label=r"$%s=%.2g$" % (name[1], upper[i]), color=dist_col[2*i % 12])
+        plt.semilogx(okf, lowerfv[zind]/defaultfv, label=r"$%s=%.2g$" % (name[1], lower[i]), ls="--", color=dist_col[(2*i+1) %12])
+        if i in (1, 3, 6):
+            save_fig(name, zz, plotdir)
+    save_fig(pnames[-1], zz, plotdir)
 
 if __name__ == "__main__":
     make_temperature_variation("emulator_meanT.hdf5-40")
