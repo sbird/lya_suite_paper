@@ -108,7 +108,6 @@ def single_parameter_plot(zz=2.2, plotdir='../figures'):
     """Plot change in each parameter of an emulator from direct simulations."""
     emulatordir = os.path.join(os.path.dirname(__file__), "emu_full_extend")
     like = LikelihoodClass(basedir=emulatordir, data_corr=False, tau_thresh=1e6)
-    dist_col = dc.get_distinct(12)
     plimits = like.param_limits
     means = np.mean(plimits, axis=1)
     okf, defaultfv, _ = like.get_predicted(means)
@@ -117,6 +116,7 @@ def single_parameter_plot(zz=2.2, plotdir='../figures'):
     okf = okf[zind]
     defaultfv = defaultfv[zind]
     assert len(pnames) == np.size(means)
+    dist_col = dc.get_distinct(2*len(pnames))
     for (i, name) in enumerate(pnames):
         upper = np.array(means)
         upper[i] = plimits[i,1]
