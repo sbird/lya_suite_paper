@@ -274,5 +274,7 @@ def res_converge(big, small, mf=True, savefile="res_converge.hdf5"):
 
 if __name__ == "__main__":
     box_converge("~/data/Lya_forest/benchmark2/L120n1024converge/output","~/data/Lya_forest/benchmark2/L60n512converge/output")
+    box_converge("~/data/Lya_forest/benchmark2/L120n1024converge/output","~/data/Lya_forest/benchmark2/L60n512converge/output", mf=False, savefile="box_converge_nomf.hdf5")
     ressim = "ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output"
     res_converge("~/scratch/Lya_forest/emu_full_hires/"+ressim,"~/scratch/Lya_forest/emu_full_extend/"+ressim)
+    res_converge("~/scratch/Lya_forest/emu_full_hires/"+ressim,"~/scratch/Lya_forest/emu_full_extend/"+ressim, mf=False, savefile="res_converge_nomf.hdf5")
