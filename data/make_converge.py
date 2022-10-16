@@ -106,7 +106,7 @@ class MySpectra():
     """This class stores the randomly positioned sightlines once,
        so that they are the same for each emulator point.
        max_k is in comoving h/Mpc."""
-    def __init__(self, numlos = 32000, max_z= 4.2, max_k = 5.):
+    def __init__(self, numlos = 32000, max_z= 4.2, min_z=2.1, max_k = 5.):
         self.NumLos = numlos
         #For SDSS or BOSS the spectral resolution is
         #60 km/s at 5000 A and 80 km/s at 4300 A.
@@ -123,7 +123,7 @@ class MySpectra():
         self.pix_res = 10.
         self.NumLos = numlos
         #Want output every 0.2 from z=max to z=2.2, matching SDSS.
-        self.zout = np.arange(max_z,2.1,-0.2)
+        self.zout = np.arange(max_z,min_z,-0.2)
         self.max_k = max_k
         self.savefile = "lya_forest_spectra.hdf5"
 
@@ -217,11 +217,11 @@ def _get_header_attr_from_snap(attr, num, base):
     del f
     return value
 
-def converge(big, small, mf=True):
+def converge(big, small, max_z=4.2, min_z=2.2, mf=True):
     """Save different box sizes"""
-    myspec_big = MySpectra()
+    myspec_big = MySpectra(max_z=max_z, min_z=min_z)
     power_big = myspec_big.get_snapshot_list(big)
-    myspec_small = MySpectra()
+    myspec_small = MySpectra(max_z=max_z, min_z=min_z)
     power_small = myspec_small.get_snapshot_list(small)
     zout_big = power_big.get_zout()
     zout_small = power_small.get_zout()
@@ -263,7 +263,7 @@ def box_converge(big, small, mf=True, savefile="box_converge.hdf5"):
 
 def res_converge(big, small, mf=True, savefile="res_converge.hdf5"):
     """Convergence with resolution"""
-    zout_big, power_small, kf, fpk_big_rebin, fpk_small_rebin = converge(big, small, mf=mf)
+    zout_big, power_small, kf, fpk_big_rebin, fpk_small_rebin = converge(big, small, mf=mf, max_z=5.4, min_z=1.95)
     with h5py.File(savefile, 'w') as ff:
         ff["zout"] = zout_big
         ff["kfkms"] = power_small.get_kf_kms(kf)
