@@ -54,14 +54,16 @@ def make_box_convergence(convfile):
     plt.subplots_adjust(wspace=0, hspace=0)
     plt.savefig("../figures/box-convergence.pdf")
 
-def make_res_convergence(convfile="fluxpower_converge.hdf5", convfile2="res_converge.hdf5"):
+def make_res_convergence(convfile="fluxpower_converge.hdf5", convfile2="res_converge_nomf.hdf5"):
     """Make a plot showing the convergence of the flux power spectrum with resolution."""
     with h5py.File(convfile2) as hh:
-        flux_powers_lr2 = hh["flux_vectors"]["L120n1536"][:]
-        flux_powers_hr2 = hh["flux_vectors"]["L120n3072"][:]
+        flux_powers_lr2 = hh["flux_powers"]["L120n1536"][:]
+        flux_powers_hr2 = hh["flux_powers"]["L120n3072"][:]
         kfkms_vhr2 = hh["kfkms"][:]
         redshifts2 = hh["zout"][:]
-
+        nk = np.shape(kfkms_vhr2)[0]
+        flux_powers_lr2 = flux_powers_lr2.reshape((nk,-1))
+        flux_powers_hr2 = flux_powers_hr2.reshape((nk,-1))
     with h5py.File(convfile) as hh:
         flux_powers_hr = hh["flux_vectors"]["L15n384"][:]
         flux_powers_vhr = hh["flux_vectors"]["L15n512"][:]
