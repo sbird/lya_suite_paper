@@ -32,7 +32,7 @@ def make_box_convergence(convfile):
             #sharey = axes[index -1 - ((index-1) % 3)]
         ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
         if sharex is None:
-             ax.set_xlim(1.5e-3, 2e-2)
+            ax.set_xlim(1.5e-3, 2e-2)
         ax.semilogx(kfkms_vhr[ii], flux_powers_lr[ii]/flux_powers_hr[ii], color="blue", ls="-")
         ax.text(2.5e-3, 0.97, "z=%.2g" % zz)
         ax.set_ylim(0.95, 1.05)
@@ -54,15 +54,20 @@ def make_box_convergence(convfile):
     plt.subplots_adjust(wspace=0, hspace=0)
     plt.savefig("../figures/box-convergence.pdf")
 
-def make_res_convergence(convfile):
+def make_res_convergence(convfile="fluxpower_converge.hdf5", convfile2="res_converge.hdf5"):
     """Make a plot showing the convergence of the flux power spectrum with resolution."""
-    hh = h5py.File(convfile)
-    #Low-res is current.
-    flux_powers_lr = hh["flux_vectors"]["L15n192"][:]
-    flux_powers_hr = hh["flux_vectors"]["L15n384"][:]
-    flux_powers_vhr = hh["flux_vectors"]["L15n512"][:]
-    kfkms_vhr = hh["kfkms"]["L15n512"][:]
-    redshifts = hh["zout"][:]
+    with h5py.File(convfile2) as hh:
+        flux_powers_lr2 = hh["flux_vectors"]["L120n1536"][:]
+        flux_powers_hr2 = hh["flux_vectors"]["L120n3072"][:]
+        kfkms_vhr2 = hh["kfkms"][:]
+        redshifts2 = hh["zout"][:]
+
+    with h5py.File(convfile) as hh:
+        flux_powers_hr = hh["flux_vectors"]["L15n384"][:]
+        flux_powers_vhr = hh["flux_vectors"]["L15n512"][:]
+        kfkms_vhr = hh["kfkms"]["L15n512"][:]
+        redshifts = hh["zout"][:]
+    assert np.size(redshifts) == np.size(redshifts2)
     fig = plt.figure()
     axes = []
     index = 1
@@ -76,7 +81,7 @@ def make_res_convergence(convfile):
         #if (index-1) % 3 > 0:
             #sharey = axes[index -1 - ((index-1) % 3)]
         ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
-        ax.semilogx(kfkms_vhr[ii], flux_powers_lr[ii]/flux_powers_vhr[ii], label="%.2g kpc/h" % (15000./192.), color="blue", ls="-")
+        ax.semilogx(kfkms_vhr2[ii], flux_powers_lr2[ii]/flux_powers_hr2[ii], label="%.2g kpc/h" % (120000./1536.), color="blue", ls="-")
         ax.semilogx(kfkms_vhr[ii], flux_powers_hr[ii]/flux_powers_vhr[ii], label="%.2g kpc/h" % (15000./384.), color="grey", ls="--")
         ax.text(0.023, 1.04, "z="+str(zz))
         ax.set_ylim(0.99, 1.05)
