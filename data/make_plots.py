@@ -157,8 +157,25 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
         save_fig(name, plotdir)
     return like
 
+def three_panel():
+    fig, ax = plt.subplots(nrows=1,ncols=3,figsize=(24,6), sharey=True)
+    plt.setp(ax, xticks=[5,4,3,2], xlim=[5.5,1.9], yticks=[0.8,0.9,1,1.1,1.2], ylim=[0.75,1.25])
+
+    for i in range(3):
+        ax[i].plot([5.6,1.8],[1,1],'k-')
+        ax[i].plot(zbins, l15n192[:, 10**i]/l15n512[:, 10**i], 'yo-', label='Full 192/512'*(1-i), alpha=0.7)
+        ax[i].plot(zbins, l15n256[:, 10**i]/l15n512[:, 10**i], 'ro-', label='Full 256/512'*(1-i), alpha=0.7)
+        ax[i].plot(zbins, l15n384[:, 10**i]/l15n512[:, 10**i], 'bo-', label='Full 384/512'*(1-i), alpha=0.7)
+        ax[i].legend(loc='best', fontsize=18, title=str(10**i)+r'$\times$Mean Density', title_fontsize=20)
+
+    ax[1].set_xlabel("Redshift", fontsize=18)
+    ax[0].set_ylabel(r"$T_{low}/T_{high}$", fontsize=20)
+    fig.subplots_adjust(hspace=0, wspace=0)
+    plt.savefig(figbase+'comp-temps.pdf')
+    plt.show()
+
 if __name__ == "__main__":
-    make_temperature_variation("emulator_meanT.hdf5-40")
-    make_res_convergence("fluxpower_converge.hdf5")
-    make_box_convergence("box_converge.hdf5")
-    single_parameter_plot()
+#    make_temperature_variation("emulator_meanT.hdf5-40")
+    make_res_convergence()
+#    make_box_convergence("box_converge.hdf5")
+  #  single_parameter_plot()
