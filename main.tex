@@ -327,12 +327,15 @@ Finally, we construct a Gaussian Process emulator construction following \cite{B
 Describe the resolution and box size of the simulation. Justify this by citing the relevant 2014 paper and with the figure. \spb{Note that the convergence at high redshift is a little better than Bolton and Becker 2010, because the heating effect of the ionization fronts smooths the high redshift gas and prevents the small unresolved halos from accreting anyway.}
 
 \begin{figure*}
-\includegraphics[width=0.45\textwidth]{figures/resolution-convergence.pdf}
-\includegraphics[width=0.45\textwidth]{figures/fps_mfr.pdf}
- \caption{Convergence of the flux power spectrum with resolution and box size. Explain box size and resolution parameters.}
+\includegraphics[width=0.9\textwidth]{figures/resolution-convergence.pdf}
+ \caption{Convergence of the flux power spectrum with resolution (mean interparticle spacing). The simulations are run with the same box size but different particle loads. The lines labelled $78$ kpc/h (blue solid) compares two simulations in a $120$ Mpc/h box. The first has $1536^3$ particles, and thus a mean-interparticle spacing of $78$ kpc/h, while the second has $3072^3$ particles. The lines labelled $39$ kpc/h compare two simulations in a $15$ Mpc/h box. The first has $384^3$ particles, and the second has $512^3$ particles.}
  \label{fig:resolution}
 \end{figure*}
-
+\begin{figure*}
+\includegraphics[width=0.9\textwidth]{figures/box-convergence.pdf}
+ \caption{Convergence of the flux power spectrum with box size. Shown is the ratio of the flux power spectrum as a function of redshift in a $120$ Mpc/h box compared to a $60$ Mpc/h box. Our primary simulations use a $120$ Mpc/h box. The range of $k$ measured by eBOSS is $10^{-3}$ s/km to $2\times 10^{-2}$ s/km. }
+ \label{fig:resolution}
+\end{figure*}
 
 \begin{figure*}
 \includegraphics[width=1.\textwidth]{figures/comp-temps_fq.pdf}
