@@ -53,6 +53,7 @@ def make_box_convergence(convfile):
         index += 1
     plt.subplots_adjust(wspace=0, hspace=0)
     plt.savefig("../figures/box-convergence.pdf")
+    plt.clf()
 
 def make_res_convergence(convfile):
     """Make a plot showing the convergence of the flux power spectrum with resolution."""
@@ -93,6 +94,7 @@ def make_res_convergence(convfile):
         plt.xlabel("k (s/km)")
     plt.subplots_adjust(wspace=0, hspace=0)
     plt.savefig("../figures/resolution-convergence.pdf")
+    plt.clf()
 
 def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolution_All_Statistics.txt"):
     """Make a plot of the possible temperature variations over time."""
@@ -110,6 +112,7 @@ def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolutio
     plt.xlabel("z")
     plt.ylabel(r"$T_0$ ($10^4$ K)")
     plt.savefig("../figures/mean-temperature.pdf")
+    plt.clf()
 
 def save_fig(name, plotdir):
     """Format and save a figure"""
