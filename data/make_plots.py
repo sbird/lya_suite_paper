@@ -32,7 +32,7 @@ def make_box_convergence(convfile):
             #sharey = axes[index -1 - ((index-1) % 3)]
         ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
         if sharex is None:
-             ax.set_xlim(1.5e-3, 2e-2)
+            ax.set_xlim(1.5e-3, 2e-2)
         ax.semilogx(kfkms_vhr[ii], flux_powers_lr[ii]/flux_powers_hr[ii], color="blue", ls="-")
         ax.text(2.5e-3, 0.97, "z=%.2g" % zz)
         ax.set_ylim(0.95, 1.05)
@@ -55,15 +55,22 @@ def make_box_convergence(convfile):
     plt.savefig("../figures/box-convergence.pdf")
     plt.clf()
 
-def make_res_convergence(convfile):
+def make_res_convergence(convfile="fluxpower_converge.hdf5", convfile2="res_converge_nomf.hdf5"):
     """Make a plot showing the convergence of the flux power spectrum with resolution."""
-    hh = h5py.File(convfile)
-    #Low-res is current.
-    flux_powers_lr = hh["flux_vectors"]["L15n192"][:]
-    flux_powers_hr = hh["flux_vectors"]["L15n384"][:]
-    flux_powers_vhr = hh["flux_vectors"]["L15n512"][:]
-    kfkms_vhr = hh["kfkms"]["L15n512"][:]
-    redshifts = hh["zout"][:]
+    with h5py.File(convfile2) as hh:
+        flux_powers_lr2 = hh["flux_powers"]["L120n1536"][:]
+        flux_powers_hr2 = hh["flux_powers"]["L120n3072"][:]
+        kfkms_vhr2 = hh["kfkms"][:]
+        redshifts2 = hh["zout"][:]
+        nk = np.shape(kfkms_vhr2)[0]
+        flux_powers_lr2 = flux_powers_lr2.reshape((nk,-1))
+        flux_powers_hr2 = flux_powers_hr2.reshape((nk,-1))
+    with h5py.File(convfile) as hh:
+        flux_powers_hr = hh["flux_vectors"]["L15n384"][:]
+        flux_powers_vhr = hh["flux_vectors"]["L15n512"][:]
+        kfkms_vhr = hh["kfkms"]["L15n512"][:]
+        redshifts = hh["zout"][:]
+    assert np.size(redshifts) == np.size(redshifts2)
     fig = plt.figure()
     axes = []
     index = 1
@@ -77,7 +84,7 @@ def make_res_convergence(convfile):
         #if (index-1) % 3 > 0:
             #sharey = axes[index -1 - ((index-1) % 3)]
         ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
-        ax.semilogx(kfkms_vhr[ii], flux_powers_lr[ii]/flux_powers_vhr[ii], label="%.2g kpc/h" % (15000./192.), color="blue", ls="-")
+        ax.semilogx(kfkms_vhr2[ii], flux_powers_lr2[ii]/flux_powers_hr2[ii], label="%.2g kpc/h" % (120000./1536.), color="blue", ls="-")
         ax.semilogx(kfkms_vhr[ii], flux_powers_hr[ii]/flux_powers_vhr[ii], label="%.2g kpc/h" % (15000./384.), color="grey", ls="--")
         ax.text(0.023, 1.04, "z="+str(zz))
         ax.set_ylim(0.99, 1.05)
@@ -153,8 +160,25 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
         save_fig(name, plotdir)
     return like
 
+def three_panel():
+    fig, ax = plt.subplots(nrows=1,ncols=3,figsize=(24,6), sharey=True)
+    plt.setp(ax, xticks=[5,4,3,2], xlim=[5.5,1.9], yticks=[0.8,0.9,1,1.1,1.2], ylim=[0.75,1.25])
+
+    for i in range(3):
+        ax[i].plot([5.6,1.8],[1,1],'k-')
+        ax[i].plot(zbins, l15n192[:, 10**i]/l15n512[:, 10**i], 'yo-', label='Full 192/512'*(1-i), alpha=0.7)
+        ax[i].plot(zbins, l15n256[:, 10**i]/l15n512[:, 10**i], 'ro-', label='Full 256/512'*(1-i), alpha=0.7)
+        ax[i].plot(zbins, l15n384[:, 10**i]/l15n512[:, 10**i], 'bo-', label='Full 384/512'*(1-i), alpha=0.7)
+        ax[i].legend(loc='best', fontsize=18, title=str(10**i)+r'$\times$Mean Density', title_fontsize=20)
+
+    ax[1].set_xlabel("Redshift", fontsize=18)
+    ax[0].set_ylabel(r"$T_{low}/T_{high}$", fontsize=20)
+    fig.subplots_adjust(hspace=0, wspace=0)
+    plt.savefig(figbase+'comp-temps.pdf')
+    plt.show()
+
 if __name__ == "__main__":
-    make_temperature_variation("emulator_meanT.hdf5-40")
-    make_res_convergence("fluxpower_converge.hdf5")
-    make_box_convergence("box_converge.hdf5")
-    single_parameter_plot()
+#    make_temperature_variation("emulator_meanT.hdf5-40")
+    make_res_convergence()
+#    make_box_convergence("box_converge.hdf5")
+  #  single_parameter_plot()

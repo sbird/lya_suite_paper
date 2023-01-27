@@ -106,7 +106,7 @@ class MySpectra():
     """This class stores the randomly positioned sightlines once,
        so that they are the same for each emulator point.
        max_k is in comoving h/Mpc."""
-    def __init__(self, numlos = 32000, max_z= 4.2, max_k = 5.):
+    def __init__(self, numlos = 32000, max_z= 4.2, min_z=2.1, max_k = 5.):
         self.NumLos = numlos
         #For SDSS or BOSS the spectral resolution is
         #60 km/s at 5000 A and 80 km/s at 4300 A.
@@ -123,7 +123,7 @@ class MySpectra():
         self.pix_res = 10.
         self.NumLos = numlos
         #Want output every 0.2 from z=max to z=2.2, matching SDSS.
-        self.zout = np.arange(max_z,2.1,-0.2)
+        self.zout = np.arange(max_z,min_z,-0.2)
         self.max_k = max_k
         self.savefile = "lya_forest_spectra.hdf5"
 
@@ -182,6 +182,7 @@ class MySpectra():
         """Get the flux power spectrum in the format used by McDonald 2004
         for a snapshot set."""
         #print('Looking for spectra in', base)
+        base = os.path.expanduser(base)
         powerspectra = FluxPower(maxk=self.max_k)
         for snap in range(30):
             snapdir = os.path.join(base,snappref+str(snap).rjust(3,'0'))
@@ -216,11 +217,11 @@ def _get_header_attr_from_snap(attr, num, base):
     del f
     return value
 
-def box_converge(big, small, mf=True, savefile="box_converge.hdf5"):
+def converge(big, small, max_z=4.2, min_z=2.2, mf=True):
     """Save different box sizes"""
-    myspec_big = MySpectra()
+    myspec_big = MySpectra(max_z=max_z, min_z=min_z)
     power_big = myspec_big.get_snapshot_list(big)
-    myspec_small = MySpectra()
+    myspec_small = MySpectra(max_z=max_z, min_z=min_z)
     power_small = myspec_small.get_snapshot_list(small)
     zout_big = power_big.get_zout()
     zout_small = power_small.get_zout()
@@ -247,6 +248,11 @@ def box_converge(big, small, mf=True, savefile="box_converge.hdf5"):
         rebinned_big=scipy.interpolate.interpolate.interp1d(power_big.kf,fpk_big[ii*nkb:(ii+1)*nkb])
         fpk_big_rebin[ii*nks:(ii+1)*nks] = rebinned_big(kf)
         fpk_small_rebin[ii*nks:(ii+1)*nks] = fpk_small[ii*nks_old:(ii+1)*nks_old][ind]
+    return zout_big, power_small, kf, fpk_big_rebin, fpk_small_rebin
+
+def box_converge(big, small, mf=True, savefile="box_converge.hdf5"):
+    """Convergence with box size"""
+    zout_big, power_small, kf, fpk_big_rebin, fpk_small_rebin = converge(big, small, mf=mf)
     with h5py.File(savefile, 'w') as ff:
         ff["zout"] = zout_big
         ff["kfkms"] = power_small.get_kf_kms(kf)
@@ -255,5 +261,20 @@ def box_converge(big, small, mf=True, savefile="box_converge.hdf5"):
         ff["flux_powers"]["L120n1024"] = fpk_big_rebin
         ff["flux_powers"]["L60n512"] = fpk_small_rebin
 
+def res_converge(big, small, mf=True, savefile="res_converge.hdf5"):
+    """Convergence with resolution"""
+    zout_big, power_small, kf, fpk_big_rebin, fpk_small_rebin = converge(big, small, mf=mf, max_z=5.4, min_z=1.95)
+    with h5py.File(savefile, 'w') as ff:
+        ff["zout"] = zout_big
+        ff["kfkms"] = power_small.get_kf_kms(kf)
+        ff["kfmpc"] = kf
+        ff.create_group("flux_powers")
+        ff["flux_powers"]["L120n3072"] = fpk_big_rebin
+        ff["flux_powers"]["L120n1536"] = fpk_small_rebin
+
 if __name__ == "__main__":
-    box_converge("/home/spb/data/Lya_forest/benchmark2/L120n1024converge/output","/home/spb/data/Lya_forest/benchmark2/L60n512converge/output")
+    box_converge("~/data/Lya_forest/benchmark2/L120n1024converge/output","~/data/Lya_forest/benchmark2/L60n512converge/output")
+    box_converge("~/data/Lya_forest/benchmark2/L120n1024converge/output","~/data/Lya_forest/benchmark2/L60n512converge/output", mf=False, savefile="box_converge_nomf.hdf5")
+    ressim = "ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output"
+    res_converge("~/scratch/Lya_forest/emu_full_hires/"+ressim,"~/scratch/Lya_forest/emu_full_extend/"+ressim)
+    res_converge("~/scratch/Lya_forest/emu_full_hires/"+ressim,"~/scratch/Lya_forest/emu_full_extend/"+ressim, mf=False, savefile="res_converge_nomf.hdf5")
