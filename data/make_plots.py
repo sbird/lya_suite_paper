@@ -7,6 +7,10 @@ import matplotlib.pyplot as plt
 from lyaemu.likelihood import LikelihoodClass
 import lyaemu.distinct_colours_py3 as dc
 
+def close(x, y):
+    """Decide if two fp numbers are close"""
+    return np.any(np.abs(x - y) < 0.01)
+
 def make_box_convergence(convfile):
     """Make a plot showing the convergence of the flux power spectrum with box size."""
     hh = h5py.File(convfile)
@@ -22,7 +26,7 @@ def make_box_convergence(convfile):
     axes = []
     index = 1
     for ii, zz in enumerate(redshifts):
-        if zz > 4.4 or zz < 2.2:
+        if not close(zz, np.array([4.0, 3.0, 2.2])):
             continue
         sharex=None
         sharey=None
@@ -86,16 +90,16 @@ def make_res_convergence(convfile="fluxpower_converge.hdf5", convfile2="res_conv
         ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
         ax.semilogx(kfkms_vhr2[ii], flux_powers_lr2[ii]/flux_powers_hr2[ii], label="%.2g kpc/h" % (120000./1536.), color="blue", ls="-")
         ax.semilogx(kfkms_vhr[ii], flux_powers_hr[ii]/flux_powers_vhr[ii], label="%.2g kpc/h" % (15000./384.), color="grey", ls="--")
-        ax.text(0.023, 1.04, "z="+str(zz))
-        ax.set_ylim(0.99, 1.05)
+        ax.text(0.015, 1.06, "z="+str(zz))
+        ax.grid(visible=True, axis='y')
+        ax.set_ylim(0.95, 1.10)
+        ax.set_yticks([0.95, 0.98, 1.0, 1.02, 1.06]) #, [str(1.0), str(1.02), str(1.04)])
         if (index-1) % 3 > 0:
             ax.set_yticklabels([])
         else:
-            ax.set_yticks([1.0, 1.02, 1.04], [str(1.0), str(1.02), str(1.04)])
             plt.ylabel(r"$P_F / P_F^{ref}$")
-
         if index == 1:
-            ax.legend()
+            ax.legend(loc="upper left", frameon=False)
         axes.append(ax)
         index += 1
         plt.xlabel("k (s/km)")
@@ -179,6 +183,6 @@ def three_panel():
 
 if __name__ == "__main__":
 #    make_temperature_variation("emulator_meanT.hdf5-40")
-    make_res_convergence()
-#    make_box_convergence("box_converge.hdf5")
+#    make_res_convergence()
+   #make_box_convergence("box_converge.hdf5")
   #  single_parameter_plot()
