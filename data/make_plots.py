@@ -5,6 +5,7 @@ import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 from lyaemu.likelihood import LikelihoodClass
+from lyaemu.meanT import t0_likelihood
 import lyaemu.distinct_colours_py3 as dc
 
 def close(x, y):
@@ -131,15 +132,17 @@ def save_fig(name, plotdir):
     #plt.ylim(bottom=0.9, top=1.1)
     plt.xlabel(r"$k_F$")
     plt.ylabel(r"$\Delta P_F(k)$ ($%s$)" % name[1])
-    plt.legend(loc="lower left", ncol=1,fontsize=10)
+    plt.legend(ncol=1,fontsize=10)
     plt.tight_layout()
     plt.savefig(os.path.join(plotdir,"single_param_%s.pdf" % name[0]))
     plt.clf()
 
 def single_parameter_plot(zzs=None, plotdir='../figures'):
     """Plot change in each parameter of an emulator from direct simulations."""
-    emulatordir = os.path.join(os.path.dirname(__file__), "emu_full_extend")
-    like = LikelihoodClass(basedir=emulatordir, data_corr=False, tau_thresh=1e6)
+    #emulatordir = os.path.join(os.path.dirname(__file__), "emu_full_extend")
+    emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-46")
+    hremudir = os.path.join(os.path.dirname(__file__), "dtau-48-46/hires")
+    like = LikelihoodClass(basedir=emulatordir, HRbasedir=hremudir, data_corr=False, tau_thresh=1e6, loo_errors=True, traindir=emulatordir+"/trained_mf")
     plimits = like.param_limits
     means = np.mean(plimits, axis=1)
     okf, defaultfv, _ = like.get_predicted(means)
@@ -150,18 +153,67 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
     dist_col = dc.get_distinct(12)
     for (i, name) in enumerate(pnames):
         upper = np.array(means)
-        upper[i] = plimits[i,1]
+        #upper[i] = plimits[i,1]
+        upper[i] = 0.8*(plimits[i,1] - means[i]) + means[i]
         okf2, upperfv, _ = like.get_predicted(upper)
         assert np.all(np.abs(okf[0] / okf2[0] -1) < 1e-3)
         lower = np.array(means)
-        lower[i] = plimits[i,0]
+        #lower[i] = plimits[i,0]
+        lower[i] = 0.8*(plimits[i,0] - means[i]) + means[i]
         okf2, lowerfv, _ = like.get_predicted(lower)
         assert np.all(np.abs(okf[-1] / okf2[-1] -1) < 1e-3)
+        lblstr = r"$%s=%.2g$, $z=%.2g$"
+        if name[0] == 'omegamh2':
+            lblstr = r"$%s=%.3g$, $z=%.2g$"
         for (j,zz) in enumerate(zzs):
             zind = np.argmin(np.abs(like.zout - zz))
-            plt.semilogx(okf[zind], upperfv[zind]/defaultfv[zind], label=r"$%s=%.2g$, $z=%.2g$" % (name[1], upper[i], zz), color=dist_col[2*j % 12])
-            plt.semilogx(okf[zind], lowerfv[zind]/defaultfv[zind], label=r"$%s=%.2g$, $z=%.2g$" % (name[1], lower[i], zz), ls="--", color=dist_col[(2*j+1) %12])
+            plt.semilogx(okf[zind], upperfv[zind]/defaultfv[zind], label= lblstr % (name[1], upper[i], zz), color=dist_col[2*j % 12])
+            plt.semilogx(okf[zind], lowerfv[zind]/defaultfv[zind], label= lblstr % (name[1], lower[i], zz), ls="--", color=dist_col[(2*j+1) %12])
         save_fig(name, plotdir)
+    return like
+
+def save_fig_t0(plotdir):
+    """Format and save a figure"""
+    #plt.xlim(1e-3,2e-2)
+    #plt.ylim(bottom=0.9, top=1.1)
+    plt.xlabel(r"$z$")
+    plt.ylabel(r"$\Delta T0(z)$")
+    plt.legend(ncol=1,fontsize=10)
+    plt.tight_layout()
+    plt.savefig(os.path.join(plotdir,"single_param_t0.pdf"))
+    plt.clf()
+
+def single_parameter_t0_plot(plotdir='../figures'):
+    """Plot change in each parameter of an emulator from direct simulations."""
+    #emulatordir = os.path.join(os.path.dirname(__file__), "emu_full_extend")
+    emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-46")
+    hremudir = os.path.join(os.path.dirname(__file__), "dtau-48-46/hires")
+    like = t0_likelihood.T0LikelihoodClass(basedir=emulatordir, HRbasedir=hremudir, loo_errors=True)
+    plimits = like.param_limits
+    means = np.mean(plimits, axis=1)
+    defaultfv, _ = like.get_predicted(means)
+    pnames = like.emulator.print_pnames()
+    assert len(pnames) == np.size(means)
+    print(pnames)
+    pnames = [('herei', r'z_\mathrm{He i}'), ('heref', r'z_\mathrm{He f}'), ('alphaq', r'\alpha_q'), ('hireionz', r'z_{Hi}')]
+    pind = [2,3,4,7]
+    dist_col = dc.get_distinct(12)
+    for (ii, name) in enumerate(pnames):
+        upper = np.array(means)
+        #upper[i] = plimits[i,1]
+        i = pind[ii]
+        upper[i] = 0.8*(plimits[i,1] - means[i]) + means[i]
+        upperfv, _ = like.get_predicted(upper)
+        lower = np.array(means)
+        #lower[i] = plimits[i,0]
+        lower[i] = 0.8*(plimits[i,0] - means[i]) + means[i]
+        lowerfv, _ = like.get_predicted(lower)
+        lblstr = r"$%s=%.2g$"
+        if name[0] == 'omegamh2':
+            lblstr = r"$%s=%.3g$"
+        plt.plot(like.zout[::-1], (upperfv[0]-defaultfv[0])[::-1], label= lblstr % (name[1], upper[i]), color=dist_col[i])
+        plt.plot(like.zout[::-1], (lowerfv[0]-defaultfv[0])[::-1], label= lblstr % (name[1], lower[i]), ls="--", color=dist_col[i])
+    save_fig_t0(plotdir)
     return like
 
 def three_panel():
@@ -185,4 +237,5 @@ if __name__ == "__main__":
 #    make_temperature_variation("emulator_meanT.hdf5-40")
 #    make_res_convergence()
    #make_box_convergence("box_converge.hdf5")
-  #  single_parameter_plot()
+#     single_parameter_plot()
+    single_parameter_t0_plot()
