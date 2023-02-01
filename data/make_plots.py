@@ -31,8 +31,9 @@ def plot_dla_cddf():
         basedir = os.path.join(emudir, sims[i])
         basedir = os.path.join(basedir, "output")
         ps = PlottingSpectra(num=nums[i], base=basedir, savefile="rand_spectra_DLA.hdf5")
-        ps.plot_cddf(minN=19, moment=True)
+        ps.plot_cddf(minN=19, moment=True, dlogN=0.1, maxN=22.4)
     ho21_cddf(redshift=2.2, moment=True)
+    plt.ylabel("N f(N)")
     plt.savefig("../figures/cddf_hires.pdf")
 
 def close(x, y):
