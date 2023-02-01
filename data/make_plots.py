@@ -17,16 +17,6 @@ def plot_dla_cddf():
             "ns0.909Ap1.98e-09herei3.75heref3.01alphaq2.43hub0.682omegamh20.14hireionz7.6bhfeedback0.0449",
             "ns0.914Ap1.32e-09herei3.85heref2.65alphaq1.57hub0.742omegamh20.141hireionz6.88bhfeedback0.04"]
     nums = [23, 25, 22]
-#    ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_012/rand_spectra_DLA.hdf5
-#    ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_018/rand_spectra_DLA.hdf5
-#    ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_023/rand_spectra_DLA.hdf5
-#    ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_024/rand_spectra_DLA.hdf5
-#    ns0.909Ap1.98e-09herei3.75heref3.01alphaq2.43hub0.682omegamh20.14hireionz7.6bhfeedback0.0449/output/SPECTRA_012/rand_spectra_DLA.hdf5
-#    ns0.909Ap1.98e-09herei3.75heref3.01alphaq2.43hub0.682omegamh20.14hireionz7.6bhfeedback0.0449/output/SPECTRA_019/rand_spectra_DLA.hdf5
-#    ns0.909Ap1.98e-09herei3.75heref3.01alphaq2.43hub0.682omegamh20.14hireionz7.6bhfeedback0.0449/output/SPECTRA_025/rand_spectra_DLA.hdf5
-#    ns0.914Ap1.32e-09herei3.85heref2.65alphaq1.57hub0.742omegamh20.141hireionz6.88bhfeedback0.04/output/SPECTRA_012/rand_spectra_DLA.hdf5
-#    ns0.914Ap1.32e-09herei3.85heref2.65alphaq1.57hub0.742omegamh20.141hireionz6.88bhfeedback0.04/output/SPECTRA_017/rand_spectra_DLA.hdf5
-#    ns0.914Ap1.32e-09herei3.85heref2.65alphaq1.57hub0.742omegamh20.141hireionz6.88bhfeedback0.04/output/SPECTRA_022/rand_spectra_DLA.hdf5
     for i in range(3):
         basedir = os.path.join(emudir, sims[i])
         basedir = os.path.join(basedir, "output")
@@ -139,10 +129,10 @@ def make_res_convergence(convfile="fluxpower_converge.hdf5", convfile2="res_conv
 def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolution_All_Statistics.txt"):
     """Make a plot of the possible temperature variations over time."""
     obs = np.loadtxt(gkfile)
-    plt.xlim(4.5, 2)
+    plt.xlim(5.4, 2)
     hh = h5py.File(tempfile)
     redshift = hh["zout"][:]
-    ii = np.where(redshift <= 4.4)
+    ii = np.where(redshift <= 5.4)
     mint = np.min(hh["meanT"][:], axis=0)
     maxt = np.max(hh["meanT"][:], axis=0)
     plt.fill_between(redshift[ii], mint[ii]/1e4, maxt[ii]/1e4, color="grey", alpha=0.3)
@@ -152,6 +142,23 @@ def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolutio
     plt.xlabel("z")
     plt.ylabel(r"$T_0$ ($10^4$ K)")
     plt.savefig("../figures/mean-temperature.pdf")
+    plt.clf()
+
+def make_res_convergence_t0(tempfile, hirestempfile):
+    """Make a plot of the change in the mean temperature with resolution."""
+    plt.xlim(4.5, 2)
+    meanThires = h5py.File(hirestempfile)
+    meanT = h5py.File(tempfile)
+    nshires = meanThires["params"][:][:,0]
+    paraminds = [np.argmin(np.abs(nshires[ii]- meanT["params"][:][:,0])) for ii in range(np.size(nshires))]
+    redshift = meanThires["zout"][:]
+    #Plot each simulation's resolution correction.
+    for i in np.size(nshires):
+        ratio = meanThires["meanT"][:][i,:] / meanT["meanT"][:][paraminds[i], :]
+        plt.plot(redshift, ratio)
+    plt.xlabel("z")
+    plt.ylabel(r"$\Delta T_0$")
+    plt.savefig("../figures/mean-temperature-resolution.pdf")
     plt.clf()
 
 def save_fig(name, plotdir):
@@ -244,27 +251,11 @@ def single_parameter_t0_plot(plotdir='../figures'):
     save_fig_t0(plotdir)
     return like
 
-def three_panel():
-    fig, ax = plt.subplots(nrows=1,ncols=3,figsize=(24,6), sharey=True)
-    plt.setp(ax, xticks=[5,4,3,2], xlim=[5.5,1.9], yticks=[0.8,0.9,1,1.1,1.2], ylim=[0.75,1.25])
-
-    for i in range(3):
-        ax[i].plot([5.6,1.8],[1,1],'k-')
-        ax[i].plot(zbins, l15n192[:, 10**i]/l15n512[:, 10**i], 'yo-', label='Full 192/512'*(1-i), alpha=0.7)
-        ax[i].plot(zbins, l15n256[:, 10**i]/l15n512[:, 10**i], 'ro-', label='Full 256/512'*(1-i), alpha=0.7)
-        ax[i].plot(zbins, l15n384[:, 10**i]/l15n512[:, 10**i], 'bo-', label='Full 384/512'*(1-i), alpha=0.7)
-        ax[i].legend(loc='best', fontsize=18, title=str(10**i)+r'$\times$Mean Density', title_fontsize=20)
-
-    ax[1].set_xlabel("Redshift", fontsize=18)
-    ax[0].set_ylabel(r"$T_{low}/T_{high}$", fontsize=20)
-    fig.subplots_adjust(hspace=0, wspace=0)
-    plt.savefig(figbase+'comp-temps.pdf')
-    plt.show()
-
 if __name__ == "__main__":
-#    make_temperature_variation("emulator_meanT.hdf5-40")
+    make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
+    make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
 #    make_res_convergence()
    #make_box_convergence("box_converge.hdf5")
 #     single_parameter_plot()
 #     single_parameter_t0_plot()
-    plot_dla_cddf()
+    # plot_dla_cddf()
