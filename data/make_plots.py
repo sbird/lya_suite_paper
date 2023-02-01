@@ -16,20 +16,23 @@ def plot_dla_cddf():
     sims = ["ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579",
             "ns0.909Ap1.98e-09herei3.75heref3.01alphaq2.43hub0.682omegamh20.14hireionz7.6bhfeedback0.0449",
             "ns0.914Ap1.32e-09herei3.85heref2.65alphaq1.57hub0.742omegamh20.141hireionz6.88bhfeedback0.04"]
-    nums = [18, 19, 17]
-#"emu_full_hires/ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_012/rand_spectra_DLA.hdf5",
-#"emu_full_hires/ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_018/rand_spectra_DLA.hdf5",
-#"emu_full_hires/ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_024/rand_spectra_DLA.hdf5",
-#"emu_full_hires/ns0.909Ap1.98e-09herei3.75heref3.01alphaq2.43hub0.682omegamh20.14hireionz7.6bhfeedback0.0449/output/SPECTRA_012/rand_spectra_DLA.hdf5",
-#"emu_full_hires/ns0.909Ap1.98e-09herei3.75heref3.01alphaq2.43hub0.682omegamh20.14hireionz7.6bhfeedback0.0449/output/SPECTRA_019/rand_spectra_DLA.hdf5",
-#"emu_full_hires/ns0.914Ap1.32e-09herei3.85heref2.65alphaq1.57hub0.742omegamh20.141hireionz6.88bhfeedback0.04/output/SPECTRA_012/rand_spectra_DLA.hdf5",
-#"emu_full_hires/ns0.914Ap1.32e-09herei3.85heref2.65alphaq1.57hub0.742omegamh20.141hireionz6.88bhfeedback0.04/output/SPECTRA_017/rand_spectra_DLA.hdf5"]
+    nums = [23, 25, 22]
+#    ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_012/rand_spectra_DLA.hdf5
+#    ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_018/rand_spectra_DLA.hdf5
+#    ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_023/rand_spectra_DLA.hdf5
+#    ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output/SPECTRA_024/rand_spectra_DLA.hdf5
+#    ns0.909Ap1.98e-09herei3.75heref3.01alphaq2.43hub0.682omegamh20.14hireionz7.6bhfeedback0.0449/output/SPECTRA_012/rand_spectra_DLA.hdf5
+#    ns0.909Ap1.98e-09herei3.75heref3.01alphaq2.43hub0.682omegamh20.14hireionz7.6bhfeedback0.0449/output/SPECTRA_019/rand_spectra_DLA.hdf5
+#    ns0.909Ap1.98e-09herei3.75heref3.01alphaq2.43hub0.682omegamh20.14hireionz7.6bhfeedback0.0449/output/SPECTRA_025/rand_spectra_DLA.hdf5
+#    ns0.914Ap1.32e-09herei3.85heref2.65alphaq1.57hub0.742omegamh20.141hireionz6.88bhfeedback0.04/output/SPECTRA_012/rand_spectra_DLA.hdf5
+#    ns0.914Ap1.32e-09herei3.85heref2.65alphaq1.57hub0.742omegamh20.141hireionz6.88bhfeedback0.04/output/SPECTRA_017/rand_spectra_DLA.hdf5
+#    ns0.914Ap1.32e-09herei3.85heref2.65alphaq1.57hub0.742omegamh20.141hireionz6.88bhfeedback0.04/output/SPECTRA_022/rand_spectra_DLA.hdf5
     for i in range(3):
         basedir = os.path.join(emudir, sims[i])
         basedir = os.path.join(basedir, "output")
         ps = PlottingSpectra(num=nums[i], base=basedir, savefile="rand_spectra_DLA.hdf5")
         ps.plot_cddf(minN=19, moment=True)
-    ho21_cddf(redshift=3., moment=True)
+    ho21_cddf(redshift=2.2, moment=True)
     plt.savefig("../figures/cddf_hires.pdf")
 
 def close(x, y):
