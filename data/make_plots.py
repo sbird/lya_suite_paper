@@ -153,7 +153,7 @@ def make_res_convergence_t0(tempfile, hirestempfile):
     paraminds = [np.argmin(np.abs(nshires[ii]- meanT["params"][:][:,0])) for ii in range(np.size(nshires))]
     redshift = meanThires["zout"][:]
     #Plot each simulation's resolution correction.
-    for i in np.size(nshires):
+    for i in range(np.size(nshires)):
         ratio = meanThires["meanT"][:][i,:] / meanT["meanT"][:][paraminds[i], :]
         plt.plot(redshift, ratio)
     plt.xlabel("z")

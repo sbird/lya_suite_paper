@@ -185,15 +185,13 @@ The UV background used is the ``optically thin'' variant from Ref.~\cite{FG2020}
 \subsection{Hydrogen Reionization}
 \label{sec:hydrogen}
 
-We model patchy reionization with a spatially varying ultra-violet background using a semi-analytic method \cite{Battaglia:2013} which pre-computes a reionization redshift, on a grid with cells $1$ Mpc/h, using FASTPM \cite{FASTPM}. The redshift of reionization, $z_{HI}$, is defined as the redshift at which $50\%$ of the simulation volume has reionized. In general, higher initial overdensities reionize earlier. We simulate $z_{HI}$ over the range $6.5 - 8$.
+We model patchy reionization with a spatially varying ultra-violet background using a semi-analytic method \cite{Battaglia:2013} which pre-computes a reionization redshift, on a grid with cells $1$ Mpc/h, using FASTPM \cite{FASTPM}. The redshift of reionization, $z_{HI}$, is defined as the redshift at which $50\%$ of the simulation volume has reionized. In general, higher initial overdensities reionize earlier. We simulate $z_{HI}$ over the range $6.5 - 8$. Our use of a patchy reionization model means that we naturally include lower redshift effects of reionization on the \Lya~forest \citep{Montero:2019}
 
 For gas particles in a region which has not yet reionized, the photon background is set to zero and the gas remains neutral. Once the reionization redshift has passed, the particle's ionization and thermal states evolve in ionization equilibrium with the external UV background. Newly in these simulations, we include a temperature boost to each gas particle as it passes the reionization redshift to account for the (subgrid) heating effect of ionization fronts.
 Each gas particle on reionization has its temperature boosted to $15,000$K.
 Ref.~\citep{DAloisio:2019} found a temperature boost of $\sim 20,000$K in their radiative transfer simulations. However, our simulation is much lower resolution and has much longer timesteps, suggesting that we should expect a certain amount of subgrid cooling before any given particle in our simulation box becomes active. Furthermore, we found that a temperature boost of $20,000$ K led to generally higher IGM temperatures when compared to observations $z\sim 6$, at least for the relatively low reionization redshifts preferred by current mean free path observations \cite{Cain:2021}.
 
-The reionization temperature boost means that $z_{HI}$ affects the thermal history of the IGM. After reionization the UV background is not sufficiently intense to preserve a thermal equilibrium and so the gas cools. The reionization parameter, $z_{HI}$, thus controls the IGM temperature before helium reionization starts at at $z \gtrsim 4$.
-
-Note that as long as $z_{HI} > 5.8$, the current highest redshift IGM temperature measurement \cite{Gaikwad:2020}, $z_{HI}$ is observationally degenerate with the size of the reionization temperature boost. Our ultimate constraints on the reionization redshift should thus be understood to be conditional on a boost of $15,000$ K.
+The reionization temperature boost means that $z_{HI}$ affects the thermal history of the IGM. After reionization the UV background is not sufficiently intense to preserve a thermal equilibrium and so the gas cools. The reionization parameter, $z_{HI}$, thus controls the IGM temperature before helium reionization starts at at $z \gtrsim 4$. Note that as long as $z_{HI} > 5.8$, the current highest redshift IGM temperature measurement \cite{Gaikwad:2020}, $z_{HI}$ is observationally degenerate with the size of the reionization temperature boost. Our ultimate constraints on the reionization redshift should thus be understood to be conditional on a boost of $15,000$ K.
 
 %We do not boost the gas temperature to account for the passage of ionization fronts \citep{2019ApJ...874..154D}.
 
@@ -247,7 +245,7 @@ Winds are sourced by newly formed star particles, which randomly pick gas partic
 We conducted an early test emulator using small boxes where the dimensionless supernova wind velocity, $\kappa_w$, was a free parameter of the model. However, we found that this free parameter was essentially unconstrained by the \Lya~forest data and so opted not to vary it in the full emulator run. Ref.~\cite{Bolton:2017} showed that supernova winds increased the \Lya~flux power on large scales, $k < 10^{-2}$ s/km, at $z < 3$, by around $10\%$, due to the presence of additional high column density systems\footnote{Ref.~\cite{Viel:2013} found that the \Lya~flux power spectrum was increased only for $ k > 0.04$ s/km (scales smaller than those measured by BOSS), but their simulations did not include self-shielding and so did not contain high column density absorbers.}. We remove high column density systems from our simulated spectra to match the observational procedure, and thus changes to the supernova wind model do not affect the \Lya~flux power spectrum. As shown in Figure~\ref{fig:DLACDDF}, our supernova simulation model parameters have been chosen to match the observed galaxy stellar mass function and thus the distribution of high column density absorbers. This good agreement can be taken as a strong prior on the supernova wind parameters and justifies our choice to fix the wind model in our emulator.
 
 \begin{figure*}
-% \includegraphics[width=1.\textwidth]{figures/cddf.pdf}
+\includegraphics[width=1.\textwidth]{figures/cddf_hires.pdf}
  \caption{CDDF of high column density absorbers from our simulation at $z=2$.}
  \label{fig:DLACDDF}
 \end{figure*}
@@ -327,19 +325,19 @@ Finally, we construct a Gaussian Process emulator construction following \cite{B
 Describe the resolution and box size of the simulation. Justify this by citing the relevant 2014 paper and with the figure. \spb{Note that the convergence at high redshift is a little better than Bolton and Becker 2010, because the heating effect of the ionization fronts smooths the high redshift gas and prevents the small unresolved halos from accreting anyway.}
 
 \begin{figure*}
-\includegraphics[width=0.9\textwidth]{figures/resolution-convergence.pdf}
+\includegraphics[width=0.95\textwidth,trim={0 0 1cm 0},clip]{figures/resolution-convergence.pdf}
  \caption{Convergence of the flux power spectrum with resolution (mean interparticle spacing). The simulations are run with the same box size but different particle loads. The lines labelled $78$ kpc/h (blue solid) compares two simulations in a $120$ Mpc/h box. The first has $1536^3$ particles, and thus a mean-interparticle spacing of $78$ kpc/h, while the second has $3072^3$ particles. The lines labelled $39$ kpc/h compare two simulations in a $15$ Mpc/h box. The first has $384^3$ particles, and the second has $512^3$ particles.}
  \label{fig:resolution}
 \end{figure*}
 \begin{figure*}
-\includegraphics[width=0.9\textwidth]{figures/box-convergence.pdf}
+\includegraphics[width=0.95\textwidth,trim={0 7cm 1cm 0},clip]{figures/box-convergence.pdf}
  \caption{Convergence of the flux power spectrum with box size. Shown is the ratio of the flux power spectrum as a function of redshift in a $120$ Mpc/h box compared to a $60$ Mpc/h box. Our primary simulations use a $120$ Mpc/h box. The range of $k$ measured by eBOSS is $10^{-3}$ s/km to $2\times 10^{-2}$ s/km. }
- \label{fig:resolution}
+ \label{fig:boxsize}
 \end{figure*}
 
 \begin{figure*}
 \includegraphics[width=1.\textwidth]{figures/comp-temps_fq.pdf}
- \caption{Temperature variations at different densities for different resolutions. Shows how the convergence changes with redshift.}
+ \caption{Temperature variations for different resolutions.}
  \label{fig:resolutiontemp}
 \end{figure*}
 
@@ -356,11 +354,12 @@ Describe the resolution and box size of the simulation. Justify this by citing t
  \label{fig:heliumtempdens}
 \end{figure*}
 
-\begin{figure*}
-\includegraphics[width=0.45\textwidth]{figures/HeIonFrac.pdf}
- \caption{Show the temperature at mean density for different redshifts of hydrogen reionization. The point is that it has a small ish effect once we get to lower redshifts.}
- \label{fig:hydrogentempdens}
-\end{figure*}
+\begin{figure}
+    \centering
+	\includegraphics[width=0.48\columnwidth]{figures/single_param_t0.pdf}
+    \caption{Effect of changing each simulation parameter on the IGM mean temperature as a function of redshift.}
+    \label{fig:meantemp}
+\end{figure}
 
 Ref.~\cite{Chabanier:2022} showed that SPH and grid codes agree to less than $1\%$.
 
@@ -370,7 +369,50 @@ Plots of the effect of each parameter on the flux power spectrum from the emulat
 
 \begin{figure}
     \centering
-	\includegraphics[width=\columnwidth]{figures/fps_mfr.pdf}
+	\includegraphics[width=0.48\columnwidth]{figures/single_param_Ap.pdf}
+		\includegraphics[width=0.48\columnwidth]{figures/single_param_ns.pdf}
+% 	\includegraphics[width=0.3\columnwidth]{figures/single_param_tau0.pdf}
+
+    \caption{Effect of changing each simulation parameter on the 1D flux power spectrum at $z=2$ and $z=3$. Plots should look a bit like Figure 9 of \url{https://arxiv.org/pdf/1401.6472.pdf}. Each panel should have 5 lines. Let's have $9$ panels, 1 for each parameter. cosmology parameters ($n_s$, $A_s$, $\Omega_m h^2$, $h$). reionization parameters ($He_i$ and $He_f$, $\alpha_q$, $HI_z$). Finally black hole feedback. }
+    \label{fig:fluxpower}
+\end{figure}
+
+\begin{figure}
+    \centering
+	\includegraphics[width=0.48\columnwidth]{figures/single_param_tau0.pdf}
+    \includegraphics[width=0.48\columnwidth]{figures/single_param_dtau0.pdf}
+% 	\includegraphics[width=0.3\columnwidth]{figures/single_param_tau0.pdf}
+
+    \caption{Effect of changing each simulation parameter on the 1D flux power spectrum at $z=2$ and $z=3$. Plots should look a bit like Figure 9 of \url{https://arxiv.org/pdf/1401.6472.pdf}. Each panel should have 5 lines. Let's have $9$ panels, 1 for each parameter. cosmology parameters ($n_s$, $A_s$, $\Omega_m h^2$, $h$). reionization parameters ($He_i$ and $He_f$, $\alpha_q$, $HI_z$). Finally black hole feedback. }
+    \label{fig:fluxpower}
+\end{figure}
+
+\begin{figure}
+    \centering
+	\includegraphics[width=0.48\columnwidth]{figures/single_param_herei.pdf}
+    \includegraphics[width=0.48\columnwidth]{figures/single_param_heref.pdf}
+% 	\includegraphics[width=0.3\columnwidth]{figures/single_param_tau0.pdf}
+
+    \caption{Effect of changing each simulation parameter on the 1D flux power spectrum at $z=2$ and $z=3$. Plots should look a bit like Figure 9 of \url{https://arxiv.org/pdf/1401.6472.pdf}. Each panel should have 5 lines. Let's have $9$ panels, 1 for each parameter. cosmology parameters ($n_s$, $A_s$, $\Omega_m h^2$, $h$). reionization parameters ($He_i$ and $He_f$, $\alpha_q$, $HI_z$). Finally black hole feedback. }
+    \label{fig:fluxpower}
+\end{figure}
+
+\begin{figure}
+    \centering
+	\includegraphics[width=0.48\columnwidth]{figures/single_param_hireionz.pdf}
+    \includegraphics[width=0.48\columnwidth]{figures/single_param_alphaq.pdf}
+% 	\includegraphics[width=0.3\columnwidth]{figures/single_param_tau0.pdf}
+
+    \caption{Effect of changing each simulation parameter on the 1D flux power spectrum at $z=2$ and $z=3$. Plots should look a bit like Figure 9 of \url{https://arxiv.org/pdf/1401.6472.pdf}. Each panel should have 5 lines. Let's have $9$ panels, 1 for each parameter. cosmology parameters ($n_s$, $A_s$, $\Omega_m h^2$, $h$). reionization parameters ($He_i$ and $He_f$, $\alpha_q$, $HI_z$). Finally black hole feedback. }
+    \label{fig:fluxpower}
+\end{figure}
+
+\begin{figure}
+    \centering
+	\includegraphics[width=0.31\columnwidth]{figures/single_param_hub.pdf}
+    \includegraphics[width=0.31\columnwidth]{figures/single_param_omegamh2.pdf}
+	\includegraphics[width=0.31\columnwidth]{figures/single_param_bhfeedback.pdf}
+
     \caption{Effect of changing each simulation parameter on the 1D flux power spectrum at $z=2$ and $z=3$. Plots should look a bit like Figure 9 of \url{https://arxiv.org/pdf/1401.6472.pdf}. Each panel should have 5 lines. Let's have $9$ panels, 1 for each parameter. cosmology parameters ($n_s$, $A_s$, $\Omega_m h^2$, $h$). reionization parameters ($He_i$ and $He_f$, $\alpha_q$, $HI_z$). Finally black hole feedback. }
     \label{fig:fluxpower}
 \end{figure}
@@ -380,12 +422,6 @@ Plots of the effect of each parameter on the flux power spectrum from the emulat
 Ref.~\cite{Viel:2013} showed an effect of AGN feedback which rises to $10\%$ at $z=2$, while Ref.~\cite{Chabanier:2020} found $8\%$ at $z=2$ and $k = 0.005$ s/km. Both simulations use AGN feedback models with parameters tuned to match the properties of galaxies at $z=0$. However, the implementations are different. Ref.~\cite{Chabanier:2020} uses the Horizon-AGN simulation \cite{Dubois:2016}. The AGN feedback model has two modes, one thermal and one kinetic, with the kinetic mode dominating at low accretion rates. Ref.~\cite{Viel:2013} uses the OWLS simulation suite, and delivers AGN feedback energy thermally, once black hole accretion has accumulated enough energy to heat a nearby gas particle to $10^8$ K. Despite the different implementations, the two codes agree reasonably well as to the effect of AGN feedback on the \Lya~forest.
 
 \spb{Plot of the effect of the AGN feedback parameter. Ideally I would compare this to the correction factor from Chabanier et al.}
-
-\begin{figure*}
-\includegraphics[width=1.\textwidth]{figures/comp-temps_fq.pdf}
- \caption{Temperature variations at different densities for different AGN feedback strengths. Make the point that higher densities are more affected by AGN feedback.}
- \label{fig:AGNtemp}
-\end{figure*}
 
 \section{Conclusion}
 
