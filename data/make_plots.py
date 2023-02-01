@@ -129,15 +129,14 @@ def make_res_convergence(convfile="fluxpower_converge.hdf5", convfile2="res_conv
 def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolution_All_Statistics.txt"):
     """Make a plot of the possible temperature variations over time."""
     obs = np.loadtxt(gkfile)
-    plt.xlim(5.4, 2)
+    plt.xlim(5.4, 2.2)
     hh = h5py.File(tempfile)
     redshift = hh["zout"][:]
-    ii = np.where(redshift <= 5.4)
     mint = np.min(hh["meanT"][:], axis=0)
     maxt = np.max(hh["meanT"][:], axis=0)
-    plt.fill_between(redshift[ii], mint[ii]/1e4, maxt[ii]/1e4, color="grey", alpha=0.3)
+    plt.fill_between(redshift, mint/1e4, maxt/1e4, color="grey", alpha=0.3)
     plt.errorbar(obs[:,0], obs[:,9]/1e4, fmt='o', xerr=0.1, yerr=obs[:,10]/1e4)
-    plt.plot(redshift[ii], hh["meanT"][:][ex][ii]/1e4, color="black", ls="-")
+    plt.plot(redshift, hh["meanT"][:][ex]/1e4, color="black", ls="-")
     print(hh["params"][:][ex])
     plt.xlabel("z")
     plt.ylabel(r"$T_0$ ($10^4$ K)")
@@ -154,6 +153,8 @@ def make_res_convergence_t0(tempfile, hirestempfile):
     redshift = meanThires["zout"][:]
     #Plot each simulation's resolution correction.
     for i in range(np.size(nshires)):
+        print(meanThires["params"][:])
+        print(meanT["params"][:])
         ratio = meanThires["meanT"][:][i,:] / meanT["meanT"][:][paraminds[i], :]
         plt.plot(redshift, ratio)
     plt.xlabel("z")
