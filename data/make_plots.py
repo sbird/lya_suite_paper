@@ -145,18 +145,19 @@ def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolutio
 
 def make_res_convergence_t0(tempfile, hirestempfile):
     """Make a plot of the change in the mean temperature with resolution."""
-    plt.xlim(4.5, 2)
+    plt.xlim(5.4, 2.2)
     meanThires = h5py.File(hirestempfile)
     meanT = h5py.File(tempfile)
-    nshires = meanThires["params"][:][:,0]
-    paraminds = [np.argmin(np.abs(nshires[ii]- meanT["params"][:][:,0])) for ii in range(np.size(nshires))]
+    nhires = np.size(meanThires["params"][:][:,0])
+    paraminds = [np.argmin(np.sum((meanThires["params"][:][ii,:]- meanT["params"][:])**2,axis=1)) for ii in range(nhires)]
+    dist_col = dc.get_distinct(nhires)
     redshift = meanThires["zout"][:]
+    lss = ["-", "--", ":"]
     #Plot each simulation's resolution correction.
-    for i in range(np.size(nshires)):
-        print(meanThires["params"][:])
-        print(meanT["params"][:])
+    for i in range(nhires):
         ratio = meanThires["meanT"][:][i,:] / meanT["meanT"][:][paraminds[i], :]
-        plt.plot(redshift, ratio)
+        plt.plot(redshift, ratio, color=dist_col[i], label="ns=%.3g" % meanThires["params"][:][i,0], ls=lss[i])
+    plt.legend()
     plt.xlabel("z")
     plt.ylabel(r"$\Delta T_0$")
     plt.savefig("../figures/mean-temperature-resolution.pdf")
@@ -253,7 +254,7 @@ def single_parameter_t0_plot(plotdir='../figures'):
     return like
 
 if __name__ == "__main__":
-    make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
+#     make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
     make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
 #    make_res_convergence()
    #make_box_convergence("box_converge.hdf5")
