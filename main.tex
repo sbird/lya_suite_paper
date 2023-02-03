@@ -164,12 +164,17 @@ Our emulator is designed to constrain cosmological parameters and so we perform 
 Here $n_s$ is the spectral index. $A_p$ is the amplitude of perturbations at $k = 0.78$ h/Mpc, chosen to be in the middle of the range probed by the \Lya~forest and thus reduce artificial correlation between $n_s$ and $A_P$ \cite{Bird:2019}. We vary $A_P$ in the range $1.2 \times 10^{-9}$ and $2.6 \times 10^{-9}$, chosen the range of $A_P$ simulated to include the posterior constraint from Planck on larger scales \cite{Planck:2018}.
 $n_s$ is the spectral index measured on small scales, which we simulate between $0.8$ and $0.995$. Note that in extended models with a scale-dependence of the spectral index (a ``running''), this need not have the same value as the spectral index measured by Ref.~\cite{Planck:2018}.
 
-We do not include a parameter for massive neutrinos. Neutrinos are massless and included in the radiation, as the effect of massive neutrinos on these scales is completely degenerate with the amplitude of the initial perturbations, $A_P$ \cite{Pedersen:2020}.
-Schematically, neutrino mass constraints come from measuring different power spectrum amplitudes on CMB and \Lya~scales.
+We also include free parameters for the growth rate, $\Omega_0 h^2$, and Hubble parameter, $h$. We vary $h$ over the range $0.65$ - $0.75$ and $\Omega_0 h^2$ between $0.14$ and $0.146$. The growth rate $\Omega_0 h^2$ has a moderate effect on the \Lya~forest, but is generally measured better by other probes. As our simulation box is set up using kpc/h units, the Hubble parameter $h$ does not affect the gravitational evolution of the code. The cooling rates are computed in physical units, and so in principle the thermal history parameters may interact with $h$. However, as we will show in Section~\ref{sec:singleparams}, the residual dependency is small for the range of $h$ we consider. Nevertheless, we chose to include $h$ in our emulator. Including $h$ allows our simulations to be re-used as part of future emulators targetting, for example, the 3D power spectrum, where the position of the BAO peak depends on $h$.
 
-We also include free parameters for the growth rate and Hubble parameter, although these are generally measured better by other probes than the \Lya~forest. However, our Latin Hypercube experimental design (see Section~\ref{sec:latinhypercube}) allows us to vary extra parameters at low computational cost, if they only weakly affect the flux power spectrum.
-We vary $h$ over the range $0.65$ - $0.75$ and $\Omega_0 h^2$ between $0.14$ and $0.146$. In our final cosmological analysis we will impose priors from Planck on $\Omega_0 h^2$.
-We do not vary $\Omega_b$ as it is degenerate with the ionization fraction of the gas and thus the mean optical depth $\tau$.
+A secondary technical reason for including $h$ is to avoid the Gaussian process fit being impacted by cosmic variance.
+Varying $h$ while fixing $\Omega_0 h^2$ also varies $\Omega_0$. The conversion between comoving kpc/h and km/s is
+\begin{equation}
+ 1 \mathrm{km/s} =  100 a (\Omega_0 /a^3 + \Omega_\Lambda )^{1/2} \mathrm{kpc/h}\,.
+\end{equation}
+Changing $h$ moves the simulation box's Fourier modes relative to the bins of the observed data, and so allows the emulator to see the effect of cosmic variance. In retrospect the benefit of this choice is small as our large boxes mean cosmic variance is minimal. However, our Latin Hypercube experimental design (see Section~\ref{sec:latinhypercube}) allows us to vary parameters with a small effect on the flux power spectrum at low computational cost.
+
+We do not include a parameter for massive neutrinos. Neutrinos are massless and included in the radiation, as the effect of massive neutrinos on these scales is completely degenerate with the amplitude of the initial perturbations, $A_P$ \cite{Pedersen:2020}.
+Schematically, neutrino mass constraints come from measuring different power spectrum amplitudes on CMB and \Lya~scales. We do not vary $\Omega_b$ as it is degenerate with the ionization fraction of the gas and thus the mean optical depth $\tau$.
 
 \subsection{Gravity, Hydrodynamics and Cooling}
 \label{sec:gravity}
