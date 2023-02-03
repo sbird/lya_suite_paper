@@ -139,22 +139,25 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="dtau-48-
     flux_powers_hr2 = mf_flux_hires["flux_vectors"][:][ii,:][0]
     flux_powers_lr2 = mf_flux["flux_vectors"][:][ii_lr,:][0]
     nhires = np.shape(params_hr)[0]
-    paraminds = [np.argmin(np.sum((params_hr[iii,:]- params_lr["params"][:])**2,axis=1)) for iii in range(nhires)]
+    nlores = np.shape(params_lr)[0]
+    paraminds = [np.argmin(np.sum((params_hr[iii,:]- params_lr)**2,axis=1)) for iii in range(nhires)]
     kfkms_vhr2 = mf_flux_hires["kfkms"][:][ii,:][0]
-    redshifts2 = mf_flux_hires["zout"][:][ii,:][0]
-    nk = np.shape(kfkms_vhr2)[0]
-    flux_powers_lr2 = flux_powers_lr2.reshape((nhires, nk,-1))
-    flux_powers_hr2 = flux_powers_hr2.reshape((nhires, nk,-1))
+    redshifts2 = mf_flux_hires["zout"][:]
+    nz = np.shape(redshifts2)[0]
+    flux_powers_lr2 = flux_powers_lr2.reshape((nlores, nz,-1))
+    flux_powers_hr2 = flux_powers_hr2.reshape((nhires, nz,-1))
+    assert np.shape(kfkms_vhr2)[-1] == np.shape(flux_powers_hr2)[-1]
+    assert np.shape(kfkms_vhr2)[-1] == np.shape(flux_powers_lr2)[-1]
     with h5py.File(convfile) as hh:
         flux_powers_hr = hh["flux_vectors"]["L15n384"][:]
         flux_powers_vhr = hh["flux_vectors"]["L15n512"][:]
         kfkms_vhr = hh["kfkms"]["L15n512"][:]
         redshifts = hh["zout"][:]
-    assert np.size(redshifts) == np.size(redshifts2)
     fig = plt.figure()
     axes = []
     index = 1
-    for ii, zz in enumerate(redshifts):
+    dist_col = dc.get_distinct(2)
+    for ii, zz in enumerate(redshifts2):
         if zz > 4.4 or zz < 2.2:
             continue
         sharex=None
@@ -165,9 +168,13 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="dtau-48-
             #sharey = axes[index -1 - ((index-1) % 3)]
         ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
         for jj in range(nhires):
-            ax.semilogx(kfkms_vhr2[ii], flux_powers_lr2[paraminds[jj], ii]/flux_powers_hr2[jj, ii], label="%.2g kpc/h" % (120000./1536.), color="blue", ls="-")
-        ax.semilogx(kfkms_vhr[ii], flux_powers_hr[ii]/flux_powers_vhr[ii], label="%.2g kpc/h" % (15000./384.), color="grey", ls="--")
-        ax.text(0.015, 1.06, "z="+str(zz))
+            label = "%.2g kpc/h" % (120000./1536.)
+            if jj > 0:
+                label = ""
+            ax.semilogx(kfkms_vhr2[jj, ii], flux_powers_lr2[paraminds[jj], ii]/flux_powers_hr2[jj, ii], label=label, color=dist_col[0], ls="-")
+        zz2 = np.where(np.abs(redshifts - zz) < 0.01)
+        ax.semilogx(kfkms_vhr[zz2][0], flux_powers_hr[zz2][0]/flux_powers_vhr[zz2][0], label="%.2g kpc/h" % (15000./384.), ls="--", color=dist_col[1])
+        ax.text(0.015, 1.06, "z=%.1f" % zz)
         ax.grid(visible=True, axis='y')
         ax.set_ylim(0.95, 1.10)
         ax.set_yticks([0.95, 0.98, 1.0, 1.02, 1.06]) #, [str(1.0), str(1.02), str(1.04)])
@@ -176,11 +183,14 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="dtau-48-
         else:
             plt.ylabel(r"$P_F / P_F^{ref}$")
         if index == 1:
-            ax.legend(loc="upper left", frameon=False)
+            ax.legend(loc="lower left", frameon=False, fontsize='small')
         axes.append(ax)
         index += 1
-        plt.xlabel("k (s/km)")
-        plt.xlim(1e-3, 0.1)
+        if index < 9:
+            ax.set_xticklabels([])
+        else:
+            plt.xlim(1e-3, 0.05)
+            plt.xlabel("k (s/km)")
     plt.subplots_adjust(wspace=0, hspace=0)
     plt.savefig("../figures/resolution-convergence.pdf")
     plt.clf()
@@ -314,8 +324,8 @@ def single_parameter_t0_plot(plotdir='../figures'):
 
 if __name__ == "__main__":
 #     make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
-    make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
-#    make_res_convergence()
+#     make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
+    make_res_convergence2()
    #make_box_convergence("box_converge.hdf5")
 #     single_parameter_plot()
 #     single_parameter_t0_plot()
