@@ -126,6 +126,65 @@ def make_res_convergence(convfile="fluxpower_converge.hdf5", convfile2="res_conv
     plt.savefig("../figures/resolution-convergence.pdf")
     plt.clf()
 
+def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="dtau-48-46/hires", mf_lowres="dtau-48-46"):
+    """Make a plot showing the convergence of the flux power spectrum with resolution."""
+    mffile = "mf_emulator_flux_vectors_tau1000000.hdf5"
+    mf_flux_hires = h5py.File(os.path.join(mf_hires, mffile))
+    mf_flux = h5py.File(os.path.join(mf_lowres, mffile))
+    #Find spectra with tau0 = 1.
+    ii = np.where(np.abs(mf_flux_hires["params"][:][:,0] -1) < 0.02)
+    params_hr = mf_flux_hires["params"][:][ii,1:][0]
+    ii_lr = np.where(np.abs(mf_flux["params"][:][:,0] -1) < 0.02)
+    params_lr = mf_flux["params"][:][ii_lr,1:][0]
+    flux_powers_hr2 = mf_flux_hires["flux_vectors"][:][ii,:][0]
+    flux_powers_lr2 = mf_flux["flux_vectors"][:][ii_lr,:][0]
+    nhires = np.shape(params_hr)[0]
+    paraminds = [np.argmin(np.sum((params_hr[iii,:]- params_lr["params"][:])**2,axis=1)) for iii in range(nhires)]
+    kfkms_vhr2 = mf_flux_hires["kfkms"][:][ii,:][0]
+    redshifts2 = mf_flux_hires["zout"][:][ii,:][0]
+    nk = np.shape(kfkms_vhr2)[0]
+    flux_powers_lr2 = flux_powers_lr2.reshape((nhires, nk,-1))
+    flux_powers_hr2 = flux_powers_hr2.reshape((nhires, nk,-1))
+    with h5py.File(convfile) as hh:
+        flux_powers_hr = hh["flux_vectors"]["L15n384"][:]
+        flux_powers_vhr = hh["flux_vectors"]["L15n512"][:]
+        kfkms_vhr = hh["kfkms"]["L15n512"][:]
+        redshifts = hh["zout"][:]
+    assert np.size(redshifts) == np.size(redshifts2)
+    fig = plt.figure()
+    axes = []
+    index = 1
+    for ii, zz in enumerate(redshifts):
+        if zz > 4.4 or zz < 2.2:
+            continue
+        sharex=None
+        sharey=None
+        if index > 3:
+            sharex = axes[(index-1) % 3]
+        #if (index-1) % 3 > 0:
+            #sharey = axes[index -1 - ((index-1) % 3)]
+        ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
+        for jj in range(nhires):
+            ax.semilogx(kfkms_vhr2[ii], flux_powers_lr2[paraminds[jj], ii]/flux_powers_hr2[jj, ii], label="%.2g kpc/h" % (120000./1536.), color="blue", ls="-")
+        ax.semilogx(kfkms_vhr[ii], flux_powers_hr[ii]/flux_powers_vhr[ii], label="%.2g kpc/h" % (15000./384.), color="grey", ls="--")
+        ax.text(0.015, 1.06, "z="+str(zz))
+        ax.grid(visible=True, axis='y')
+        ax.set_ylim(0.95, 1.10)
+        ax.set_yticks([0.95, 0.98, 1.0, 1.02, 1.06]) #, [str(1.0), str(1.02), str(1.04)])
+        if (index-1) % 3 > 0:
+            ax.set_yticklabels([])
+        else:
+            plt.ylabel(r"$P_F / P_F^{ref}$")
+        if index == 1:
+            ax.legend(loc="upper left", frameon=False)
+        axes.append(ax)
+        index += 1
+        plt.xlabel("k (s/km)")
+        plt.xlim(1e-3, 0.1)
+    plt.subplots_adjust(wspace=0, hspace=0)
+    plt.savefig("../figures/resolution-convergence.pdf")
+    plt.clf()
+
 def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolution_All_Statistics.txt"):
     """Make a plot of the possible temperature variations over time."""
     obs = np.loadtxt(gkfile)
@@ -155,11 +214,11 @@ def make_res_convergence_t0(tempfile, hirestempfile):
     lss = ["-", "--", ":"]
     #Plot each simulation's resolution correction.
     for i in range(nhires):
-        ratio = meanThires["meanT"][:][i,:] / meanT["meanT"][:][paraminds[i], :]
+        ratio = meanT["meanT"][:][paraminds[i], :] / meanThires["meanT"][:][i,:]
         plt.plot(redshift, ratio, color=dist_col[i], label="ns=%.3g" % meanThires["params"][:][i,0], ls=lss[i])
     plt.legend()
     plt.xlabel("z")
-    plt.ylabel(r"$\Delta T_0$")
+    plt.ylabel(r"$T_0(N = 1536) / T_0 (N = 3072)$")
     plt.savefig("../figures/mean-temperature-resolution.pdf")
     plt.clf()
 
