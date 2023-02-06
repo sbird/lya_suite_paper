@@ -179,18 +179,19 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="dtau-48-
         ax.set_ylim(0.95, 1.10)
         ax.set_yticks([0.95, 0.98, 1.0, 1.02, 1.06]) #, [str(1.0), str(1.02), str(1.04)])
         if (index-1) % 3 > 0:
-            ax.set_yticklabels([])
+            plt.setp(ax.get_yticklabels(), visible=False)
         else:
             plt.ylabel(r"$P_F / P_F^{ref}$")
         if index == 1:
-            ax.legend(loc="lower left", frameon=False, fontsize='small')
+            ax.legend(loc="upper left", frameon=False, fontsize='small')
+#         print("z=%g, index %d\n" % (zz, index))
+        if index < 10:
+            plt.setp(ax.get_xticklabels(), visible=False)
+        else:
+            ax.set_xlim(1e-3, 0.05)
+            ax.set_xlabel("k (s/km)")
         axes.append(ax)
         index += 1
-        if index < 9:
-            ax.set_xticklabels([])
-        else:
-            plt.xlim(1e-3, 0.05)
-            plt.xlabel("k (s/km)")
     plt.subplots_adjust(wspace=0, hspace=0)
     plt.savefig("../figures/resolution-convergence.pdf")
     plt.clf()
