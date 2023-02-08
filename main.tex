@@ -310,21 +310,63 @@ We rescale our simulated spectra to match a desired mean optical depth. As in \c
 
 \begin{figure}
     \centering
-	\includegraphics[width=0.5\columnwidth]{figures/120box_42samples.pdf}
-    \caption{Simulation parameter limits, and parameters simulated. Shown as crosses are the $30$ initial simulations chosen from a Latin hypercube, while the squares show the secondary set of $13$ simulations chosen using Bayesian optimisation.
+    \includegraphics[width=0.75\textwidth]{figures/sample_params.pdf}
+    \caption{\label{fig:samples}
+    Parameter limits for each of the nine parameters varied in the simulation suites.
+    Samples for both the LF (grey crosses) and HF (red circles) are also shown.
+    The blue boxes indicate two LF simulations which are included in the flux power spectrum emulator, but not in the mean temperature emulator (due to the loss of the simulation outputs before the mean temperatures were extracted).
     }
-    \label{fig:samples}
 \end{figure}
 
 % Describe the chosen cosmological parameters. Add a plot as Figure 3 of the multi-fidelity paper. Explain why these parameters are chosen. We use a Latin Hypercube design. Outputs are every $\Delta z=0.2$ from $z=5.4$ to $z=2.0$.
 
 Our emulator includes a total of $10$ parameters at each redshift. One parameter, the mean flux, is generated in post-processing, meaning that we run simulations covering a $9$-dimensional parameter space, summarised in Table~\ref{tab:emulatorparams}.
 
-We generate simulations at specific points in parameter space using a Latin Hypercube design, following the description in \cite{Bird:2019}. Latin Hypercubes are generated at random on a normalised unit cube, and the design which maximises the spread between parameter points is chosen for the final emulator. We ran $30$ simulations in our initial Latin Hypercube design. We supplemented these simulations with $2$ chosen by Bayesian optimisation, as described in \cite{Rogers:2019}. However, we found that the initial space was not finely sampled enough for Bayesian Optimization to be effective: we thus ran an extra $8$ simulation Latin Hypercube, before $3$ more simulations chosen with Bayesian Optimisation. \spb{What was the acquisition function used?} The parameters simulated are shown in Figure~\ref{fig:samples}, which demonstrates that both sets efficiently cover parameter space.
+The low fidelity simulation parameters were selected using either a Latin hypercube sampling scheme, or using Bayesian optimization.
+The $48$ low fidelity simulation parameters were selected in the following manner: an initial Latin hypercube sample of $30$ simulations was generated and run, then Bayesian optimization, as described in \cite{Rogers:2019}, was used to select $2$ further simulations.
+However, we found that the initial space was not finely sampled enough for Bayesian Optimization to be effective: we thus ran an extra $8$ simulation Latin Hypercube, followed by $2$ more Bayesian optimization samples. Finally, after examination of the simulation showed that the lower range of the $\alpha_q$ parameter was close to the boundary of our simulation space, we generated $6$ samples from a Latin hypercube at a lower range for the $\alpha_q$ parameter.
+The final set of low fidelity samples is shown in Figure~\ref{fig:samples}, indicated by the grey crosses, which demonstrates that our simulation sets efficiently cover parameter space.
+
+We generate simulations at specific points in parameter space using a Latin Hypercube design, following the description in \cite{Bird:2019}. Latin Hypercubes are generated at random on a normalised unit cube, and the design which maximises the spread between parameter points is chosen for the final emulator. We ran $30$ simulations in our initial Latin Hypercube design. We supplemented these simulations with $2$ chosen by Bayesian optimisation, as described in \cite{Rogers:2019}. However, we found that the initial space was not finely sampled enough for Bayesian Optimization to be effective: we thus ran an extra $8$ simulation Latin Hypercube, before $3$ more simulations chosen with Bayesian Optimisation. The parameters simulated are shown in Figure~\ref{fig:samples}, which demonstrates that both sets efficiently cover parameter space.
+
+We then performed $3$ simulations at high fidelity, shown by the red circles in Figure~\ref{fig:samples}. The parameters to simulate were selected as suggested in \cite{Ho:2022,Fernandez:2022}, by finding which $n$-simulation subset of the already complete low fidelity simulations produced the most accurate emulator.
+
+Specifically, the high fidelity samples were chosen by training a single-fidelity emulator using all combinations of two low fidelity samples (excluding the aforementioned simulations without mean temperature data) to predict the remaining low fidelity samples for both the flux power and mean temperature \cite{Ho:2022}.
+The two low fidelity simulations which produced the most accurate predictions (defined as minimizing the loss, $(pred - true)^2/true^2$) for the combination of the flux power and mean temperature were then run at the higher resolution.
+These first two high fidelity samples were selected prior to the low fidelity simulations that were run to expand the $\alpha_q$ parameter.
+The final high fidelity sample was chosen using the same method, but conditioned on the previously selected two samples.
+Each remaining low fidelity sample was added to the set of two previously selected samples, an emulator was trained using each of these three sample combinations, then the loss for each combination was calculated.
+Using both the loss from this method, and the value of $A_p$ for each sample (among the varied parameters, $A_p$ has by far the strongest effect on the amount of computational time the simulation requires to complete), we selected a third sample to run at high fidelity that had low loss and low $A_p$.
+This final high fidelity sample was chosen from the full set of low fidelity samples (after the $\alpha_q$ expansion simulations were added). Table~\ref{tab:highfidelity} shows the parameters of our $3$ high fidelity simulations.
+
+\begin{table*}
+\begin{centering}
+  \begin{tabular}{llll}
+  \hline
+  Parameter & HF 1 & HF 2 & HF 3\\
+    \hline
+    $n_s$  &  $0.909$  & $0.914$ & $0.859$ \\
+    $A_P$  &  $1.98 \times 10^{-9}$  & $1.32 \times 10^{-9}$ & $1.29 \times 10^{-9}$\\
+    $h$    & $0.68$  & $0.74$ & $0.69$\\
+    $\Omega_0 h^2$ & $0.1403$ & $0.1415$ & $0.1412$\\
+    $z_{Hei}$      & $3.75$  & $3.85$  & $ 3.92$ \\
+    $z_{Hef}$      & $3.00$  & $2.65$  & $2.72$\\
+    $\alpha_q$     & $2.43$  & $1.575$ & $ 1.87$ \\
+    $z_{Hi}$        & $7.6$ & $6.875$   & $7.15 $\\
+    $\epsilon_{AGN}$ & $0.045$ & $0.040$ & $ 0.058$\\
+    \hline
+%    [[0.909475936, 1.98137389e-09, 3.75465601, 3.00952068, 2.43025565, 0.681591829, 0.1403, 7.60269787, 0.0448727377],
+%    [0.91375, 1.31666667e-09, 3.85, 2.65,     1.575, 0.741666667, 0.1415, 6.875, 0.04],
+%    [0.859013158, 1.29210526e-09, 3.91842105, 2.71842105, 1.87236842, 0.693421053, 0.141184211, 7.15131579, 0.0578947368]]
+  \end{tabular}
+  \caption{Parameters of the three high fidelity (HF) simulations, performed with $2\times 3072^3$ particles.}
+  \label{tab:highfidelity}
+  \end{centering}
+\end{table*}
 
 \subsection{Multi-Fidelity Emulator}
 
-Finally, we construct a multi-fidelity Gaussian Process emulator following the scheme described in \cite{Bird:2019, Fernandez:2022}. The covariance kernel is the combination of a radial basis function and a dot kernel. The length-scale of the radial basis function for each parameter is a hyper-parameter chosen by optimisation.
+Finally, we construct from our simulations a multi-fidelity Gaussian Process emulator following the scheme described in \cite{Bird:2019, Fernandez:2022}. The covariance kernel is the combination of a radial basis function and a dot kernel. The length-scale of the radial basis function for each parameter is a hyper-parameter chosen by optimisation.
 We use a multi-fidelity emulation scheme following \cite{Fernandez:2022}. We use the AR1 emulation model, where the resolution correction is modelled using a correction function, $\rho$, which is a function of $k$, $z$ and cosmological parameter. If the target high fidelity flux power spectrum is $P_{F, HF}$ and the low fidelity flux power spectrum is  $P_{F, LF}$, we thus correct for resolution using
 \begin{equation}
  P_{F, HF}(k, z, \boldsymbol{\theta}) =  \rho(k, z) P_{F, LF}(k,z,\boldsymbol{\theta}) + \delta(k, z, \boldsymbol{\theta})
@@ -363,7 +405,7 @@ To demonstrate convergence of our high fidelity node we also show a comparison b
 The worst convergence is seen during helium reionization, which starts at $z=4$ and ends at $z=3.1$. This may indicate that the simulation is being affected by the small separation between the size of the box and the size of the helium reionizing bubbles, and that a hypothetical simulation in a larger box would display even better resolution convergence.
 
 It is interesting to compare our results to earlier simulation suites. Ref.~\cite{Borde:2014} performed a convergence study using a $20$ Mpc/h box and $192^3$ - $1024^3$ particles. Our high fidelity node is equivalent in resolution to their $20, 512^3$ simulation, and exhibits similar convergence for $z < 3.6$, although our simulations are fully hydrodynamic while theirs make use of the simplified \Lya~forest star formation model. However, at $z=4.4$, their simulation loses $2-5\%$ of the flux power for $k > 0.01$ s/km. Although this degree of convergence is negligible compared to the observational errors at $z=4.4$, we do not observe a similar effect.
-We also found that our convergence at $z \sim 5$ was better than predicted by Ref.~\cite{2009MNRAS.398L..26B}. This is due to our inclusion of a temperature boost during hydrogen reionization \cite{DAloisio:2019}. We found that small test simulations without this boost had high redshift convergence behaviour similar to earlier work. The temperature boost heats the gas, increasing the Jeans mass and preventing small overdensities which would normally be underresolved from accreting gas.
+We also found that our convergence at $z \sim 5$ was better than predicted by Ref.~\cite{2009MNRAS.398L..26B}. This is due to our inclusion of a temperature boost during hydrogen reionization \cite{DAloisio:2019}. We found that small test simulations without this boost had high redshift convergence behaviour similar to earlier work. The temperature boost heats the gas, increasing the thermal free-streaming length and Jeans' mass. This prevents small overdensities, which would normally be underresolved, from accreting gas.
 
 %Describe the resolution and box size of the simulation. Justify this by citing the relevant 2014 paper and with the figure.
 %\spb{Note that the convergence at high redshift is a little better than Bolton and Becker 2010, because the heating effect of the ionization fronts smooths the high redshift gas and prevents the small unresolved halos from accreting anyway.}
@@ -384,6 +426,7 @@ We also found that our convergence at $z \sim 5$ was better than predicted by Re
  \label{fig:meanigmtempdens}
 \end{figure*}
 
+Figure~\ref{fig:meanigmtempdens} shows the mean temperatures for our simulations, confirming that our reionization models are able to bracket the observed mean IGM temperatures from Ref.~\cite{Gaikwad:2021}. The right panel shows the convergence with resolution, for our three high fidelity simulations.
 Ref.~\cite{Chabanier:2022} showed that SPH and grid codes agree to less than $1\%$.
 
 \subsection{Effect of Parameters on the Flux Power Spectrum and Temperature}
