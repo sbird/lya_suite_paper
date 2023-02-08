@@ -208,7 +208,7 @@ The reionization temperature boost means that $z_{HI}$ affects the thermal histo
 We include a model for spatially inhomogeneous helium reionization following \cite{UptonSanderbeck:2020}. Reionized bubbles are placed around randomly chosen halos with mass $10^{13} \geq M_{\rm halo}\geq 10^{12}$M$_{\odot}$, which could host a quasar. Bubbles are $20$ Mpc/h in radius, matching the mean bubble size found in radiative transfer simulations \citep{McQuinn:2009}. Inside this bubble a quasar radiation field is assumed with an effective spectral index of $- \alpha_q$, which we vary in our simulation suite over the range $\alpha_q  = 1.6 - 2.5$. During the reionization timestep gas particles in a bubble are abruptly heated and marked as ionized. Should bubbles overlap, only particles not already marked as ionized are heated. Bubbles are placed until the total ionized gas mass in the box reaches
 a pre-computed ionization fraction. We assume a linear ionization history between the initial redshift $z_{Hei}$ and the final redshift $z_{Hef}$. Following measurements of the optical depth in the Helium \Lya~forest \cite{Worseck:2019}, we simulate $z_{Hei} = 3.5 -  4.1$ and $z_{Hef} = 2.6 - 3.2$.
 
-Our $120$ Mpc/h box simulations contain $\sim 50$ reionization bubbles and so our model includes the patchiness of helium reionization and the resulting fluctuations in temperature, ionization state, and pressure smoothing. A consequence is that there is no unique temperature-density relation in our simulations, but a range of temperature-density relations depending on the time at which a given part of the simulation reionized. Our three free parameters allow us to generate a wide range of thermal histories, as shown in Figure~\ref{fig:heliumtempdens}. The quasar spectral index, $\alpha_q$ controls the level of heating during helium reionization and thus the peak IGM temperature. Higher values of $\alpha_q$ lead to lower peak temperatures.
+Our $120$ Mpc/h box simulations contain $\sim 50$ reionization bubbles and so our model includes the patchiness of helium reionization and the resulting fluctuations in temperature, ionization state, and pressure smoothing. A consequence is that there is no unique temperature-density relation in our simulations, but a range of temperature-density relations depending on the time at which a given part of the simulation reionized. Our three free parameters allow us to generate a wide range of thermal histories, as shown in Figure~\ref{fig:meanigmtempdens}. The quasar spectral index, $\alpha_q$ controls the level of heating during helium reionization and thus the peak IGM temperature. Higher values of $\alpha_q$ lead to lower peak temperatures.
 
 %$z_{Hei}$ and $z_{Hef}$ are the start and end redshifts, respectively, of helium reionization. $z_{Hi}$ is the midpoint redshift of hydrogen reionization. $\alpha_q$ is the quasar emissivity spectral index, which controls the peak IGM temperature at the midpoint of helium reionization.
 
@@ -298,7 +298,7 @@ Our emulator design also allows us to measure parameter degeneracies between AGN
 \label{sec:spectra}
 
 We generate artificial spectra and compute the flux power spectrum as described in \cite{Bird:2019}. Each simulation generates output snapshots evenly spaced every $\Delta z = 0.2$ between $z = 5.2$ and $z = 2$. Spectra are generated using ``fake\_spectra'' \footnote{\url{https://github.com/sbird/fake_spectra}} \cite{FSFE:2017}. We generate $32000$
-\Lya~absorption spectra at random positions. To improve emulation performance, the random positions are the same for each simulation. The pixel width is $10$ km/s, finer than either the BOSS or DESI spectrograph. Flux power spectra are generated in h/Mpc units, with the natural Fourier bins of the box, and transformed to velocity units after emulation. The flux power spectrum is generated as average of the 1D Fourier transform along each sightline.
+\Lya~absorption spectra at random positions. To improve emulation performance, the random positions are the same for each simulation. The pixel width is $10$ km/s, finer than either the BOSS or DESI spectrograph. Flux power spectra are generated in h/Mpc units, with the natural Fourier bins of the box, and transformed to velocity units after emulation. The flux power spectrum is generated as average of the 1D Fourier transform along each sightline. We discard spectra with a maximum optical depth $\tau > 10^6$ as containing a DLA. This affects approximately $2\%$ of spectra.
 
 We rescale our simulated spectra to match a desired mean optical depth. As in \cite{Bird:2019}, our emulator has the ability to generate flux power spectra for arbitrary input mean optical depth $\tau$. This is achieved by rescaling the spectra in post-processing: no extra simulations are needed. We are thus able to dramatically over-sample the mean optical depth as an input parameter, generating a dense grid of $10$ optical depth samples per redshift per cosmological simulation. As explained in \cite{Bird:2019}, we generate one Gaussian Process emulator for every redshift bin, each emulator taking the mean optical depth at that redshift as an input parameter. We would thus be able to use very general redshift variations of the mean optical depth if supported by observational data.
 
@@ -327,9 +327,10 @@ We generate simulations at specific points in parameter space using a Latin Hype
 Finally, we construct a multi-fidelity Gaussian Process emulator following the scheme described in \cite{Bird:2019, Fernandez:2022}. The covariance kernel is the combination of a radial basis function and a dot kernel. The length-scale of the radial basis function for each parameter is a hyper-parameter chosen by optimisation.
 We use a multi-fidelity emulation scheme following \cite{Fernandez:2022}. We use the AR1 emulation model, where the resolution correction is modelled using a correction function, $\rho$, which is a function of $k$, $z$ and cosmological parameter. If the target high fidelity flux power spectrum is $P_{F, HF}$ and the low fidelity flux power spectrum is  $P_{F, LF}$, we thus correct for resolution using
 \begin{equation}
- P_{F, HF}(k, z, x) =  \rho(x) P_{F, LF}(k,z,x) + \delta(k, z, x)
+ P_{F, HF}(k, z, \boldsymbol{\theta}) =  \rho(k, z) P_{F, LF}(k,z,\boldsymbol{\theta}) + \delta(k, z, \boldsymbol{\theta})
+    \label{eq:mf_model}
 \end{equation}
-\spb{Expand and correct this}
+where $\rho$ is a trained hyperparameter, and $\delta(\boldsymbol{\theta})$ is a GP.
 
 We have thus built a surrogate model able to target a mean interparticle spacing of $39$ kpc/h.
 
@@ -344,22 +345,29 @@ We have thus built a surrogate model able to target a mean interparticle spacing
  \label{fig:boxsize}
 \end{figure*}
 
-Our lower resolution simulations, of which we have $48$, contain $1536^3$ gas particles, $1536^3$ cold dark matter particles and model a $120$ Mpc/h periodic box with a mean inter-particle spacing of $79$ kpc/h. Our $3$ higher resolution simulations contain $2\times 3072^3$ particles and thus a mean inter-particle spacing of $39$ kpc/h.
-
 Figure~\ref{fig:boxsize} shows the effect of the finite box size on the flux power spectrum, as a function of redshift. We show the flux power spectrum ratio between a test simulation in a $60$ Mpc/h simulation box and a larger $120$ Mpc/h simulation box. The mean inter-particle spacing is $120$ kpc/h for both simulations, so that the large box simulation has $1024^3$ particles, while the small box simulation has $512^3$ particles. Since our main simulations use $120$ Mpc/h simulation boxes, this is an upper limit on the effect of the finite box. The non-linear scale at $z=2$ is $\sim 45 - 60$ Mpc/h.
 %However, the \Lya~forest is predominantly sensitive to gas from $1-10$ times the mean density, and so the effect of non-linearities is reduced.
 
 Cosmic variance is suppressed when compared to emulators of the matter power spectrum as our summary statistic is the $1$-D flux power spectrum, evaluated along the line of sight to the quasar and averaged over multiple quasar positions. Effectively this sums over two dimensions of the box, ensuring that even the largest scales sample Fourier modes proportional to the number of spectra. Since the larger box contains $8\times$ volume of the small box, Figure~\ref{fig:boxsize} is also a demonstration of the small effect of cosmic variance.
-
-
-
-Describe the resolution and box size of the simulation. Justify this by citing the relevant 2014 paper and with the figure. \spb{Note that the convergence at high redshift is a little better than Bolton and Becker 2010, because the heating effect of the ionization fronts smooths the high redshift gas and prevents the small unresolved halos from accreting anyway.}
 
 \begin{figure*}
 \includegraphics[width=0.95\textwidth,trim={0 0 1cm 0},clip]{figures/resolution-convergence.pdf}
  \caption{Convergence of the flux power spectrum with resolution (mean interparticle spacing). The simulations are run with the same box size but different particle loads. The lines labelled $78$ kpc/h (blue solid) compares two simulations in a $120$ Mpc/h box. The first has $1536^3$ particles, and thus a mean-interparticle spacing of $78$ kpc/h, while the second has $3072^3$ particles. The lines labelled $39$ kpc/h compare two simulations in a $15$ Mpc/h box. The first has $384^3$ particles, and the second has $512^3$ particles.}
  \label{fig:resolution}
 \end{figure*}
+
+Figure~\ref{fig:resolution} shows the effect of finite resolution on our flux power spectrum predictions. We show in blue the difference between the high and low resolution branches of the emulator, for the $3$ different parameter sets. Our lower resolution simulations contain $2\times 1536^3$ particles in a $120$ Mpc/h periodic box with a mean inter-particle spacing of $79$ kpc/h. Our $3$ higher resolution simulations contain $2\times 3072^3$ particles and thus a mean inter-particle spacing of $39$ kpc/h. Figure~\ref{fig:resolution} shows that our high fidelity node is meaningfully correcting the resolution of our low fidelity simulations. The dependence of the resolution correction on cosmological parameters is fairly small, which explains why our multi-fidelity emulator can converge with only $3$ high fidelity simulations, compared to $6$ required in \cite{Fernandez:2022}. The low fidelity node of the emulator constructed in \cite{Fernandez:2022} had a mean interparticle spacing of $118$ kpc/h, $1.5 \times$ the resolution we achieve here\footnote{We originally intended this to be the resolution of the low resolution node of our current emulator, but improvements in our simulation code between the two papers allowed us to increase our minimum particle load.}. The convergence in our low fidelity node is thus already reasonably good, at the level of $5\%$ for $k < 0.02$ s/km, the scales measured by eBOSS and $10\%$ for $k < 0.05$ s/km, which covers the scales expected to be measured by DESI. Note that these simulations have been rescaled to have the same mean optical depth, as these are the values input into the emulator.
+
+To demonstrate convergence of our high fidelity node we also show a comparison between two $15$ Mpc/h box size simulations, one $384^3$ particles and thus the same resolution as our high fidelity node, and one with $512^3$ particles. Convergence is at the $2\%$ level for $z > 2.6$ and the sub-percent level for $z \leq 2.6$, apart from scales greater than $1/4$ the box size. These spectra were not rescaled to have the same optical depth. This level of resolution sensitivity is small compared to current observational uncertainties.
+\spb{Martin can you confirm these spectra were not rescaled?}
+The worst convergence is seen during helium reionization, which starts at $z=4$ and ends at $z=3.1$. This may indicate that the simulation is being affected by the small separation between the size of the box and the size of the helium reionizing bubbles, and that a hypothetical simulation in a larger box would display even better resolution convergence.
+
+It is interesting to compare our results to earlier simulation suites. Ref.~\cite{Borde:2014} performed a convergence study using a $20$ Mpc/h box and $192^3$ - $1024^3$ particles. Our high fidelity node is equivalent in resolution to their $20, 512^3$ simulation, and exhibits similar convergence for $z < 3.6$, although our simulations are fully hydrodynamic while theirs make use of the simplified \Lya~forest star formation model. However, at $z=4.4$, their simulation loses $2-5\%$ of the flux power for $k > 0.01$ s/km. Although this degree of convergence is negligible compared to the observational errors at $z=4.4$, we do not observe a similar effect.
+We also found that our convergence at $z \sim 5$ was better than predicted by Ref.~\cite{2009MNRAS.398L..26B}. This is due to our inclusion of a temperature boost during hydrogen reionization \cite{DAloisio:2019}. We found that small test simulations without this boost had high redshift convergence behaviour similar to earlier work. The temperature boost heats the gas, increasing the Jeans mass and preventing small overdensities which would normally be underresolved from accreting gas.
+
+%Describe the resolution and box size of the simulation. Justify this by citing the relevant 2014 paper and with the figure.
+%\spb{Note that the convergence at high redshift is a little better than Bolton and Becker 2010, because the heating effect of the ionization fronts smooths the high redshift gas and prevents the small unresolved halos from accreting anyway.}
+
 
 \subsection{Realised Thermal Histories}
 \spb{Mean temperature plot for the helium reionization model parameters.}
@@ -373,12 +381,13 @@ Describe the resolution and box size of the simulation. Justify this by citing t
  %6.66666667e-02]
  (Right) Ratio between the IGM mean temperature in low resolution simulations to the high resolution simulations. Convergence is at the level of $1\%$ while the observational error on the temperature is $5-10\%$.
 }
- \label{fig:heliumtempdens}
+ \label{fig:meanigmtempdens}
 \end{figure*}
 
 Ref.~\cite{Chabanier:2022} showed that SPH and grid codes agree to less than $1\%$.
 
 \subsection{Effect of Parameters on the Flux Power Spectrum and Temperature}
+\label{sec:singleparams}
 
 Plots of the effect of each parameter on the flux power spectrum from the emulator.
 
@@ -389,7 +398,7 @@ Plots of the effect of each parameter on the flux power spectrum from the emulat
 % 	\includegraphics[width=0.3\columnwidth]{figures/single_param_tau0.pdf}
 
     \caption{Effect of changing each simulation parameter on the 1D flux power spectrum at $z=2$ and $z=3$. Plots should look a bit like Figure 9 of \url{https://arxiv.org/pdf/1401.6472.pdf}. Each panel should have 5 lines. Let's have $9$ panels, 1 for each parameter. cosmology parameters ($n_s$, $A_s$, $\Omega_m h^2$, $h$). reionization parameters ($He_i$ and $He_f$, $\alpha_q$, $HI_z$). Finally black hole feedback. }
-    \label{fig:fluxpower}
+    \label{fig:Apnsfluxpower}
 \end{figure}
 
 \begin{figure}
@@ -399,7 +408,7 @@ Plots of the effect of each parameter on the flux power spectrum from the emulat
 % 	\includegraphics[width=0.3\columnwidth]{figures/single_param_tau0.pdf}
 
     \caption{Effect of changing each simulation parameter on the 1D flux power spectrum at $z=2$ and $z=3$. Plots should look a bit like Figure 9 of \url{https://arxiv.org/pdf/1401.6472.pdf}. Each panel should have 5 lines. Let's have $9$ panels, 1 for each parameter. cosmology parameters ($n_s$, $A_s$, $\Omega_m h^2$, $h$). reionization parameters ($He_i$ and $He_f$, $\alpha_q$, $HI_z$). Finally black hole feedback. }
-    \label{fig:fluxpower}
+    \label{fig:tau0fluxpower}
 \end{figure}
 
 \begin{figure}
@@ -409,7 +418,7 @@ Plots of the effect of each parameter on the flux power spectrum from the emulat
 % 	\includegraphics[width=0.3\columnwidth]{figures/single_param_tau0.pdf}
 
     \caption{Effect of changing each simulation parameter on the 1D flux power spectrum at $z=2$ and $z=3$. Plots should look a bit like Figure 9 of \url{https://arxiv.org/pdf/1401.6472.pdf}. Each panel should have 5 lines. Let's have $9$ panels, 1 for each parameter. cosmology parameters ($n_s$, $A_s$, $\Omega_m h^2$, $h$). reionization parameters ($He_i$ and $He_f$, $\alpha_q$, $HI_z$). Finally black hole feedback. }
-    \label{fig:fluxpower}
+    \label{fig:zhefluxpower}
 \end{figure}
 
 \begin{figure}
@@ -419,7 +428,7 @@ Plots of the effect of each parameter on the flux power spectrum from the emulat
 % 	\includegraphics[width=0.3\columnwidth]{figures/single_param_tau0.pdf}
 
     \caption{Effect of changing each simulation parameter on the 1D flux power spectrum at $z=2$ and $z=3$. Plots should look a bit like Figure 9 of \url{https://arxiv.org/pdf/1401.6472.pdf}. Each panel should have 5 lines. Let's have $9$ panels, 1 for each parameter. cosmology parameters ($n_s$, $A_s$, $\Omega_m h^2$, $h$). reionization parameters ($He_i$ and $He_f$, $\alpha_q$, $HI_z$). Finally black hole feedback. }
-    \label{fig:fluxpower}
+    \label{fig:zhifluxpower}
 \end{figure}
 
 \begin{figure}
@@ -427,7 +436,7 @@ Plots of the effect of each parameter on the flux power spectrum from the emulat
 	\includegraphics[width=0.48\columnwidth]{figures/single_param_hub.pdf}
     \includegraphics[width=0.48\columnwidth]{figures/single_param_omegamh2.pdf}
     \caption{Effect of changing each simulation parameter on the 1D flux power spectrum at $z=2$ and $z=3$. Plots should look a bit like Figure 9 of \url{https://arxiv.org/pdf/1401.6472.pdf}. Each panel should have 5 lines. Let's have $9$ panels, 1 for each parameter. cosmology parameters ($n_s$, $A_s$, $\Omega_m h^2$, $h$). reionization parameters ($He_i$ and $He_f$, $\alpha_q$, $HI_z$). Finally black hole feedback. }
-    \label{fig:fluxpower}
+    \label{fig:hubgrowthfluxpower}
 \end{figure}
 
 \begin{figure}
@@ -436,7 +445,7 @@ Plots of the effect of each parameter on the flux power spectrum from the emulat
     \includegraphics[width=0.48\columnwidth]{figures/single_param_bhfeedback.pdf}
 
     \caption{Effect of changing each simulation parameter on the IGM mean temperature as a function of redshift.}
-    \label{fig:meantemp}
+    \label{fig:meantempfluxpower}
 \end{figure}
 
 
