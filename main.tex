@@ -249,7 +249,7 @@ where $v_w$ is the wind speed. $\kappa_w$ is a dimensionless parameter, which we
 
 Winds are sourced by newly formed star particles, which randomly pick gas particles from within their SPH smoothing length to become wind particles. The total mass loading is $(v_w/ 350 \mathrm{km/s})^{-2}$ where $350$ km/s is in physical units. Particles recouple when their surrounding density drops by a factor of $10$, or after $60$ Myr.\footnote{In Ref.~\cite{Bird:2022} we had a subdominant recoupling condition: gas would recouple after $20 \mathrm{kpc} / v_w$. In practice this affected only a small fraction of the wind, as for a typical star forming halo with a virial velocity of $200$ km/s the recoupling time was $100$ Myr, and gas always recoupled after $60$ Myr. We have thus removed this condition for model simplicity.} Particles in the wind cool, but do not experience or produce pressure forces, nor may they be accreted onto a black hole. However, to enhance the stability of the SPH density estimates, they are included when computing SPH smoothing lengths.
 
-We conducted an early test emulator using small boxes where the dimensionless supernova wind velocity, $\kappa_w$, was a free parameter of the model. However, we found that this free parameter was essentially unconstrained by the \Lya~forest data and so opted not to vary it in the full emulator run. Ref.~\cite{Bolton:2017} showed that supernova winds increased the \Lya~flux power on large scales, $k < 10^{-2}$ s/km, at $z < 3$, by around $10\%$, due to the presence of additional high column density systems\footnote{Ref.~\cite{Viel:2013} found that the \Lya~flux power spectrum was increased only for $ k > 0.04$ s/km (scales smaller than those measured by BOSS), but their simulations did not include self-shielding and so did not contain high column density absorbers.}. We remove high column density systems from our simulated spectra to match the observational procedure, and thus changes to the supernova wind model do not affect the \Lya~flux power spectrum.
+We conducted an early test emulator using small boxes where the dimensionless supernova wind velocity, $\kappa_w$, was a free parameter of the model. However, we found that this free parameter was essentially unconstrained by the \Lya~forest data and so opted not to vary it in the full emulator run. Ref.~\cite{Bolton:2017} showed that supernova winds increased the \Lya~flux power on large scales, $k < 10^{-2}$ s/km, at $z < 3$, by around $10\%$, due to the presence of additional high column density systems\footnote{Ref.~\cite{Viel:2013} found that the \Lya~flux power spectrum was increased only for $ k > 0.04$ s/km (scales smaller than those measured by BOSS), but their simulations did not include self-shielding and so did not contain high column density absorbers.}. Our supernova simulation model parameters have been chosen to match the observed galaxy stellar mass function and thus the distribution of high column density absorbers. We remove high column density systems from our simulated spectra to match the observational procedure, and thus changes to the supernova wind model do not affect the \Lya~flux power spectrum.
 
 \subsection{Black Holes and AGN Feedback}
 \label{sec:agn}
@@ -437,9 +437,20 @@ We also found that our convergence at $z \sim 5$ was better than predicted by Re
  \label{fig:meanigmtempdens}
 \end{figure*}
 
-Figure~\ref{fig:meanigmtempdens} shows the mean temperatures for our simulations, confirming that our reionization models are able to bracket the observed mean IGM temperatures from Ref.~\cite{Gaikwad:2021}. The right panel shows the convergence with resolution, for our three high fidelity simulations, labelled by their $n_s$ values. Convergence is better than $3\%$ between the low and high fidelity simulations, showing that even our low fidelity nodes contain converged thermal histories. We have determined the IGM mean temperature thermal history Note that the thermal history is measured by comparing simulations to observed statistics of high resolution quasar spectra, such as the flux power spectrum on scales $0.01$ - $0.1$ s/km. These simulations did not use a patchy helium reionization model; however, given the relatively large observational error bars on the mean IGM temperature, this should not have a significant effect on our results. In future work we will directly carry out a comparison to these statistics, rather than using the derived thermal history. The high fidelity simulations generally have slightly lower temperature than the low fidelity simulations, as the inclusion of higher density structures increases the amount by which gas can cool. Relatedly, the high fidelity simulation labelled with $ns=0.914$ has slightly better convergence than the others, as well as having the latest redshift of hydrogen reionization and lowest $\alpha_q$, thus the strongest heating during helium reionization.
+Figure~\ref{fig:meanigmtempdens} shows the mean temperatures for our simulations, confirming that our reionization models are able to bracket the observed mean IGM temperatures from Ref.~\cite{Gaikwad:2021}. The right panel shows the convergence with resolution, for our three high fidelity simulations, labelled by their $n_s$ values. Convergence is better than $3\%$ between the low and high fidelity simulations, showing that even our low fidelity nodes contain converged thermal histories. We have determined the IGM mean temperature thermal history Note that the thermal history is measured by comparing simulations to observed statistics of high resolution quasar spectra, such as the flux power spectrum on scales $0.01$ - $0.1$ s/km. These simulations did not use a patchy helium reionization model; however, given the relatively large observational error bars on the mean IGM temperature, this should not have a significant effect on our results. In future work we will directly carry out a comparison to these statistics, rather than using the derived thermal history. The high fidelity simulations generally have slightly lower temperature than the low fidelity simulations, as the inclusion of higher density structures increases the amount by which gas can cool. The high fidelity simulation labelled with $n_s=0.914$ has the lowest redshift of hydrogen reionization and lowest $\alpha_q$ and thus the strongest heating during helium reionization. The extra heating reduces the amount of dense gas and thus improves the overall convergence of the simulation.
 
 %Ref.~\cite{Chabanier:2022} showed that SPH and grid codes agree to less than $1\%$.
+
+\subsection{High Column Density Systems}
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.6\textwidth]{figures/cddf_hires.pdf}
+ \caption{Column density distribution function (CDDF) of high column density absorbers from our $3$ high resolution simulations at $z=2.2$, compared to the CDDF from SDSS DR16 of Ref.~\cite{2021MNRAS.507..704H}}.
+ \label{fig:DLACDDF}
+\end{figure*}
+
+Figure~\ref{fig:DLACDDF} shows the predicted column density distribution function for high column density absorbers from our three high fidelity simulations. We have generated spectra at random positions until we have $4000$ spectra, each containing a system with column density $N_{HI} > 10^{18}$ cm$^{-2}$. There is good agreement between the simulations and the observed CDDF from Ref.~\cite{2021MNRAS.507..704H}. This can be taken as a strong prior on the supernova wind parameters and justifies our choice to fix the wind model in our emulator. Furthermore, there is no strong or consistent variation with emulator parameters, which reinforces that the cosmological information in the high column density absorbers is small and so it is optimal to exclude them when computing the flux power spectrum.
 
 \subsection{Effect of Parameters on the Flux Power Spectrum and Temperature}
 \label{sec:singleparams}
@@ -452,7 +463,7 @@ Figure~\ref{fig:meanigmtempdens} shows the mean temperatures for our simulations
     	\includegraphics[width=0.48\columnwidth]{figures/single_param_hub.pdf}
     	\includegraphics[width=0.48\columnwidth]{figures/single_param_tau0.pdf}
     \includegraphics[width=0.48\columnwidth]{figures/single_param_dtau0.pdf}
-    \caption{Predicted flux power spectra from the full multi-fidelity emulator when changing a single simulation parameter, for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. Shown are the cosmological parameters $A_p$ (Top-Left) and $n_s$ (Top-Right), $\Omega_m h^2$ (Mid-Left) and $h$ (Mid-Right). The bottom row shows the mean flux model parameters $\tau_0$(Bottom-Left) and $d\tau_0$ (Bottom-Right).}
+    \caption{Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing a single simulation parameter, for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. Shown are the cosmological parameters $A_p$ (Top-Left) and $n_s$ (Top-Right), $\Omega_m h^2$ (Mid-Left) and $h$ (Mid-Right). The bottom row shows the mean flux model parameters $\tau_0$(Bottom-Left) and $d\tau_0$ (Bottom-Right).}
     \label{fig:Apnsfluxpower}
 \end{figure}
 
@@ -462,30 +473,20 @@ Figure~\ref{fig:meanigmtempdens} shows the mean temperatures for our simulations
     \includegraphics[width=0.48\columnwidth]{figures/single_param_heref.pdf}
 	\includegraphics[width=0.48\columnwidth]{figures/single_param_hireionz.pdf}
     \includegraphics[width=0.48\columnwidth]{figures/single_param_alphaq.pdf}
-    \caption{Predicted flux power spectra from the full multi-fidelity emulator when changing a single simulation parameter, for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. Shown are the four reionization parameters $z_\mathrm{Hei}$ (Top-Left) and $z_\mathrm{Hef}$ (Top-Right), $z_\mathrm{HI}$ (Bottom-Left) and $\alpha_q$ (Bottom-Right).}
+    \caption{Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing a single simulation parameter, for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. Shown are the four reionization parameters $z_\mathrm{Hei}$ (Top-Left) and $z_\mathrm{Hef}$ (Top-Right), $z_\mathrm{HI}$ (Bottom-Left) and $\alpha_q$ (Bottom-Right).}
     \label{fig:zhefluxpower}
 \end{figure}
 
-Plots of the effect of each parameter on the flux power spectrum from the emulator.
-
-
 \begin{figure}
     \centering
-	\includegraphics[width=0.48\columnwidth]{figures/single_param_t0.pdf}
     \includegraphics[width=0.48\columnwidth]{figures/single_param_bhfeedback.pdf}
-    \caption{Predicted flux power spectra from the full multi-fidelity emulator when changing a single simulation parameter, for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. Shown are the four reionization parameters $T_0$ (Left) and $\epsilon_\mathrm{AGN}$ (Right).}
+    	\includegraphics[width=0.48\columnwidth]{figures/single_param_t0.pdf}
+    \caption{(Left) Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing the strength of black hole feedback, $\epsilon_\mathrm{AGN}$ for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. (Right) Effect on the mean IGM temperature $T_0$ as a function of redshift, for the four reionization parameters which significantly change $T_0$.}
     \label{fig:meantempfluxpower}
 \end{figure}
 
-Figure~\ref{fig:DLACDDF} shows  our supernova simulation model parameters have been chosen to match the observed galaxy stellar mass function and thus the distribution of high column density absorbers. This good agreement can be taken as a strong prior on the supernova wind parameters and justifies our choice to fix the wind model in our emulator.
-
-\begin{figure*}
-\centering
-\includegraphics[width=0.6\textwidth]{figures/cddf_hires.pdf}
- \caption{Column density distribution function (CDDF) of high column density absorbers from our $3$ high resolution simulations at $z=2.2$, compared to the CDDF from SDSS DR16 of Ref.~\cite{2021MNRAS.507..704H}}.
- \label{fig:DLACDDF}
-\end{figure*}
-
+In this Section we show the effect of varying each parameter
+Plots of the effect of each parameter on the flux power spectrum from the emulator.
 
 
 
