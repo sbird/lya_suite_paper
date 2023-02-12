@@ -1,14 +1,50 @@
 """Figures for the simulation suite paper."""
 
 import os.path
+import shutil
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 from lyaemu.likelihood import LikelihoodClass
 from lyaemu.meanT import t0_likelihood
+import lyaemu.flux_power as fps
+from lyaemu.mean_flux import ConstMeanFlux
+from lyaemu.coarse_grid import Emulator
+import lyaemu.lyman_data as ldd
 import lyaemu.distinct_colours_py3 as dc
 from fake_spectra.plot_spectra import PlottingSpectra
 from dla_data import ho21_cddf
+
+def regen_single_flux_power_emu(emudir, outdir="", mf=None):
+    """Make and save a file of the flux power spectra with and without optical depth rescaling"""
+    if mf is not None:
+        mf = ConstMeanFlux()
+    emu = Emulator(emudir, tau_thresh=1e6, mf=mf)
+    emu.load()
+    #Set max k to a large value
+    emu.kf = np.concatenate([ldd.BOSSData().get_kf(),np.logspace(np.log10(0.02), np.log10(0.06), 20)])
+    emu.set_maxk()
+    print(emu.kf[-10:], emu.maxk)
+    emu.myspec = fps.MySpectra(max_z=emu.max_z, min_z=emu.min_z, max_k=emu.maxk)
+    #Backup any existing flux powers.
+    if mf is not None:
+        savefile = "cc_emulator_flux_vectors_tau1000000.hdf5"
+    else:
+        savefile = "emulator_flux_vectors_tau1000000.hdf5"
+    shutil.move(os.path.join(emudir, savefile), os.path.join(emudir, savefile+".backup"))
+    emu.get_flux_vectors()
+    #Move new flux powers where I want them
+    save = os.path.join("fpk_highk/"+outdir, savefile)
+    shutil.move(os.path.join(emudir, savefile), save)
+    shutil.move(os.path.join(emudir, savefile+".backup"), os.path.join(emudir, savefile))
+
+def get_flux_power_resolution(hiresdir, lowresdir):
+    """Make and save a file of the flux power spectra with and without optical depth rescaling"""
+    #Without mean flux rescaling
+    regen_single_flux_power_emu(hiresdir, outdir="hires")
+    regen_single_flux_power_emu(lowresdir)
+    regen_single_flux_power_emu(hiresdir, outdir="hires", mf=True)
+    regen_single_flux_power_emu(lowresdir, mf=True)
 
 def plot_dla_cddf():
     """Plot the strong absorber column density function"""
