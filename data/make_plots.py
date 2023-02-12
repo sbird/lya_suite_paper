@@ -272,14 +272,15 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
             lblstr = r"$%s=%.3g$, $z=%.2g$"
         if name[0] == 'herei':
             zzs = np.array([3.6, 3.2])
-        if name[0] == 'heref' or name[0] == 'alphaq':
-            zzs = np.array([3.2, 2.2])
-        if name[0] == 'hireionz':
+        elif name[0] == 'heref' or name[0] == 'alphaq':
+            zzs = np.array([3.2, 2.6])
+        elif name[0] == 'hireionz':
             zzs = np.array([3.2, 4.4])
-        if name[0] == 'bhfeedback':
+        elif name[0] == 'bhfeedback':
             zzs = np.array([3.2, 2.2])
         else:
             zzs = np.array([2.2, 3.2, 4.4])
+        print(name[0], zzs)
         for (j,zz) in enumerate(zzs):
             zind = np.argmin(np.abs(like.zout - zz))
             plt.semilogx(okf[zind], upperfv[zind]/defaultfv[zind], label= lblstr % (name[1], upper[i], zz), color=dist_col[2*j % 12])
