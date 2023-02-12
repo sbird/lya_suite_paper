@@ -272,6 +272,12 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
         lblstr = r"$%s=%.2g$, $z=%.2g$"
         if name[0] == 'omegamh2':
             lblstr = r"$%s=%.3g$, $z=%.2g$"
+        if name[0] == 'zhei':
+            zzs = np.array([3.6, 3.2])
+        if name[0] == 'zhef' or name[0] == 'alphaq':
+            zzs = np.array([3.2, 2.2])
+        if name[0] == 'hireionz':
+            zzs = np.array([3.2, 4.4])
         for (j,zz) in enumerate(zzs):
             zind = np.argmin(np.abs(like.zout - zz))
             plt.semilogx(okf[zind], upperfv[zind]/defaultfv[zind], label= lblstr % (name[1], upper[i], zz), color=dist_col[2*j % 12])
@@ -279,7 +285,7 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
         save_fig(name, plotdir)
     return like
 
-def save_fig_t0(plotdir):
+def save_fig_t0(plotdir, extra=""):
     """Format and save a figure"""
     #plt.xlim(1e-3,2e-2)
     #plt.ylim(bottom=0.9, top=1.1)
@@ -287,10 +293,10 @@ def save_fig_t0(plotdir):
     plt.ylabel(r"$\Delta T0(z)$")
     plt.legend(ncol=1,fontsize=10)
     plt.tight_layout()
-    plt.savefig(os.path.join(plotdir,"single_param_t0.pdf"))
+    plt.savefig(os.path.join(plotdir,"single_param_t0"+extra+".pdf"))
     plt.clf()
 
-def single_parameter_t0_plot(plotdir='../figures'):
+def single_parameter_t0_plot(plotdir='../figures', one=False):
     """Plot change in each parameter of an emulator from direct simulations."""
     #emulatordir = os.path.join(os.path.dirname(__file__), "emu_full_extend")
     emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-46")
@@ -302,7 +308,10 @@ def single_parameter_t0_plot(plotdir='../figures'):
     pnames = like.emulator.print_pnames()
     assert len(pnames) == np.size(means)
     print(pnames)
-    pnames = [('herei', r'z_\mathrm{He i}'), ('heref', r'z_\mathrm{He f}'), ('alphaq', r'\alpha_q'), ('hireionz', r'z_{Hi}')]
+    if one:
+        pnames = [('herei', r'z_\mathrm{He i}'), ('hireionz', r'z_{Hi}')]
+    else:
+        pnames = [('heref', r'z_\mathrm{He f}'), ('alphaq', r'\alpha_q')]
     pind = [2,3,4,7]
     dist_col = dc.get_distinct(12)
     for (ii, name) in enumerate(pnames):
@@ -320,14 +329,18 @@ def single_parameter_t0_plot(plotdir='../figures'):
             lblstr = r"$%s=%.3g$"
         plt.plot(like.zout[::-1], (upperfv[0]-defaultfv[0])[::-1], label= lblstr % (name[1], upper[i]), color=dist_col[i])
         plt.plot(like.zout[::-1], (lowerfv[0]-defaultfv[0])[::-1], label= lblstr % (name[1], lower[i]), ls="--", color=dist_col[i])
-    save_fig_t0(plotdir)
+    if one:
+        extra = "_hi_"
+    else:
+        extra = "_hef_"
+    save_fig_t0(plotdir, extra=extra)
     return like
 
 if __name__ == "__main__":
 #     make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
 #     make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
-    make_res_convergence2()
+#    make_res_convergence2()
    #make_box_convergence("box_converge.hdf5")
-#     single_parameter_plot()
-#     single_parameter_t0_plot()
+    single_parameter_plot()
+    single_parameter_t0_plot()
     # plot_dla_cddf()
