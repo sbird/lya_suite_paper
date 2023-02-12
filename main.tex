@@ -158,11 +158,11 @@ We generate initial condition for our simulations as in Ref.~\cite{Bird:2020}. W
 
 Our emulator is designed to constrain cosmological parameters and so we perform simulations varying cosmological parameters in the initial conditions. Specifically, we define the primordial matter power spectrum as:
 \begin{equation}
- P(k) = A_P \left(\frac{k}{ 0.78 \mathrm{h/Mpc}}\right)^{n_s-1}\,.
+ P(k) = A_P \left(\frac{k}{ 0.78 \mathrm{h/Mpc}}\right)^{n_P-1}\,.
  \label{eq:pk}
 \end{equation}
-Here $n_s$ is the spectral index. $A_p$ is the amplitude of perturbations at $k = 0.78$ h/Mpc, chosen to be in the middle of the range probed by the \Lya~forest and thus reduce artificial correlation between $n_s$ and $A_P$ \cite{Bird:2019}. We vary $A_P$ in the range $1.2 \times 10^{-9}$ and $2.6 \times 10^{-9}$, chosen the range of $A_P$ simulated to include the posterior constraint from Planck on larger scales \cite{Planck:2018}.
-$n_s$ is the spectral index measured on small scales, which we simulate between $0.8$ and $0.995$. Note that in extended models with a scale-dependence of the spectral index (a ``running''), this need not have the same value as the spectral index measured by Ref.~\cite{Planck:2018}.
+Here $n_P$ is the spectral index. $A_p$ is the amplitude of perturbations at $k = 0.78$ h/Mpc, chosen to be in the middle of the range probed by the \Lya~forest and thus reduce artificial correlation between $n_P$ and $A_P$ \cite{Bird:2019}. We vary $A_P$ in the range $1.2 \times 10^{-9}$ and $2.6 \times 10^{-9}$, chosen the range of $A_P$ simulated to include the posterior constraint from Planck on larger scales \cite{Planck:2018}.
+$n_P$ is the spectral index measured on small scales, which we simulate between $0.8$ and $0.995$. Note that in extended models with a scale-dependence of the spectral index (a ``running''), this need not have the same value as the spectral index measured by Ref.~\cite{Planck:2018}.
 
 We also include free parameters for the growth rate, $\Omega_0 h^2$, and Hubble parameter, $h$. We vary $h$ over the range $0.65$ - $0.75$ and $\Omega_0 h^2$ between $0.14$ and $0.146$. The growth rate $\Omega_0 h^2$ has a moderate effect on the \Lya~forest, but is generally measured better by other probes. As our simulation box is set up using kpc/h units, the Hubble parameter $h$ does not affect the gravitational evolution of the code. The cooling rates are computed in physical units, and so in principle the thermal history parameters may interact with $h$. However, as we will show in Section~\ref{sec:singleparams}, the residual dependency is small for the range of $h$ we consider. Nevertheless, we chose to include $h$ in our emulator. Including $h$ allows our simulations to be re-used as part of future emulators targetting, for example, the 3D power spectrum, where the position of the BAO peak depends on $h$.
 
@@ -218,7 +218,7 @@ Our $120$ Mpc/h box simulations contain $\sim 50$ reionization bubbles and so ou
   \hline
   Parameter & Minimum & Maximum & Description \\
     \hline
-    $n_s$  &  $0.8$  & $0.995$ & Scalar spectral index \\
+    $n_P$  &  $0.8$  & $0.995$ & Scalar spectral index \\
     $A_P$  &  $2.2 \times 10^{-9}$  & $2.6 \times 10^{-9}$ & Power amplitude at $k = 0.78$ h/Mpc \\
     $h$    & $0.65$  & $0.75$ & Hubble parameter \\
     $\Omega_0 h^2$ & $0.14$ & $0.146$ & Total matter density \\
@@ -314,6 +314,15 @@ We generate $32000$ \Lya~absorption spectra at random positions. To improve emul
 
 We rescale our simulated spectra to match a desired mean optical depth. As in \cite{Bird:2019}, our emulator has the ability to generate flux power spectra for arbitrary input mean optical depth $\tau$. This is achieved by rescaling the spectra in post-processing: no extra simulations are needed. We are thus able to dramatically over-sample the mean optical depth as an input parameter, generating a dense grid of $10$ optical depth samples per redshift per cosmological simulation. As explained in \cite{Bird:2019}, we generate one Gaussian Process emulator for every redshift bin, each emulator taking the mean optical depth at that redshift as an input parameter. We would thus be able to use very general redshift variations of the mean optical depth if supported by observational data.
 
+Based on earlier work and observational data, we specialise our mean flux model to a power law. The amplitude $\tau_0$ and slope $d\tau_0$ of this power law are free parameters, defined relative to the value of $\tau_\mathrm{eff}$ measured by Ref.~\cite{Kim:2007}:
+\begin{align}
+\tau_\mathrm{Kim}(z) &= 0.0023 \times (1 + z)^{3.65} \\
+ \tau_\mathrm{eff}(z) &= \tau_0 \left(\frac{1+z}{4}\right)^{d\tau_0}  \tau_\mathrm{Kim}(z)
+ \label{eq:meanflux}
+\end{align}
+Thus by construction $d\tau_0$ does not affect the $z=3$ flux power spectrum, and $\tau_0 = 1$ and $d\tau_0 = 0$ correspond to Ref.~\cite{Kim:2007}.
+
+
 % This is done because for any given redshift bin there is a degeneracy between $\tau_0$ and $d\tau_0$. Computing the mean flux in each redshift bin separately breaks this degeneracy and avoids duplicate spectra.
 
 
@@ -357,7 +366,7 @@ This final high fidelity sample was chosen from the full set of low fidelity sam
   \hline
   Parameter & HF 1 & HF 2 & HF 3\\
     \hline
-    $n_s$  &  $0.909$  & $0.914$ & $0.859$ \\
+    $n_P$  &  $0.909$  & $0.914$ & $0.859$ \\
     $A_P$  &  $1.98 \times 10^{-9}$  & $1.32 \times 10^{-9}$ & $1.29 \times 10^{-9}$\\
     $h$    & $0.68$  & $0.74$ & $0.69$\\
     $\Omega_0 h^2$ & $0.1403$ & $0.1415$ & $0.1412$\\
@@ -410,7 +419,9 @@ Cosmic variance is suppressed when compared to emulators of the matter power spe
  \label{fig:resolution}
 \end{figure*}
 
-Figure~\ref{fig:resolution} shows the effect of finite resolution on our flux power spectrum predictions. We show in blue the difference between the high and low resolution branches of the emulator, for the $3$ different parameter sets. Our lower resolution simulations contain $2\times 1536^3$ particles in a $120$ Mpc/h periodic box with a mean inter-particle spacing of $79$ kpc/h. Our $3$ higher resolution simulations contain $2\times 3072^3$ particles and thus a mean inter-particle spacing of $39$ kpc/h. Figure~\ref{fig:resolution} shows that our high fidelity node is meaningfully correcting the resolution of our low fidelity simulations. The dependence of the resolution correction on cosmological parameters is fairly small, which explains why our multi-fidelity emulator can converge with only $3$ high fidelity simulations, compared to $6$ required in \cite{Fernandez:2022}. The low fidelity node of the emulator constructed in \cite{Fernandez:2022} had a mean interparticle spacing of $118$ kpc/h, $1.5 \times$ the resolution we achieve here\footnote{We originally intended this to be the resolution of the low resolution node of our current emulator, but improvements in our simulation code between the two papers allowed us to increase our minimum particle load.}. The convergence in our low fidelity node is thus already reasonably good, at the level of $5\%$ for $k < 0.02$ s/km, the scales measured by eBOSS and $10\%$ for $k < 0.05$ s/km, which covers the scales expected to be measured by DESI. Note that these simulations have been rescaled to have the same mean optical depth, as these are the values input into the emulator.
+Figure~\ref{fig:resolution} shows the effect of finite resolution on our flux power spectrum predictions. We show in blue the difference between the high and low resolution branches of the emulator, for the $3$ different parameter sets. Our lower resolution simulations contain $2\times 1536^3$ particles in a $120$ Mpc/h periodic box with a mean inter-particle spacing of $79$ kpc/h. Our $3$ higher resolution simulations contain $2\times 3072^3$ particles and thus a mean inter-particle spacing of $39$ kpc/h. Figure~\ref{fig:resolution} shows that our high fidelity node is meaningfully correcting the resolution of our low fidelity simulations. The dependence of the resolution correction on cosmological parameters is fairly small, which explains why our multi-fidelity emulator can converge with only $3$ high fidelity simulations, compared to $6$ required in \cite{Fernandez:2022}. The prediction in this case is dominated by the cosmology-independent scaling factor $\rho$ in Eq.~\ref{eq:mf_model}.
+
+The low fidelity node of the emulator constructed in \cite{Fernandez:2022} had a mean interparticle spacing of $118$ kpc/h, $1.5 \times$ the resolution we achieve here\footnote{We originally intended this to be the resolution of the low resolution node of our current emulator, but improvements in our simulation code between the two papers allowed us to increase our minimum particle load.}. The convergence in our low fidelity node is thus already reasonably good, at the level of $5\%$ for $k < 0.02$ s/km, the scales measured by eBOSS and $10\%$ for $k < 0.05$ s/km, which covers the scales expected to be measured by DESI. Note that these simulations have been rescaled to have the same mean optical depth, as these are the values input into the emulator.
 
 To demonstrate convergence of our high fidelity node we also show a comparison between two $15$ Mpc/h box size simulations, one $384^3$ particles and thus the same resolution as our high fidelity node, and one with $512^3$ particles. Convergence is at the $2\%$ level for $z > 2.6$ and the sub-percent level for $z \leq 2.6$, apart from scales greater than $1/4$ the box size. These spectra were not rescaled to have the same optical depth. This level of resolution sensitivity is small compared to current observational uncertainties.
 \spb{Martin can you confirm these spectra were not rescaled?}
@@ -428,7 +439,7 @@ We also found that our convergence at $z \sim 5$ was better than predicted by Re
 \begin{figure*}
 \includegraphics[width=0.45\textwidth]{figures/mean-temperature.pdf}
 \includegraphics[width=0.45\textwidth]{figures/mean-temperature-resolution.pdf}
- \caption{(Left) Temperatures at mean density as a function of redshift for simulations in our emulator. Observational points shown are the combined $T_0$ measurements from \protect\cite{Gaikwad:2021}.  The grey band shows the range of temperatures realised by simulations in our emulator. The black line shows an example thermal history, for a simulation with reionization parameters $\alpha_q = 1.795$, $z_{Hei} = 3.79$, $z_{Hef} = 3.09$, $z_{Hi} = 7.1$. Other parameters are $n_s = 0.82275$, $A_P = 1.92 \times 10^{-9}$, $\Omega_0 h^2 = 0.1445$, $h = 0.67$, $\epsilon_{AGN} = 0.067$.
+ \caption{(Left) Temperatures at mean density as a function of redshift for simulations in our emulator. Observational points shown are the combined $T_0$ measurements from \protect\cite{Gaikwad:2021}.  The grey band shows the range of temperatures realised by simulations in our emulator. The black line shows an example thermal history, for a simulation with reionization parameters $\alpha_q = 1.795$, $z_{Hei} = 3.79$, $z_{Hef} = 3.09$, $z_{Hi} = 7.1$. Other parameters are $n_P = 0.82275$, $A_P = 1.92 \times 10^{-9}$, $\Omega_0 h^2 = 0.1445$, $h = 0.67$, $\epsilon_{AGN} = 0.067$.
  %[8.22750000e-01 1.92333333e-09 3.79000000e+00 3.09000000e+00
  %1.79500000e+00 6.85000000e-01 1.44500000e-01 7.07500000e+00
  %6.66666667e-02]
@@ -437,7 +448,7 @@ We also found that our convergence at $z \sim 5$ was better than predicted by Re
  \label{fig:meanigmtempdens}
 \end{figure*}
 
-Figure~\ref{fig:meanigmtempdens} shows the mean temperatures for our simulations, confirming that our reionization models are able to bracket the observed mean IGM temperatures from Ref.~\cite{Gaikwad:2021}. The right panel shows the convergence with resolution, for our three high fidelity simulations, labelled by their $n_s$ values. Convergence is better than $3\%$ between the low and high fidelity simulations, showing that even our low fidelity nodes contain converged thermal histories. We have determined the IGM mean temperature thermal history Note that the thermal history is measured by comparing simulations to observed statistics of high resolution quasar spectra, such as the flux power spectrum on scales $0.01$ - $0.1$ s/km. These simulations did not use a patchy helium reionization model; however, given the relatively large observational error bars on the mean IGM temperature, this should not have a significant effect on our results. In future work we will directly carry out a comparison to these statistics, rather than using the derived thermal history. The high fidelity simulations generally have slightly lower temperature than the low fidelity simulations, as the inclusion of higher density structures increases the amount by which gas can cool. The high fidelity simulation labelled with $n_s=0.914$ has the lowest redshift of hydrogen reionization and lowest $\alpha_q$ and thus the strongest heating during helium reionization. The extra heating reduces the amount of dense gas and thus improves the overall convergence of the simulation.
+Figure~\ref{fig:meanigmtempdens} shows the mean temperatures for our simulations, confirming that our reionization models are able to bracket the observed mean IGM temperatures from Ref.~\cite{Gaikwad:2021}. The right panel shows the convergence with resolution, for our three high fidelity simulations, labelled by their $n_P$ values. Convergence is better than $3\%$ between the low and high fidelity simulations, showing that even our low fidelity nodes contain converged thermal histories. We have determined the IGM mean temperature thermal history Note that the thermal history is measured by comparing simulations to observed statistics of high resolution quasar spectra, such as the flux power spectrum on scales $0.01$ - $0.1$ s/km. These simulations did not use a patchy helium reionization model; however, given the relatively large observational error bars on the mean IGM temperature, this should not have a significant effect on our results. In future work we will directly carry out a comparison to these statistics, rather than using the derived thermal history. The high fidelity simulations generally have slightly lower temperature than the low fidelity simulations, as the inclusion of higher density structures increases the amount by which gas can cool. The high fidelity simulation labelled with $n_P=0.914$ has the lowest redshift of hydrogen reionization and lowest $\alpha_q$ and thus the strongest heating during helium reionization. The extra heating reduces the amount of dense gas and thus improves the overall convergence of the simulation.
 
 %Ref.~\cite{Chabanier:2022} showed that SPH and grid codes agree to less than $1\%$.
 
@@ -457,13 +468,13 @@ Figure~\ref{fig:DLACDDF} shows the predicted column density distribution functio
 
 \begin{figure}
     \centering
+    \includegraphics[width=0.48\columnwidth]{figures/single_param_tau0.pdf}
+    \includegraphics[width=0.48\columnwidth]{figures/single_param_dtau0.pdf}
 	\includegraphics[width=0.48\columnwidth]{figures/single_param_Ap.pdf}
 		\includegraphics[width=0.48\columnwidth]{figures/single_param_ns.pdf} \\
     \includegraphics[width=0.48\columnwidth]{figures/single_param_omegamh2.pdf}
     	\includegraphics[width=0.48\columnwidth]{figures/single_param_hub.pdf}
-    	\includegraphics[width=0.48\columnwidth]{figures/single_param_tau0.pdf}
-    \includegraphics[width=0.48\columnwidth]{figures/single_param_dtau0.pdf}
-    \caption{Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing a single simulation parameter, for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. Shown are the cosmological parameters $A_p$ (Top-Left) and $n_s$ (Top-Right), $\Omega_m h^2$ (Mid-Left) and $h$ (Mid-Right). The bottom row shows the mean flux model parameters $\tau_0$(Bottom-Left) and $d\tau_0$ (Bottom-Right).}
+    \caption{Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing a single simulation parameter, for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. The top row shows the mean flux model parameters $\tau_0$(Top-Left) and $d\tau_0$ (Top-Right). The other rows show the cosmological parameters $A_p$ (Mid-Left) and $n_P$ (Mid-Right), $\Omega_m h^2$ (Bottom-Left) and $h$ (Bottom-Right). }
     \label{fig:Apnsfluxpower}
 \end{figure}
 
@@ -485,10 +496,14 @@ Figure~\ref{fig:DLACDDF} shows the predicted column density distribution functio
     \label{fig:meantempfluxpower}
 \end{figure}
 
-In this Section we show the effect of varying each parameter
-Plots of the effect of each parameter on the flux power spectrum from the emulator.
+In this Section we discuss the effect of varying each parameter individually on the flux power spectrum, as predicted by our multi-fidelity emulator. We can use this to understand which parameters are most strongly measured by the \Lya~forest, and where the strongest degeneracies lie. Figure~\ref{fig:Apnsfluxpower} shows the mean flux and cosmological parameters. The top row shows the mean flux rescaling parameters $\tau_0$ and d$\tau_0$, which control the total abundance of neutral hydrogen as a function of redshift. As a reminder, these parameters are defined so that  $\tau_0 = 1$ and d$\tau_0 = 0$ correspond to $\tau_\mathrm{eff} = 0.0023 (1+z)^{3.65}$. The mean flux controls the amplitude of the flux power spectrum, and has an effect analogous to the linear bias parameter of galaxy surveys. A good order of magnitude model is that the amplitude of the flux power spectrum is directly proportional to $\tau_0$, with increased sensitivity at high redshift where the overall absorption is larger. Note that, by construction, the effect of d$\tau_0$ at $z=3$ is zero.
 
+Importantly, because the mean flux parameter must be constrained first and is measured by thr amplitude of the flux power spectrum, the \Lya~forest measures other cosmological parameters only insofar as they change the power spectrum shape. The initial power spectrum  amplitude $A_P$, shown in the middle row of Figure~\ref{fig:Apnsfluxpower} also changes the flux power spectrum amplitude. However, it is not degenerate with the mean flux. Increasing $A_P$ increases the flux power spectrum amplitude only on large scales, with small scales partially washed out by nonlinear growth. The spectral index $n_P$ (right panel of middle row) changes the slope of both the initial matter power spectrum and the flux power spectrum, but again is partially washed out on small scales for $z < 3$.
 
+The above four parameters dominate the information content of the flux power spectrum on these scales \cite{Pedersen:2022}. The other two cosmological parameters are the growth function $\Omega_M h^2$ and $h$, whose effect on the flux power spectrum is significantly smaller. As expected, for constant $\Omega_M h^2$, changing $h$ also changes $\Omega_M$ and thus slightly shifts the mapping between physical and velocity units (the shift is slight because at $z=2$ we are deep in the matter dominated era). The small, poorly correlated, change in the flux power spectrum is due mostly to modes shifting between bins and thus dominated by the small residual effect of cosmic variance. The growth function $\Omega_M h^2$ does change the amplitude of the flux power spectrum. The effect is similar to $A_P$ in shape, but distinguished from it by a much stronger dependence on redshift. Lower redshifts have experienced more growth and are thus more sensitive to the growth function. The overall amplitude of the change in the flux power spectrum is smaller than $A_P$, as this parameter is already fairly well constrained by Planck \cite{Planck:2018}, and so our emulator limits are relatively tight compared to the constraints available from the \Lya~forest alone.
+
+Figure~\ref{fig:zhefluxpower} shows the effect of the thermal parameters on the flux power spectrum. On the scales measured by BOSS, the thermal parameters have a relatively modest effect, which is why we supplement our analysis with a measurement of the mean IGM temperature derived from high resolution flux power spectrum data. The initial helium reionization redshift $z_\mathrm{Hei}$ shows a very small effect, due to our choices of plotting redshift, which are either before helium reionization starts or after it is almost finished in the default model at $z=2.9$ \spb{Change this}. We are more sensitive to both $z_\mathrm{Hef}$ and $\alpha_q$, which are somewhat degenerate. Decreasing $\alpha_q$ increases the maximum temperature during helium reionization, and
+\spb{Why do zhef and alphaq have such a big effect at z=4.4 before he reion starts?} On large scales the scale-dependent signature of patchy helium reionization is visible
 
 \subsubsection{Effect of AGN Feedback}
 
