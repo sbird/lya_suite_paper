@@ -18,25 +18,31 @@ from dla_data import ho21_cddf
 def regen_single_flux_power_emu(emudir, outdir="", mf=None):
     """Make and save a file of the flux power spectra with and without optical depth rescaling"""
     if mf is not None:
-        mf = ConstMeanFlux()
+        mf = ConstMeanFlux(1)
     emu = Emulator(emudir, tau_thresh=1e6, mf=mf)
     emu.load()
     #Set max k to a large value
-    emu.kf = np.concatenate([ldd.BOSSData().get_kf(),np.logspace(np.log10(0.02), np.log10(0.06), 20)])
+    emu.kf = np.concatenate([ldd.BOSSData().get_kf(),np.logspace(np.log10(0.02), np.log10(0.1), 20)])
     emu.set_maxk()
     print(emu.kf[-10:], emu.maxk)
     emu.myspec = fps.MySpectra(max_z=emu.max_z, min_z=emu.min_z, max_k=emu.maxk)
     #Backup any existing flux powers.
-    if mf is not None:
-        savefile = "cc_emulator_flux_vectors_tau1000000.hdf5"
-    else:
-        savefile = "emulator_flux_vectors_tau1000000.hdf5"
-    shutil.move(os.path.join(emudir, savefile), os.path.join(emudir, savefile+".backup"))
-    emu.get_flux_vectors()
+    savefile = "cc_emulator_flux_vectors_tau1000000.hdf5"
+    try:
+        shutil.move(os.path.join(emudir, savefile), os.path.join(emudir, savefile+".backup"))
+    except FileNotFoundError:
+        pass
+    emu.get_flux_vectors(min_z=2.2, max_z=5.0)
     #Move new flux powers where I want them
-    save = os.path.join("fpk_highk/"+outdir, savefile)
+    newsavefile = savefile
+    if mf is None:
+        newsavefile= "nomf_emulator_flux_vectors_tau1000000.hdf5"
+    save = os.path.join("fpk_highk/"+outdir, newsavefile)
     shutil.move(os.path.join(emudir, savefile), save)
-    shutil.move(os.path.join(emudir, savefile+".backup"), os.path.join(emudir, savefile))
+    try:
+        shutil.move(os.path.join(emudir, savefile+".backup"), os.path.join(emudir, savefile))
+    except FileNotFoundError:
+        pass
 
 def get_flux_power_resolution(hiresdir, lowresdir):
     """Make and save a file of the flux power spectra with and without optical depth rescaling"""
@@ -377,11 +383,12 @@ def single_parameter_t0_plot(plotdir='../figures', one=False):
     return like
 
 if __name__ == "__main__":
+    get_flux_power_resolution("emu_full_hires", "emu_full_extend")
 #     make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
 #     make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
 #    make_res_convergence2()
    #make_box_convergence("box_converge.hdf5")
-    single_parameter_plot()
-    single_parameter_t0_plot(one=False)
-    single_parameter_t0_plot(one=True)
+#     single_parameter_plot()
+#     single_parameter_t0_plot(one=False)
+#     single_parameter_t0_plot(one=True)
     # plot_dla_cddf()
