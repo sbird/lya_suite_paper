@@ -254,8 +254,6 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
     means = np.mean(plimits, axis=1)
     okf, defaultfv, _ = like.get_predicted(means)
     pnames = like.get_pnames()
-    if zzs is None:
-        zzs = np.array([2.2, 3.2, 4.4])
     assert len(pnames) == np.size(means)
     dist_col = dc.get_distinct(12)
     for (i, name) in enumerate(pnames):
@@ -272,12 +270,16 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
         lblstr = r"$%s=%.2g$, $z=%.2g$"
         if name[0] == 'omegamh2':
             lblstr = r"$%s=%.3g$, $z=%.2g$"
-        if name[0] == 'zhei':
+        if name[0] == 'herei':
             zzs = np.array([3.6, 3.2])
-        if name[0] == 'zhef' or name[0] == 'alphaq':
+        if name[0] == 'heref' or name[0] == 'alphaq':
             zzs = np.array([3.2, 2.2])
         if name[0] == 'hireionz':
             zzs = np.array([3.2, 4.4])
+        if name[0] == 'bhfeedback':
+            zzs = np.array([3.2, 2.2])
+        else:
+            zzs = np.array([2.2, 3.2, 4.4])
         for (j,zz) in enumerate(zzs):
             zind = np.argmin(np.abs(like.zout - zz))
             plt.semilogx(okf[zind], upperfv[zind]/defaultfv[zind], label= lblstr % (name[1], upper[i], zz), color=dist_col[2*j % 12])
@@ -310,9 +312,10 @@ def single_parameter_t0_plot(plotdir='../figures', one=False):
     print(pnames)
     if one:
         pnames = [('herei', r'z_\mathrm{He i}'), ('hireionz', r'z_{Hi}')]
+        pind = [2,7]
     else:
         pnames = [('heref', r'z_\mathrm{He f}'), ('alphaq', r'\alpha_q')]
-    pind = [2,3,4,7]
+        pind = [3,4]
     dist_col = dc.get_distinct(12)
     for (ii, name) in enumerate(pnames):
         upper = np.array(means)
@@ -342,5 +345,6 @@ if __name__ == "__main__":
 #    make_res_convergence2()
    #make_box_convergence("box_converge.hdf5")
     single_parameter_plot()
-    single_parameter_t0_plot()
+    single_parameter_t0_plot(one=False)
+    single_parameter_t0_plot(one=True)
     # plot_dla_cddf()
