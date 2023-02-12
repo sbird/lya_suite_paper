@@ -452,17 +452,6 @@ Figure~\ref{fig:meanigmtempdens} shows the mean temperatures for our simulations
 
 %Ref.~\cite{Chabanier:2022} showed that SPH and grid codes agree to less than $1\%$.
 
-\subsection{High Column Density Systems}
-
-\begin{figure*}
-\centering
-\includegraphics[width=0.6\textwidth]{figures/cddf_hires.pdf}
- \caption{Column density distribution function (CDDF) of high column density absorbers from our $3$ high resolution simulations at $z=2.2$, compared to the CDDF from SDSS DR16 of Ref.~\cite{2021MNRAS.507..704H}}.
- \label{fig:DLACDDF}
-\end{figure*}
-
-Figure~\ref{fig:DLACDDF} shows the predicted column density distribution function for high column density absorbers from our three high fidelity simulations. We have generated spectra at random positions until we have $4000$ spectra, each containing a system with column density $N_{HI} > 10^{18}$ cm$^{-2}$. There is good agreement between the simulations and the observed CDDF from Ref.~\cite{2021MNRAS.507..704H}. This can be taken as a strong prior on the supernova wind parameters and justifies our choice to fix the wind model in our emulator. Furthermore, there is no strong or consistent variation with emulator parameters, which reinforces that the cosmological information in the high column density absorbers is small and so it is optimal to exclude them when computing the flux power spectrum.
-
 \subsection{Effect of Parameters on the Flux Power Spectrum and Temperature}
 \label{sec:singleparams}
 
@@ -480,20 +469,20 @@ Figure~\ref{fig:DLACDDF} shows the predicted column density distribution functio
 
 \begin{figure}
     \centering
-	\includegraphics[width=0.48\columnwidth]{figures/single_param_herei.pdf}
-    \includegraphics[width=0.48\columnwidth]{figures/single_param_heref.pdf}
-	\includegraphics[width=0.48\columnwidth]{figures/single_param_hireionz.pdf}
-    \includegraphics[width=0.48\columnwidth]{figures/single_param_alphaq.pdf}
-    \caption{Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing a single simulation parameter, for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. Shown are the four reionization parameters $z_\mathrm{Hei}$ (Top-Left) and $z_\mathrm{Hef}$ (Top-Right), $z_\mathrm{HI}$ (Bottom-Left) and $\alpha_q$ (Bottom-Right).}
-    \label{fig:zhefluxpower}
+    \includegraphics[width=0.48\columnwidth]{figures/single_param_t0_hi_.pdf}
+    \includegraphics[width=0.48\columnwidth]{figures/single_param_t0_hef_.pdf} \\
+    \caption{Effect on the mean IGM temperature $T_0$ as a function of redshift, for the four reionization parameters which significantly change $T_0$. (Top-Left) Effect of $z_\mathrm{Hei}$ and $z_\mathrm{HI}$. (Top-Right) Effect of $z_\mathrm{Hef}$ and $\alpha_q$.}
+    \label{fig:meantempfluxpower}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.48\columnwidth]{figures/single_param_bhfeedback.pdf}
-    	\includegraphics[width=0.48\columnwidth]{figures/single_param_t0.pdf}
-    \caption{(Left) Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing the strength of black hole feedback, $\epsilon_\mathrm{AGN}$ for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. (Right) Effect on the mean IGM temperature $T_0$ as a function of redshift, for the four reionization parameters which significantly change $T_0$.}
-    \label{fig:meantempfluxpower}
+	\includegraphics[width=0.48\columnwidth]{figures/single_param_herei.pdf}
+    \includegraphics[width=0.48\columnwidth]{figures/single_param_heref.pdf} \\
+	\includegraphics[width=0.48\columnwidth]{figures/single_param_hireionz.pdf}
+    \includegraphics[width=0.48\columnwidth]{figures/single_param_alphaq.pdf}
+    \caption{Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing a single simulation parameter, for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. Shown are the four reionization parameters $z_\mathrm{Hei}$ (Top-Left) and $z_\mathrm{Hef}$ (Top-Right), $z_\mathrm{HI}$ (Bottom-Left) and $\alpha_q$ (Bottom-Right).}
+    \label{fig:zhefluxpower}
 \end{figure}
 
 In this Section we discuss the effect of varying each parameter individually on the flux power spectrum, as predicted by our multi-fidelity emulator. We can use this to understand which parameters are most strongly measured by the \Lya~forest, and where the strongest degeneracies lie. Figure~\ref{fig:Apnsfluxpower} shows the mean flux and cosmological parameters. The top row shows the mean flux rescaling parameters $\tau_0$ and d$\tau_0$, which control the total abundance of neutral hydrogen as a function of redshift. As a reminder, these parameters are defined so that  $\tau_0 = 1$ and d$\tau_0 = 0$ correspond to $\tau_\mathrm{eff} = 0.0023 (1+z)^{3.65}$. The mean flux controls the amplitude of the flux power spectrum, and has an effect analogous to the linear bias parameter of galaxy surveys. A good order of magnitude model is that the amplitude of the flux power spectrum is directly proportional to $\tau_0$, with increased sensitivity at high redshift where the overall absorption is larger. Note that, by construction, the effect of d$\tau_0$ at $z=3$ is zero.
@@ -502,14 +491,30 @@ Importantly, because the mean flux parameter must be constrained first and is me
 
 The above four parameters dominate the information content of the flux power spectrum on these scales \cite{Pedersen:2022}. The other two cosmological parameters are the growth function $\Omega_M h^2$ and $h$, whose effect on the flux power spectrum is significantly smaller. As expected, for constant $\Omega_M h^2$, changing $h$ also changes $\Omega_M$ and thus slightly shifts the mapping between physical and velocity units (the shift is slight because at $z=2$ we are deep in the matter dominated era). The small, poorly correlated, change in the flux power spectrum is due mostly to modes shifting between bins and thus dominated by the small residual effect of cosmic variance. The growth function $\Omega_M h^2$ does change the amplitude of the flux power spectrum. The effect is similar to $A_P$ in shape, but distinguished from it by a much stronger dependence on redshift. Lower redshifts have experienced more growth and are thus more sensitive to the growth function. The overall amplitude of the change in the flux power spectrum is smaller than $A_P$, as this parameter is already fairly well constrained by Planck \cite{Planck:2018}, and so our emulator limits are relatively tight compared to the constraints available from the \Lya~forest alone.
 
-Figure~\ref{fig:zhefluxpower} shows the effect of the thermal parameters on the flux power spectrum. On the scales measured by BOSS, the thermal parameters have a relatively modest effect, which is why we supplement our analysis with a measurement of the mean IGM temperature derived from high resolution flux power spectrum data. The initial helium reionization redshift $z_\mathrm{Hei}$ shows a very small effect, due to our choices of plotting redshift, which are either before helium reionization starts or after it is almost finished in the default model at $z=2.9$ \spb{Change this}. We are more sensitive to both $z_\mathrm{Hef}$ and $\alpha_q$, which are somewhat degenerate. Decreasing $\alpha_q$ increases the maximum temperature during helium reionization, and
-\spb{Why do zhef and alphaq have such a big effect at z=4.4 before he reion starts?} On large scales the scale-dependent signature of patchy helium reionization is visible
+Figure~\ref{fig:meanigmtempdens} shows the effect of the thermal parameters on the mean IGM temperature. A later hydrogen reionization redshift gives the gas less time to cool after the temperature boost and thus increases the temperature of the IGM moderately, although the effect is washed out once helium reionization starts. The effect of the onset of helium reionization is large during the initial phases of helium reionization, but quickly diminishes by $z=3.0$. The sign of the effect is reversed at lower redshift: a later starting point of helium reionization leads to a higher final temperature as reionization proceeds faster and the gas experiences less cooling during the reionization process. The quasar spectral index $\alpha_q$ directly controls the temperature during reionization: a lower $\alpha_q$ leads to a higher peak temperature, while a higher $\alpha_q$ leads to a lower temperature. After reionization finishes, the cooling rate is the same irrespective of the peak temperature, so reducing $\alpha_q$ still boosts the temperature at $z=2.2$. During helium reionization, the effect of  $z_\mathrm{Hef}$ is similar to $\alpha_q$. A shorter helium reionization means the gas is heated more strongly while reionization is ongoing. However, once helium reionization has finished the effect is much smaller. As with $z_\mathrm{Hei}$, a shorter duration of helium reionization leads to a higher final temperature as the gas experiences has less time to cool.
+
+Figure~\ref{fig:zhefluxpower} shows the effect of the thermal parameters on the flux power spectrum. Changing the gas temperature changes the neutral fraction and thus the amplitude of the flux power spectrum. This is not completely degenerate with the mean optical depth parameters as the redshift dependence is proportional to the way each parameter affects the IGM temperature, shown in Figure~\ref{fig:meanigmtempdens}. Thus the amplitude shifts are largest during helium reionization and smaller by $z=2.2$. However, since $z_\mathrm{Hei}$, $z_\mathrm{Hef}$ and $\alpha_q$ all affect the flux power spectrum amplitude in similar ways, constraints on the thermal history from the flux power spectrum alone are likely to suffer from a three way degeneracy. The best constraints will continue to come from scales which resolve the thermal cutoff in the power spectrum \cite{Gaikwad:2021}. On large scales there is a scale-dependent effect visible when changing $z_{Hef}$ and $\alpha_q$. A scale-dependent bias signature is expected from patchy helium reionization, as discussed in Refs.~\cite{Pontzen:2014a, Pontzen:2014b,  Gontcho:2014}. Essentially, different regions of the box have different temperatures, depending on when the reionized, . This effect is only present on the largest scales probed by BOSS (and is mostly degenerate with the effect of DLA damping wings \cite{Rogers:2017}), so it is likely not directly measurable in the 1D flux power spectrum. In future work we will look at measuring this bias using 3D correlations.
+
+At $z=4.4$, for a low hydrogen reionization midpoint, the emulator predicts a similar large-scale effect from our patchy hydrogen reionization model. This would not yet be detectable in BOSS data as the statistical error at this redshift is still large compared to the effect, however it may be detectable in DESI. By $z=3.2$, the effect of the hydrogen reionization midpoint has mostly disappeared.
 
 \subsubsection{Effect of AGN Feedback}
 
 Ref.~\cite{Viel:2013} showed an effect of AGN feedback which rises to $10\%$ at $z=2$, while Ref.~\cite{Chabanier:2020} found $8\%$ at $z=2$ and $k = 0.005$ s/km. Both simulations use AGN feedback models with parameters tuned to match the properties of galaxies at $z=0$. However, the implementations are different. Ref.~\cite{Chabanier:2020} uses the Horizon-AGN simulation \cite{Dubois:2016}. The AGN feedback model has two modes, one thermal and one kinetic, with the kinetic mode dominating at low accretion rates. Ref.~\cite{Viel:2013} uses the OWLS simulation suite, and delivers AGN feedback energy thermally, once black hole accretion has accumulated enough energy to heat a nearby gas particle to $10^8$ K. Despite the different implementations, the two codes agree reasonably well as to the effect of AGN feedback on the \Lya~forest.
 
 \spb{Plot of the effect of the AGN feedback parameter. Ideally I would compare this to the correction factor from Chabanier et al.}
+
+\subsection{High Column Density Systems}
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.48\columnwidth]{figures/single_param_bhfeedback.pdf}
+\includegraphics[width=0.48\textwidth]{figures/cddf_hires.pdf}
+ \caption{(Left) Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing the strength of black hole feedback, $\epsilon_\mathrm{AGN}$ for three representative redshifts. All other parameters are shown fixed to the midpoint of their range. (Right) Column density distribution function (CDDF) of high column density absorbers from our $3$ high resolution simulations at $z=2.2$, compared to SDSS DR16 \cite{2021MNRAS.507..704H}.}
+ \label{fig:DLACDDF}
+\end{figure*}
+
+Figure~\ref{fig:DLACDDF} shows the predicted column density distribution function for high column density absorbers from our three high fidelity simulations. We have generated spectra at random positions until we have $4000$ spectra, each containing a system with column density $N_{HI} > 10^{18}$ cm$^{-2}$. There is good agreement between the simulations and the observed CDDF from Ref.~\cite{2021MNRAS.507..704H}. This can be taken as a strong prior on the supernova wind parameters and justifies our choice to fix the wind model in our emulator. Furthermore, there is no strong or consistent variation with emulator parameters, which reinforces that the cosmological information in the high column density absorbers is small and so it is optimal to exclude them when computing the flux power spectrum.
+
 
 \section{Conclusion}
 
