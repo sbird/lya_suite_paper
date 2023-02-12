@@ -19,8 +19,12 @@ def regen_single_flux_power_emu(emudir, outdir="", mf=None):
     """Make and save a file of the flux power spectra with and without optical depth rescaling"""
     if mf is not None:
         mf = ConstMeanFlux(1)
+    minz = 2.2
+    maxz = 5.0
     emu = Emulator(emudir, tau_thresh=1e6, mf=mf)
     emu.load()
+    emu.max_z = maxz
+    emu.min_z = minz
     #Set max k to a large value
     emu.kf = np.concatenate([ldd.BOSSData().get_kf(),np.logspace(np.log10(0.02), np.log10(0.1), 20)])
     emu.set_maxk()
@@ -168,25 +172,27 @@ def make_res_convergence(convfile="fluxpower_converge.hdf5", convfile2="res_conv
     plt.savefig("../figures/resolution-convergence.pdf")
     plt.clf()
 
-def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="dtau-48-46/hires", mf_lowres="dtau-48-46"):
+def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="fpk_highk/hires", mf_lowres="fpk_highk"):
     """Make a plot showing the convergence of the flux power spectrum with resolution."""
-    mffile = "mf_emulator_flux_vectors_tau1000000.hdf5"
+    mffile = "cc_emulator_flux_vectors_tau1000000.hdf5"
     mf_flux_hires = h5py.File(os.path.join(mf_hires, mffile))
     mf_flux = h5py.File(os.path.join(mf_lowres, mffile))
     #Find spectra with tau0 = 1.
-    ii = np.where(np.abs(mf_flux_hires["params"][:][:,0] -1) < 0.02)
-    params_hr = mf_flux_hires["params"][:][ii,1:][0]
-    ii_lr = np.where(np.abs(mf_flux["params"][:][:,0] -1) < 0.02)
-    params_lr = mf_flux["params"][:][ii_lr,1:][0]
-    flux_powers_hr2 = mf_flux_hires["flux_vectors"][:][ii,:][0]
-    flux_powers_lr2 = mf_flux["flux_vectors"][:][ii_lr,:][0]
+    #ii = np.where(np.abs(mf_flux_hires["params"][:][:,0] -1) < 0.02)
+    params_hr = mf_flux_hires["params"][:] #[ii,1:][0]
+    #ii_lr = np.where(np.abs(mf_flux["params"][:][:,0] -1) < 0.02)
+    params_lr = mf_flux["params"][:] #[ii_lr,1:][0]
+    flux_powers_hr2 = mf_flux_hires["flux_vectors"][:] #[ii,:][0]
+    flux_powers_lr2 = mf_flux["flux_vectors"][:] #[ii_lr,:][0]
     nhires = np.shape(params_hr)[0]
     nlores = np.shape(params_lr)[0]
     paraminds = [np.argmin(np.sum((params_hr[iii,:]- params_lr)**2,axis=1)) for iii in range(nhires)]
-    kfkms_vhr2 = mf_flux_hires["kfkms"][:][ii,:][0]
+    kfkms_vhr2 = mf_flux_hires["kfkms"][:] #[ii,:][0]
     redshifts2 = mf_flux_hires["zout"][:]
     nz = np.shape(redshifts2)[0]
-    flux_powers_lr2 = flux_powers_lr2.reshape((nlores, nz,-1))
+    redshifts_lr = mf_flux["zout"][:]
+    nzlr = np.shape(mf_flux["zout"][:])[0]
+    flux_powers_lr2 = flux_powers_lr2.reshape((nlores, nzlr,-1))
     flux_powers_hr2 = flux_powers_hr2.reshape((nhires, nz,-1))
     assert np.shape(kfkms_vhr2)[-1] == np.shape(flux_powers_hr2)[-1]
     assert np.shape(kfkms_vhr2)[-1] == np.shape(flux_powers_lr2)[-1]
@@ -200,7 +206,7 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="dtau-48-
     index = 1
     dist_col = dc.get_distinct(2)
     for ii, zz in enumerate(redshifts2):
-        if zz > 4.4 or zz < 2.2:
+        if zz > 5.1 or zz < 2.1:
             continue
         sharex=None
         sharey=None
@@ -208,12 +214,13 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="dtau-48-
             sharex = axes[(index-1) % 3]
         #if (index-1) % 3 > 0:
             #sharey = axes[index -1 - ((index-1) % 3)]
-        ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
+        ax = fig.add_subplot(5,3, index, sharex=sharex, sharey=sharey)
+        ii_lr = np.where(np.abs(redshifts_lr - zz) < 0.01)[0][0]
         for jj in range(nhires):
             label = "%.2g kpc/h" % (120000./1536.)
             if jj > 0:
                 label = ""
-            ax.semilogx(kfkms_vhr2[jj, ii], flux_powers_lr2[paraminds[jj], ii]/flux_powers_hr2[jj, ii], label=label, color=dist_col[0], ls="-")
+            ax.semilogx(kfkms_vhr2[jj, ii], flux_powers_lr2[paraminds[jj], ii_lr]/flux_powers_hr2[jj, ii], label=label, color=dist_col[0], ls="-")
         zz2 = np.where(np.abs(redshifts - zz) < 0.01)
         ax.semilogx(kfkms_vhr[zz2][0], flux_powers_hr[zz2][0]/flux_powers_vhr[zz2][0], label="%.2g kpc/h" % (15000./384.), ls="--", color=dist_col[1])
         ax.text(0.015, 1.06, "z=%.1f" % zz)
@@ -227,10 +234,10 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="dtau-48-
         if index == 1:
             ax.legend(loc="upper left", frameon=False, fontsize='small')
 #         print("z=%g, index %d\n" % (zz, index))
-        if index < 10:
+        if index < 13:
             plt.setp(ax.get_xticklabels(), visible=False)
         else:
-            ax.set_xlim(1e-3, 0.05)
+            ax.set_xlim(1e-3, 0.1)
             ax.set_xlabel("k (s/km)")
         axes.append(ax)
         index += 1
