@@ -4,9 +4,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 basedir = 'dtau-48-46/'
-figbase = 'figures/'
+figbase = '../figures/'
 
-c_midnight = "black"
+c_midnight = "pink"
 c_sunshine = "gold"
 # leave-one-out for LF FPS
 ff = h5py.File(basedir+'loo_fps.hdf5', 'r')
@@ -32,6 +32,9 @@ ax[0].set_yticks([])
 ax[0].tick_params(which='both', direction='inout', right=True, labelright=True, labelleft=False, length=12)
 ax[0].tick_params(which='minor', length=8, labelright=False, labelleft=False)
 ax[0].set_xlabel(r'$\|P_F^{{pred}}-P_F^{{true}}\|/\sigma^{{pred}}$', fontsize=26)
+bins2 = np.linspace(-3, 3, 200)
+ax[0].plot(bins, 4200 * np.exp(-0.5*bins**2), color="black")
+ax[0].set_yscale('log')
 
 logbins = np.logspace(np.log10(err.min()), np.log10(err.max()), 280)
 ax[1].hist(err, bins=logbins, color=c_midnight, histtype='stepfilled', alpha=0.9, label='Single-Fidelity, LF')
