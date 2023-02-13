@@ -295,6 +295,13 @@ def save_fig(name, plotdir):
     plt.savefig(os.path.join(plotdir,"single_param_%s.pdf" % name[0]))
     plt.clf()
 
+def make_loo_values():
+    """Generate the LOO errors for the default saved flux power spectra."""
+    emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-46")
+    hremudir = os.path.join(os.path.dirname(__file__), "dtau-48-46/hires")
+    like = LikelihoodClass(basedir=emulatordir, HRbasedir=hremudir, data_corr=False, tau_thresh=1e6, loo_errors=True, traindir=None, use_meant=False)
+    like.calculate_loo_errors(savefile="loo_fps_2.hdf5")
+
 def single_parameter_plot(zzs=None, plotdir='../figures'):
     """Plot change in each parameter of an emulator from direct simulations."""
     #emulatordir = os.path.join(os.path.dirname(__file__), "emu_full_extend")
