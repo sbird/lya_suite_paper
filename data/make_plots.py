@@ -15,6 +15,35 @@ import lyaemu.distinct_colours_py3 as dc
 from fake_spectra.plot_spectra import PlottingSpectra
 from dla_data import ho21_cddf
 
+def regen_15mpc_flux_box(simdir, mf=None):
+    """Regenerate the 15 Mpc box flux power spectra ratios."""
+    if mf is not None:
+        mf = ConstMeanFlux(1)
+    minz = 2.2
+    maxz = 5.0
+    #Set max k to a large value
+    myspec = fps.MySpectra(max_z=maxz, min_z=minz, max_k=25)
+    powers = myspec.get_snapshot_list(simdir)
+    mef = None
+    if mf is not None:
+        mef = np.exp(-1*mf.get_t0(powers.get_zout()))
+    flux_vectors = powers.get_power_native_binning(mean_fluxes=mef, tau_thresh=1e6)
+    kfkms = powers.get_kf_kms()
+    return kfkms, flux_vectors, powers.get_zout()
+
+def save_15mpc_flux_box(convfile="fluxpower_converge_2.hdf5"):
+    """Save the 15 Mpc flux vectors in the box"""
+    kfkms_384,flux_vectors_384,zout = regen_15mpc_flux_box("L15n384")
+    kfkms_512,flux_vectors_512,zout = regen_15mpc_flux_box("L15n512")
+    with h5py.File(convfile, 'w') as hh:
+        hh.create_group("flux_vectors")
+        hh["flux_vectors"]["L15n384"] = flux_vectors_384
+        hh["flux_vectors"]["L15n512"] = flux_vectors_512
+        hh.create_group("kfkms")
+        hh["kfkms"]["L15n512"] = kfkms_512
+        hh["kfkms"]["L15n384"] = kfkms_384
+        hh["zout"] = zout
+
 def regen_single_flux_power_emu(emudir, outdir="", mf=None):
     """Make and save a file of the flux power spectra with and without optical depth rescaling"""
     if mf is not None:
@@ -300,7 +329,9 @@ def make_loo_values():
     emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-46")
     hremudir = os.path.join(os.path.dirname(__file__), "dtau-48-46/hires")
     like = LikelihoodClass(basedir=emulatordir, HRbasedir=hremudir, data_corr=False, tau_thresh=1e6, loo_errors=True, traindir=None, use_meant=False)
-    like.calculate_loo_errors(savefile="loo_fps_2.hdf5")
+    like.calculate_loo_errors(savefile="loo_fps_3.hdf5")
+#    likesf = LikelihoodClass(basedir=emulatordir, data_corr=False, tau_thresh=1e6, loo_errors=True, traindir=None, use_meant=False)
+#    likesf.calculate_loo_errors(savefile="loo_fps_2.hdf5")
 
 def single_parameter_plot(zzs=None, plotdir='../figures'):
     """Plot change in each parameter of an emulator from direct simulations."""
@@ -402,7 +433,7 @@ if __name__ == "__main__":
 #     get_flux_power_resolution("emu_full_hires", "emu_full_extend")
 #     make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
 #     make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
-   make_res_convergence2()
+    make_res_convergence2()
    #make_box_convergence("box_converge.hdf5")
 #     single_parameter_plot()
 #     single_parameter_t0_plot(one=False)
