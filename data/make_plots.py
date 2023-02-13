@@ -52,9 +52,9 @@ def get_flux_power_resolution(hiresdir, lowresdir):
     """Make and save a file of the flux power spectra with and without optical depth rescaling"""
     #Without mean flux rescaling
     regen_single_flux_power_emu(hiresdir, outdir="hires")
-    regen_single_flux_power_emu(lowresdir)
     regen_single_flux_power_emu(hiresdir, outdir="hires", mf=True)
     regen_single_flux_power_emu(lowresdir, mf=True)
+    regen_single_flux_power_emu(lowresdir)
 
 def plot_dla_cddf():
     """Plot the strong absorber column density function"""
@@ -208,13 +208,15 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="fpk_high
     for ii, zz in enumerate(redshifts2):
         if zz > 5.1 or zz < 2.1:
             continue
+        if close(zz, [4.8, 4.4,4.0]):
+            continue
         sharex=None
         sharey=None
         if index > 3:
             sharex = axes[(index-1) % 3]
         #if (index-1) % 3 > 0:
             #sharey = axes[index -1 - ((index-1) % 3)]
-        ax = fig.add_subplot(5,3, index, sharex=sharex, sharey=sharey)
+        ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
         ii_lr = np.where(np.abs(redshifts_lr - zz) < 0.01)[0][0]
         for jj in range(nhires):
             label = "%.2g kpc/h" % (120000./1536.)
@@ -223,7 +225,7 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="fpk_high
             ax.semilogx(kfkms_vhr2[jj, ii], flux_powers_lr2[paraminds[jj], ii_lr]/flux_powers_hr2[jj, ii], label=label, color=dist_col[0], ls="-")
         zz2 = np.where(np.abs(redshifts - zz) < 0.01)
         ax.semilogx(kfkms_vhr[zz2][0], flux_powers_hr[zz2][0]/flux_powers_vhr[zz2][0], label="%.2g kpc/h" % (15000./384.), ls="--", color=dist_col[1])
-        ax.text(0.015, 1.06, "z=%.1f" % zz)
+        ax.text(0.025, 1.06, "z=%.1f" % zz)
         ax.grid(visible=True, axis='y')
         ax.set_ylim(0.95, 1.10)
         ax.set_yticks([0.95, 0.98, 1.0, 1.02, 1.06]) #, [str(1.0), str(1.02), str(1.04)])
@@ -234,10 +236,10 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="fpk_high
         if index == 1:
             ax.legend(loc="upper left", frameon=False, fontsize='small')
 #         print("z=%g, index %d\n" % (zz, index))
-        if index < 13:
+        if index < 10:
             plt.setp(ax.get_xticklabels(), visible=False)
         else:
-            ax.set_xlim(1e-3, 0.1)
+            ax.set_xlim(1.5e-3, 0.1)
             ax.set_xlabel("k (s/km)")
         axes.append(ax)
         index += 1
@@ -390,10 +392,10 @@ def single_parameter_t0_plot(plotdir='../figures', one=False):
     return like
 
 if __name__ == "__main__":
-    get_flux_power_resolution("emu_full_hires", "emu_full_extend")
+#     get_flux_power_resolution("emu_full_hires", "emu_full_extend")
 #     make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
 #     make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
-#    make_res_convergence2()
+   make_res_convergence2()
    #make_box_convergence("box_converge.hdf5")
 #     single_parameter_plot()
 #     single_parameter_t0_plot(one=False)
