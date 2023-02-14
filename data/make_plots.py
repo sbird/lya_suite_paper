@@ -26,19 +26,23 @@ def regen_15mpc_flux_box(simdir, mf=None):
     powers = myspec.get_snapshot_list(simdir)
     mef = None
     if mf is not None:
-        mef = np.exp(-1*mf.get_t0(powers.get_zout()))
+        mef = np.exp(-1*mf.get_t0(powers.get_zout()))[0]
     flux_vectors = powers.get_power_native_binning(mean_fluxes=mef, tau_thresh=1e6)
     kfkms = powers.get_kf_kms()
     return kfkms, flux_vectors, powers.get_zout()
 
 def save_15mpc_flux_box(convfile="fluxpower_converge_2.hdf5"):
     """Save the 15 Mpc flux vectors in the box"""
-    kfkms_384,flux_vectors_384,zout = regen_15mpc_flux_box("L15n384")
-    kfkms_512,flux_vectors_512,zout = regen_15mpc_flux_box("L15n512")
+    kfkms_384,flux_vectors_384,zout = regen_15mpc_flux_box("L15n384/output")
+    kfkms_512,flux_vectors_512,zout = regen_15mpc_flux_box("L15n512/output")
+    kfkms_384,flux_vectors_384_mf,zout = regen_15mpc_flux_box("L15n384/output", mf=True)
+    kfkms_512,flux_vectors_512_mf,zout = regen_15mpc_flux_box("L15n512/output", mf=True)
     with h5py.File(convfile, 'w') as hh:
         hh.create_group("flux_vectors")
         hh["flux_vectors"]["L15n384"] = flux_vectors_384
         hh["flux_vectors"]["L15n512"] = flux_vectors_512
+        hh["flux_vectors"]["L15n384mf"] = flux_vectors_384_mf
+        hh["flux_vectors"]["L15n512mf"] = flux_vectors_512_mf
         hh.create_group("kfkms")
         hh["kfkms"]["L15n512"] = kfkms_512
         hh["kfkms"]["L15n384"] = kfkms_384
@@ -201,7 +205,7 @@ def make_res_convergence(convfile="fluxpower_converge.hdf5", convfile2="res_conv
     plt.savefig("../figures/resolution-convergence.pdf")
     plt.clf()
 
-def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="fpk_highk/hires", mf_lowres="fpk_highk"):
+def make_res_convergence2(convfile="fluxpower_converge_2.hdf5", mf_hires="fpk_highk/hires", mf_lowres="fpk_highk"):
     """Make a plot showing the convergence of the flux power spectrum with resolution."""
     mffile = "cc_emulator_flux_vectors_tau1000000.hdf5"
     mf_flux_hires = h5py.File(os.path.join(mf_hires, mffile))
@@ -226,10 +230,13 @@ def make_res_convergence2(convfile="fluxpower_converge.hdf5", mf_hires="fpk_high
     assert np.shape(kfkms_vhr2)[-1] == np.shape(flux_powers_hr2)[-1]
     assert np.shape(kfkms_vhr2)[-1] == np.shape(flux_powers_lr2)[-1]
     with h5py.File(convfile) as hh:
-        flux_powers_hr = hh["flux_vectors"]["L15n384"][:]
-        flux_powers_vhr = hh["flux_vectors"]["L15n512"][:]
         kfkms_vhr = hh["kfkms"]["L15n512"][:]
         redshifts = hh["zout"][:]
+        nzvhr = np.size(redshifts)
+        flux_powers_hr = hh["flux_vectors"]["L15n384mf"][:]
+        flux_powers_vhr = hh["flux_vectors"]["L15n512mf"][:]
+        flux_powers_hr = flux_powers_hr.reshape((nzvhr, -1))
+        flux_powers_vhr = flux_powers_vhr.reshape((nzvhr, -1))
     fig = plt.figure()
     axes = []
     index = 1
