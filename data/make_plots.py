@@ -436,6 +436,35 @@ def single_parameter_t0_plot(plotdir='../figures', one=False):
     save_fig_t0(plotdir, extra=extra)
     return like
 
+def make_spectra_convergence():
+    """Plot showing the convergence with number of spectra"""
+    simdir = "emu_full/ns0.816Ap1.55e-09herei3.55heref3.15alphaq1.48hub0.658omegamh20.143hireionz7.38bhfeedback0.0533/output"
+    #largest: grid with 720^2 spectra through each axis
+    sgrid32 = spectra.Spectra(20, simdir, None, None, savefile="lya_forest_spectra_grid_720.hdf5", res=10)
+    (kfgrid32, flux_pow_grid32) = ssgrid32.get_flux_power_1D(mean_flux_desired=mf, tau_thresh=1e6)
+    #Desired: grid with 480^2 spectra through each axis
+    ssgrid3 = spectra.Spectra(20, simdir, None, None, savefile="lya_forest_spectra_grid_480.hdf5", res=10)
+    (kfgrid3, flux_pow_grid3) = ssgrid3.get_flux_power_1D(mean_flux_desired=mf, tau_thresh=1e6)
+    #Low density: grid with 179^2 spectra through *one* axis only!
+    ss = spectra.Spectra(20, simdir, None, None, savefile="lya_forest_spectra.hdf5", res=10)
+    (kf, flux_pow) = ss.get_flux_power_1D(mean_flux_desired=mf, tau_thresh=1e6)
+    gridspline = scipy.interpolate.interp1d(kfgrid32, flux_pow_grid32)
+    plt.semilogx(kf, flux_pow/gridspline(kf), ls=":", label=r"$179^2$")
+    plt.semilogx(kfgrid3, flux_pow_grid3/gridspline(kfgrid3), ls="-", label=r"$3\times 480^2$")
+    plt.ylim(0.9, 1.1)
+    plt.xlim(xmax=0.1)
+    plt.legend()
+    plt.savefig("../figures/gridfpk-diff.pdf")
+    plt.clf()
+    plt.loglog(kfgrid32, flux_pow_grid32, ls="-",  label=r"$3\times 720^2$")
+    plt.loglog(kfgrid3, flux_pow_grid3, ls="--",  label=r"$3\times 480^2$")
+    plt.loglog(kf, flux_pow, ls=":",  label=r"$179^2$")
+    plt.ylim(10, 40)
+    plt.xlim(xmax=0.02)
+    plt.legend()
+    plt.savefig("../figures/gridfpk.pdf")
+
+
 if __name__ == "__main__":
 #     get_flux_power_resolution("emu_full_hires", "emu_full_extend")
 #     make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
