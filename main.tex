@@ -112,9 +112,19 @@ We present a new suite of $43$ simulations of the Lyman-$\alpha$ forest, spannin
 
 \section{Introduction}
 
-Introduce the problem. Cite the previous simulation suites for the Lyman alpha forest. The purpose of a simulation suite is to compare to observational measurements. The main output of our suite is a set of medium resolution artificial flux power spectra, from which the flux power spectrum may be generated. In this paper we describe the simulation suite we have run and defer description of the likelihood function to upcoming work.
+%Introduce the problem. Cite the previous simulation suites for the Lyman alpha forest. The purpose of a simulation suite is to compare to observational measurements. The main output of our suite is a set of medium resolution artificial flux power spectra, from which the flux power spectrum may be generated. In this paper we describe the simulation suite we have run and defer description of the likelihood function to upcoming work.
 
+% Paragraph: the Lyman alpha forest is a classic probe of cosmology.
+% Power comes from small scales. Small scales require simulations.
+
+Creating an accurate model for the \Lya~forest requires the ability to probe the Jeans scales of the collapsing gas and thus a mean interparticle spacing of $\sim 39$ kpc/h \cite{Borde:2014}. Conversely, the box size required to have a handle on cosmic variance is $\sim 100$ Mpc/h. Ideally, \Lya~forest simulations thus have a particle load of  $3072^3$, which was previously infeasible. Here we present a suite of simulations and an emulator for the flux power spectrum built upon them. Together they are able to make predictions, accurate at the percent level, flux the flux power spectrum which would be output by a simulation within a wide range of cosmological parameters. Using the \mpgadget~code developed for the ASTRID simulation, our largest simulations have a box size of $120$ Mpc/h and $2\times 3072^3$ particles, achieving the desired resolution for the \Lya~forest. In addition, the simulations contain a full hydrodynamic galaxy formation model including stellar and black hole physics. The main output is the \Lya~spectra, of which we have generated $691200$ from each snapshot.
+
+%Prior art: McDonald paper. Borde paper. Pedersen's work and how we differ. Puchwein/Bolton SHERWOOD and SHERWOOD-Relics.
 \cite{Puchwein:2022}
+
+%The data: SDSS BOSS DR14. XQ-100. HIRES/MIKE.
+%Future data: 3D flux power spectrum, tomography.
+
 
 \section{Simulations}
 
@@ -398,15 +408,68 @@ This final high fidelity sample was chosen from the full set of low fidelity sam
 
 \subsection{Multi-Fidelity Emulator}
 
-Finally, we construct from our simulations a multi-fidelity Gaussian Process emulator following the scheme described in \cite{Bird:2019, Fernandez:2022}. The covariance kernel is the combination of a radial basis function and a dot kernel. The length-scale of the radial basis function for each parameter is a hyper-parameter chosen by optimisation.
-We use a multi-fidelity emulation scheme following \cite{Fernandez:2022}. We use the AR1 emulation model, where the resolution correction is modelled using a correction function, $\rho$, which is a function of $k$, $z$ and cosmological parameter. If the target high fidelity flux power spectrum is $P_{F, HF}$ and the low fidelity flux power spectrum is  $P_{F, LF}$, we thus correct for resolution using
-\begin{equation}
- P_{F, HF}(k, z, \boldsymbol{\theta}) =  \rho(k, z) P_{F, LF}(k,z,\boldsymbol{\theta}) + \delta(k, z, \boldsymbol{\theta})
-    \label{eq:mf_model}
-\end{equation}
-where $\rho$ is a trained hyperparameter, and $\delta(\boldsymbol{\theta})$ is a GP.
+Finally, we construct from our simulations a multi-fidelity Gaussian Process (GP) emulator following the scheme described in Refs.~\cite{Bird:2019, Fernandez:2022}.
+This allows accurate predictions of the simulated output, along with a measure of prediction uncertainty, for arbitrary cosmological parameters within our input set. We first construct an emulator, based on a Gaussian Process, for our low fidelity simulations. We then use the multi-fidelity technique, which allows for a cosmology dependent correction function, to generate a prediction for high fidelity simulations at arbitrary cosmologies.
+The multi-fidelity technique allows for simulations with different resolutions to be combined together: low resolution simulations explore parameter space and their low resolution result is corrected by a few high resolution evaluations. The multi-fidelity technique was introduced in astronomy by Ref.~\cite{Ho:2022} and applied to the \Lya~forest in Ref.~\cite{Fernandez:2022}.
 
-We have thus built a surrogate model able to target a mean interparticle spacing of $39$ kpc/h.
+The ultimate result is the construction of an emulator which can predict the \Lya~flux power spectrum for arbitrary cosmological parameters at the resolution of the high fidelity simulations. However, instead of the daunting task of performing $\sim 50$ simulations at our high fidelity ($3072^3$ particles), we need only run simulations at our low fidelity and apply a correction function using $3$ high fidelity simulations. Overall, our multi-fidelity emulator is able to make predictions similar to a suite of $\sim 50$ simulations with a mean interparticle spacing of $39$ comoving kpc/h.
+
+Our multi-fidelity emulator is built on Gaussian Processes, using the GPy
+package \cite{gpy2014} and EmuKit \cite{2021arXiv211013293P}. If $P_F(\boldsymbol{\theta})$ is the simulated \Lya~forest flux power spectrum as a function of $\boldsymbol{\theta}$, the input parameters to the simulation, then a GP models this output as draws from a distribution
+\begin{equation}
+    P_F(\boldsymbol{\theta}) \sim GP(\mu(\boldsymbol{\theta}), k(\boldsymbol{\theta}, \boldsymbol{\theta}^{\prime})),
+\end{equation}
+where $\mu(\boldsymbol{\theta})$ and $k(\boldsymbol{\theta}, \boldsymbol{\theta}^{\prime})$ are the mean and covariance function, respectively.
+As in \cite{Fernandez:2022}, we rescale the training samples by the median of the low fidelity spectrum, so that they match the GP prior of a zero mean function. The predictions are then multiplied by this rescaling factor on output. The covariance kernel is the combination of a radial basis function and a linear kernel, following \cite{Fernandez:2022}. The total kernel is
+\begin{equation}
+        k_\mathrm{RBF}(\boldsymbol{\theta}, \boldsymbol{\theta}'; \sigma_0, \boldsymbol{l}) + k_\mathrm{LIN}(\boldsymbol{\theta}, \boldsymbol{\theta}'; \boldsymbol{\sigma})\\
+        = \sigma_0^2 \exp{\left( \sum_{i=1}^{d} -\frac{(\boldsymbol{\theta}_i - {\boldsymbol{\theta}_i}')^2}{2 l_i^2} \right)} +  \sum_{i=1}^{d} \sigma_i^2 \boldsymbol{\theta}_i {\boldsymbol{\theta}_i}',
+\end{equation}
+where $d$ is the dimensionality of the input parameters.
+
+The multi-fidelity part of the model uses the linear multi-fidelity model Ref.~\citep{10.1093/biomet/87.1.1}. A high fidelity prediction is given by
+\begin{equation}
+    P_F^{^\mathrm{HF}}(k, z, \boldsymbol{\theta}) = \rho(k, z) \cdot P_F^{^\mathrm{LF}}(k, z, \boldsymbol{\theta}) + \delta(k, z, \boldsymbol{\theta}),
+    \label{eq:ko_model}
+\end{equation}
+where $\rho$ is a scaling parameter, and $\delta(\boldsymbol{\theta})$ is a GP (independent of the LF output). Both $\rho$ and $\delta$ are optimized using the training samples. $\rho$ is a multiplicative correction, and $\delta(\boldsymbol{\theta})$ is an additive correction. Notice that the cosmology dependence comes from $\delta$. In practice we shall see that the cosmology dependence of the resolution correction is fairly small for our simulations, and so the linear multi-fidelity model is a good choice.
+
+The hyperparameters that are learned from the training samples are: variances for the RBF ($\sigma_0^2$) and  linear ($\boldsymbol{\sigma}^2$) kernels, and the lengthscale controlling the smoothness of the RBF kernel, $\boldsymbol{l}$. An independent value is assigned for each dimension $d$ of the input for each of these hyperparameters. Parameters to which the flux power spectrum is more sensitive have a smaller scale. The kernel for $\delta(\boldsymbol{\theta})$ is also the combination of an RBF and a linear kernel. However, all parameters share a single length scale. This simplification was done to improve the training time, and we verified that it did not affect prediction accuracy. With only $3$ high fidelity samples, there is in any case little data to separately optimise the hyperparameters of $\delta(\boldsymbol{\theta})$.
+
+Ref.~\cite{Fernandez:2022} trained a GP for every $k$ bin for every redshift. However, with our increased training set size, we found that training a GP for each $k$ bin led to very large memory usage for the emulator, and substantially slowed down the training and prediction steps. Here we instead train a single GP for each redshift bin, across the full $k$ range. We found that the emulator accuracy was similar for our dataset.
+
+% The code used to generate training samples, train and test single- and multi-fidelity emulators, and perform inference via MCMC is publicly available at: \url{https://github.com/sbird/lya_emulator_full}.
+
+\subsubsection{Leave One Out Errors}
+
+Figure~\ref{fig:fps_error} shows the interpolation accuracy for our emulator. Accuracy is measured using leave-one-out errors. Each simulation is left out of the emulator training set in turn. The emulator is trained with this reduced set, and a prediction is made for the omitted simulation. The relative error between the prediction and true output from the omitted simulation is then used as the leave-one-out score.
+The distribution of relative errors from this calculation are shown for the flux power spectrum in Figure~\ref{fig:fps_error}.
+These figures show the errors for a single-fidelity emulator that is predicting low fidelity outputs (grey), and the errors for a multi-fidelity emulator that is predicting high fidelity outputs (yellow). Note that because there are only three high fidelity simulations, the multi-fidelity emulator error distributions have much smaller sample sizes, and have been scaled for clarity.
+
+In the left panels of Figures~\ref{fig:fps_error}, the absolute error normalized by the prediction uncertainty is shown.
+For the distributions with large enough sample sizes, these appear to be normally distributed, as expected.
+The right panels show the absolute relative error, a good indicator of the accuracy of the emulator predictions.
+The flux power emulator has an average error of $0.7\%$, with a maximum of $8\%$, when predicting the low fidelity simulations. For the high fidelity predictions, the mean is similar, but the maximum leave-one-out interpolation error is smaller, $4\%$, reflecting the smaller test set. Note that because these are interpolation errors on a subset of the data, they are larger than the errors in the full multi-fidelity emulator.
+
+For comparison, the flux power spectrum from BOSS DR14 \cite{Chabanier:2019}, which is dominated by systematics, has a diagonal error between $1.5\%$ (at $z=2.8$ and k = $5\times 10^{-3}$ s/km) and $\sim 15\%$ (at $z=4.6$). Our emulator error is thus in most of parameter space smaller than the observational systematics.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/fpsemu_errors.pdf}
+    \caption{\label{fig:fps_error}
+    Leave-one-out errors for the \Lya forest flux power spectrum emulator.
+    The left panel shows the absolute error in units of prediction uncertainty.
+    The right panel shows the relative errors, an estimate of how well the emulator predicts the flux power spectrum.
+    The distributions show the prediction error for each redshift of each flux power sample included in the final training sample.
+    The grey distribution shows the emulator error for a single-fidelity emulator, predicting the flux power for the LF simulations.
+    The yellow distribution shows the errors for a multi-fidelity emulator, predicting the flux power for the HF simulations.
+    }
+\end{figure}
+
+Ref.~\cite{Fernandez:2022} achieved sub-$1\%$ accuracy using $30$ low fidelity and $5$ high fidelity simulations. We have achieved similar accuracy with only $3$ high fidelity simulations. Our low fidelity training set has a mean inter-particle spacing of $78$ kpc/h, whereas Ref.~\cite{Fernandez:2022} use low fidelity simulations with a mean inter-particle spacing of $117$ kpc/h, and this accounts for the improvement.
+
+%Emulator construction - kernel hyperparameters/ARD don't make much difference.
+%LOO errors.
 
 \section{Results}
 
@@ -430,7 +493,7 @@ Cosmic variance is suppressed when compared to emulators of the matter power spe
  \label{fig:resolution}
 \end{figure*}
 
-Figure~\ref{fig:resolution} shows the effect of finite resolution on our flux power spectrum predictions. We show in blue the difference between the high and low resolution branches of the emulator, for the $3$ different parameter sets. Our lower resolution simulations contain $2\times 1536^3$ particles in a $120$ Mpc/h periodic box with a mean inter-particle spacing of $79$ kpc/h. Our $3$ higher resolution simulations contain $2\times 3072^3$ particles and thus a mean inter-particle spacing of $39$ kpc/h. Figure~\ref{fig:resolution} shows that our high fidelity node is meaningfully correcting the resolution of our low fidelity simulations. The dependence of the resolution correction on cosmological parameters is fairly small, which explains why our multi-fidelity emulator can converge with only $3$ high fidelity simulations, compared to $6$ required in \cite{Fernandez:2022}. The prediction in this case is dominated by the cosmology-independent scaling factor $\rho$ in Eq.~\ref{eq:mf_model}.
+Figure~\ref{fig:resolution} shows the effect of finite resolution on our flux power spectrum predictions. We show in blue the difference between the high and low resolution branches of the emulator, for the $3$ different parameter sets. Our lower resolution simulations contain $2\times 1536^3$ particles in a $120$ Mpc/h periodic box with a mean inter-particle spacing of $79$ kpc/h. Our $3$ higher resolution simulations contain $2\times 3072^3$ particles and thus a mean inter-particle spacing of $39$ kpc/h. Figure~\ref{fig:resolution} shows that our high fidelity node is meaningfully correcting the resolution of our low fidelity simulations. The dependence of the resolution correction on cosmological parameters is fairly small, which explains why our multi-fidelity emulator can converge with only $3$ high fidelity simulations, compared to $6$ required in \cite{Fernandez:2022}. The prediction in this case is dominated by the cosmology-independent scaling factor $\rho$ in Eq.~\ref{eq:ko_model}.
 
 The low fidelity node of the emulator constructed in \cite{Fernandez:2022} had a mean interparticle spacing of $118$ kpc/h, $1.5 \times$ the resolution we achieve here\footnote{We originally intended this to be the resolution of the low resolution node of our current emulator, but improvements in our simulation code between the two papers allowed us to increase our minimum particle load.}. The convergence in our low fidelity node is thus already reasonably good, at the level of $5\%$ for $k < 0.02$ s/km, the scales measured by eBOSS and $10\%$ for $k < 0.05$ s/km, which covers the scales expected to be measured by DESI. Note that these simulations have been rescaled to have the same mean optical depth, as these are the values input into the emulator.
 
