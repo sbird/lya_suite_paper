@@ -283,6 +283,100 @@ def make_res_convergence2(convfile="fluxpower_converge_2.hdf5", mf_hires="fpk_hi
     plt.savefig("../figures/resolution-convergence.pdf")
     plt.clf()
 
+import scipy.interpolate
+
+def rebin_power_to_kms(kfkms, kfmpc, flux_powers, zbins, omega_m, omega_l=None):
+    """Rebins a power spectrum to constant km/s bins.
+    Bins larger than the box are discarded. The return type is thus a list,
+    with each redshift bin having potentially different lengths."""
+    if omega_l is None:
+        omega_l = 1 - omega_m
+    nz = np.size(zbins)
+    assert np.size(flux_powers) == nz * np.size(kfmpc)
+    # conversion factor from mpc to kms units
+    velfac = 1./(1+zbins) * 100.0*np.sqrt(omega_m*(1 + zbins)**3 + omega_l)
+    # original simulation output
+    okmsbins = np.outer(kfmpc, 1./velfac).T
+    flux_powers = flux_powers.reshape(okmsbins.shape)
+    # interpolate simulation output for averaging
+    rebinned = [scipy.interpolate.UnivariateSpline(okmsbins[i], flux_powers[i], s=0, k=3) for i in range(nz)]
+    new_flux_powers = np.array([rebinned[i](kfkms) for i in range(nz)])
+    assert np.all(new_flux_powers > 0)
+    return np.repeat([kfkms], nz, axis=0), new_flux_powers
+
+def get_flux(mf_dir, rebinned = True):
+    """Rebin the MF flux power file into the BOSS bins"""
+    mffile = "cc_emulator_flux_vectors_tau1000000.hdf5"
+    mf_flux = h5py.File(os.path.join(mf_dir, mffile))
+    params = mf_flux["params"][:]
+    #Omegam h2 is param 6, h is param 5
+    omega_m = mf_flux["params"][:][:,6]/mf_flux["params"][:][:,5]**2
+    flux_powers = mf_flux["flux_vectors"][:]
+    nlores = np.shape(params)[0]
+    kfkms = mf_flux["kfkms"][:] #[ii,:][0]
+    kfmpc = mf_flux["kfmpc"][:] #[ii,:][0]
+    redshifts = mf_flux["zout"][:]
+    mf_flux.close()
+    nz = np.shape(redshifts)[0]
+    flux_powers = flux_powers.reshape((nlores, nz,-1))
+    assert np.shape(kfkms)[-1] == np.shape(flux_powers)[-1]
+    if rebinned:
+        npar = np.size(params[:,0])
+        boss = ldd.BOSSData()
+        kfkms = boss.kf[:35]
+        flux_powers = np.array([rebin_power_to_kms(kfkms, kfmpc, flux_powers[i], redshifts, omega_m = omega_m[i])[1] for i in range(npar)])
+    return kfkms, flux_powers, params, redshifts
+
+def make_res_convergence_3(mf_hires="fpk_highk/hires", mf_lowres="fpk_highk"):
+    """Make a plot showing the convergence of the flux power spectrum with resolution, rebinned as the emulator sees it."""
+    kfkms_vhr2, flux_powers_lr2, params_lr, redshifts_lr = get_flux(mf_lowres)
+    kfkms_vhr2, flux_powers_hr2, params_hr, redshifts2 = get_flux(mf_hires)
+    nhires = np.shape(params_hr)[0]
+    paraminds = [np.argmin(np.sum((params_hr[iii,:]- params_lr)**2,axis=1)) for iii in range(nhires)]
+    fig = plt.figure()
+    axes = []
+    index = 1
+    dist_col = dc.get_distinct(2)
+    for ii, zz in enumerate(redshifts2):
+        if zz > 5.1 or zz < 2.1:
+            continue
+        if close(zz, [4.8, 4.4,4.0]):
+            continue
+        sharex=None
+        sharey=None
+        if index > 3:
+            sharex = axes[(index-1) % 3]
+        #if (index-1) % 3 > 0:
+            #sharey = axes[index -1 - ((index-1) % 3)]
+        ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
+        ii_lr = np.where(np.abs(redshifts_lr - zz) < 0.01)[0][0]
+        for jj in range(nhires):
+            label = "%.2g kpc/h" % (120000./1536.)
+            if jj > 0:
+                label = ""
+            ax.semilogx(kfkms_vhr2, flux_powers_lr2[paraminds[jj], ii_lr]/flux_powers_hr2[jj, ii], label=label, color=dist_col[0], ls="-")
+        ax.text(0.025, 1.06, "z=%.1f" % zz)
+        ax.grid(visible=True, axis='y')
+        ax.set_ylim(1., 1.06)
+        ax.set_yticks([1.0, 1.02, 1.06]) #, [str(1.0), str(1.02), str(1.04)])
+        if (index-1) % 3 > 0:
+            plt.setp(ax.get_yticklabels(), visible=False)
+        else:
+            plt.ylabel(r"$P_F / P_F^{ref}$")
+        if index == 1:
+            ax.legend(loc="upper left", frameon=False, fontsize='small')
+#         print("z=%g, index %d\n" % (zz, index))
+        if index < 10:
+            plt.setp(ax.get_xticklabels(), visible=False)
+        else:
+            ax.set_xlim(1.5e-3, 0.02)
+            ax.set_xlabel("k (s/km)")
+        axes.append(ax)
+        index += 1
+    plt.subplots_adjust(wspace=0, hspace=0)
+    plt.savefig("../figures/resolution-convergence_test.pdf")
+    plt.clf()
+
 def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolution_All_Statistics.txt"):
     """Make a plot of the possible temperature variations over time."""
     obs = np.loadtxt(gkfile)
@@ -469,7 +563,8 @@ if __name__ == "__main__":
 #     get_flux_power_resolution("emu_full_hires", "emu_full_extend")
 #     make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
 #     make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
-    make_res_convergence2()
+#     make_res_convergence2()
+#     make_res_convergence_3()
    #make_box_convergence("box_converge.hdf5")
 #     single_parameter_plot()
 #     single_parameter_t0_plot(one=False)
