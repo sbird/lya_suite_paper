@@ -106,7 +106,7 @@ class MySpectra():
     """This class stores the randomly positioned sightlines once,
        so that they are the same for each emulator point.
        max_k is in comoving h/Mpc."""
-    def __init__(self, numlos = 32000, max_z= 4.2, min_z=2.1, max_k = 5.):
+    def __init__(self, numlos = 32000, max_z= 4.2, min_z=2.1, max_k = 5., savefile=None):
         self.NumLos = numlos
         #For SDSS or BOSS the spectral resolution is
         #60 km/s at 5000 A and 80 km/s at 4300 A.
@@ -125,7 +125,10 @@ class MySpectra():
         #Want output every 0.2 from z=max to z=2.2, matching SDSS.
         self.zout = np.arange(max_z,min_z,-0.2)
         self.max_k = max_k
-        self.savefile = "lya_forest_spectra.hdf5"
+        if savefile is None:
+            self.savefile = "lya_forest_spectra.hdf5"
+        else:
+            self.savefile = savefile
 
     def _get_cofm(self, num, base):
         """Get an array of sightlines."""
@@ -217,11 +220,11 @@ def _get_header_attr_from_snap(attr, num, base):
     del f
     return value
 
-def converge(big, small, max_z=4.2, min_z=2.2, mf=True):
+def converge(big, small, max_z=4.2, min_z=2.2, mf=True, savefile=None):
     """Save different box sizes"""
-    myspec_big = MySpectra(max_z=max_z, min_z=min_z)
+    myspec_big = MySpectra(max_z=max_z, min_z=min_z, savefile=savefile)
     power_big = myspec_big.get_snapshot_list(big)
-    myspec_small = MySpectra(max_z=max_z, min_z=min_z)
+    myspec_small = MySpectra(max_z=max_z, min_z=min_z, savefile=savefile)
     power_small = myspec_small.get_snapshot_list(small)
     zout_big = power_big.get_zout()
     zout_small = power_small.get_zout()
@@ -271,6 +274,19 @@ def res_converge(big, small, mf=True, savefile="res_converge.hdf5"):
         ff.create_group("flux_powers")
         ff["flux_powers"]["L120n3072"] = fpk_big_rebin
         ff["flux_powers"]["L120n1536"] = fpk_small_rebin
+
+def seed_converge(mf=True, savefile="seed_converge.hdf5"):
+    """Convergence with box size"""
+    orig = "~/data/Lya_forest/emu_full/ns0.881Ap2.25e-09herei3.75heref2.75alphaq1.32hub0.708omegamh20.144hireionz6.62bhfeedback0.06/output"
+    seed = "~/data/Lya_forest/emu_full/ns0.881Ap2.25e-09herei3.75heref2.75alphaq1.32hub0.708omegamh20.144hireionz6.62bhfeedback0.06-seed/output"
+    zout_big, power_small, kf, fpk_big_rebin, fpk_small_rebin = converge(orig, seed, mf=mf, savefile="lya_forest_spectra_grid_480.hdf5")
+    with h5py.File(savefile, 'w') as ff:
+        ff["zout"] = zout_big
+        ff["kfkms"] = power_small.get_kf_kms(kf)
+        ff["kfmpc"] = kf
+        ff.create_group("flux_powers")
+        ff["flux_powers"]["orig"] = fpk_big_rebin
+        ff["flux_powers"]["seed"] = fpk_small_rebin
 
 if __name__ == "__main__":
     box_converge("~/data/Lya_forest/benchmark2/L120n1024converge/output","~/data/Lya_forest/benchmark2/L60n512converge/output")
