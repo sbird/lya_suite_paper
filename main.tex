@@ -26,11 +26,11 @@
 \newcommand{\mfemu}{\texttt{MFEmulator}}     % i made the acronym, but not used a lot
 \newcommand{\Data}{\mathcal{D}}
 \newcommand{\gp}{\textsc{gp}}
-\newcommand{\normal}{\mathcal{N}}
+% \newcommand{\normal}{\mathcal{N}}
 \newcommand{\GP}{\mathcal{GP}}
 \newcommand{\thetavec}{\boldsymbol{\theta}}  % input parameters
-\newcommand{\zvec}{\boldsymbol{z}}
-\newcommand{\outputFunction}{Z}
+% \newcommand{\zvec}{\boldsymbol{z}}
+% \newcommand{\outputFunction}{Z}
 \newcommand{\outputVector}{\zvec}            % output response
 \newcommand{\outputVectorModel}{\zvec_\mathrm{model}}
 \newcommand{\outputVectorObs}{\zvec_\mathrm{obs}}
@@ -50,6 +50,7 @@
 \newcommand{\aap}{AAP}
 \newcommand{\mnras}{MNRAS}
 \newcommand{\prd}{PRD}
+\newcommand{\prl}{PRL}
 \newcommand{\gadget}{{\small GADGET}}
 \newcommand{\mpgadget}{{\small MP-GADGET}}
 
@@ -97,10 +98,11 @@
 
 \author[a]{Simeon Bird,\note{Corresponding author}}
 \affiliation[a]{Department of Physics \& Astronomy, University of California  Riverside,\\900 University Avenue, Riverside, CA 92521, USA}
-\author[a,1]{Martin Fernandez,}
+\author[a]{Martin Fernandez,}
+\author[a]{Ming-Feng Ho,}
 \author[b]{Others: Yueying, Tiziana, Nianyi, Yu? Rupert? Anson (for the hydrogen reionization boost)?}
-\emailAdd{mfern027@ucr.edu}
 \emailAdd{sbird@ucr.edu}
+% \emailAdd{mfern027@ucr.edu}
 
 \abstract{
 We present a new suite of $43$ simulations of the Lyman-$\alpha$ forest, spanning a $9$-dimensional parameter space, including $4$ cosmological parameters and $5$ astrophysical/thermal parameters. These simulations advance on earlier simulations suites by larger particle loads, by incorporating new physical models for hydrogen and helium reionization, and by self-consistently incorporating a model for AGN feedback. Parameters are chosen based on a Latin hypercube design and a Gaussian process is used to interpolate to arbitrary parameter combinations. Our simulation suite will be used to interpret existing Lyman-$\alpha$ forest 1D flux power spectra from SDSS and future DESI data releases.
@@ -116,15 +118,21 @@ We present a new suite of $43$ simulations of the Lyman-$\alpha$ forest, spannin
 
 % Paragraph: the Lyman alpha forest is a classic probe of cosmology.
 % Power comes from small scales. Small scales require simulations.
+The distribution of neutral hydrogen in the Universe, as traced by \Lya~forest absorption in quasars, is a classic probe of cosmology \citep{Croft:1998}. The power of the \Lya~forest lies in its ability to probe small scales at $z = 2-5$ in a way which is minimally sensitive to galaxy physics. Realising this potential requires cosmological simulations, which are the only way to model the non-linear evolution of the gas and dark matter with sufficient fidelity. The Lyman-$\alpha$ forest has been used to constrain cosmological parameters and make constraints on total neutrino mass ($\sum m_\nu < 0.11$ eV when combined with the cosmic microwave background) \citep{2004MNRAS.354..684V, McDonald:2005pk, Viel:2006, 2005PhRvD..71j3515S, 2006JCAP...10..014S, 2020JCAP...04..038P}, measure the expansion rate (via baryon acoustic oscillations) at $z \sim 2.4$ \cite{Slosar:2011, Bautista:2017, dSAgathe:2019}, test alternatives to cold dark matter \citep{2005PhRvD..71f3534V,  Viel:2013wdm, Irsic:2017pk, Garzilli:2021, 2021PhRvL.126g1302R} and constrain the thermal history of the Universe and thus reionization \citep{2008MNRAS.386.1131B,2014MNRAS.438.2499B, 2016MNRAS.463.2335N, Boera:2019, Gaikwad:2021, 2021arXiv211100019V}.
 
-Creating an accurate model for the \Lya~forest requires the ability to probe the Jeans scales of the collapsing gas and thus a mean interparticle spacing of $\sim 39$ kpc/h \cite{Borde:2014}. Conversely, the box size required to have a handle on cosmic variance is $\sim 100$ Mpc/h. Ideally, \Lya~forest simulations thus have a particle load of  $3072^3$, which was previously infeasible. Here we present a suite of simulations and an emulator for the flux power spectrum built upon them. Together they are able to make predictions, accurate at the percent level, for the flux power spectrum which would be output by a simulation within a wide range of cosmological parameters. Using the \mpgadget~code developed for the ASTRID simulation, our largest simulations have a box size of $120$ Mpc/h and $2\times 3072^3$ particles, achieving the desired resolution for the \Lya~forest. In addition, the simulations contain a full hydrodynamic galaxy formation model including stellar and black hole physics. The main output is the \Lya~spectra, of which we have generated $691,200$ from each snapshot, and the derived flux power spectra.
+%When combined with measurements from the The \Lya~forest already provides the best constraints on the total neutrino mass ($\sum m_\nu < 0.11$ eV) are come from the \Lya~forest.
+Despite these successes, the constraining power of the \Lya~forest is currently limited by systematic uncertainty, especially in creating large and accurate enough simulation models and in understanding the spectrograph resolution. Here we address the first, presenting a new suite of simulations large enough to model the \Lya~forest at all probed scales and redshifts. Creating an accurate model for the \Lya~forest requires the ability to probe the Jeans scales of the collapsing gas and thus a mean interparticle spacing of $\sim 39$ kpc/h \cite{Borde:2014}. Conversely, the box size required to have a handle on cosmic variance is $\sim 100$ Mpc/h. Ideally, \Lya~forest simulations thus have a particle load of  $3072^3$, which was previously infeasible. Here we present a suite of simulations and an emulator for the flux power spectrum built upon them. Together they are able to make predictions, accurate at the percent level, for the flux power spectrum which would be output by a simulation within a wide range of cosmological parameters. Using the \mpgadget~code developed for the ASTRID simulation, our largest simulations have a box size of $120$ Mpc/h and $2\times 3072^3$ particles, achieving the desired resolution for the \Lya~forest. In addition, the simulations contain a full hydrodynamic galaxy formation model including stellar and black hole physics. The main output is the \Lya~spectra, of which we have generated $691,200$ from each snapshot, and the derived flux power spectra.
 
-%Prior art: McDonald paper. Borde paper. Pedersen's work and how we differ. Puchwein/Bolton SHERWOOD and SHERWOOD-Relics.
-\cite{Puchwein:2022}
+%Prior art: McDonald paper. Borde paper. Pedersen's work and how we differ. Puchwein/Bolton SHERWOOD and SHERWOOD-Relics. Walther.
+There have been a variety of previous \Lya~forest simulation suites, each following the state of the art in simulation technology. Ref.~\cite{McDonald:2005pk} used dark matter only simulations convolved with a temperature broadening function. Ref.~\cite{Viel:2006}, which is most similar to our own method, used hydrodynamic simulations with a simplified star formation prescription. Each cosmological parameter was varied individually and a polynomial fit to the changes in the flux power spectrum. This approach was extended by Ref.~\cite{Borde:2014} with larger simulations, necessitated by the more precise dataset available in later SDSS releases. Ref.~\cite{Bird:2019} improved on the polynomial fit by develop Gaussian Process emulator techniques for the \Lya~forest. However, the simulations used were small and did not resolve the forest. Later emulators were developed by Refs.~\cite{Walther:2019} and \cite{Pedersen:2021}. Ref.~\cite{Walther:2019} studied the evolution of the IGM temperature using an emulaor. Ref.~\cite{Pedersen:2021, Pedersen:2022} pursued a complementary approach, building an emulated map between the flux power spectrum and the amplitude and slope of the matter power spectrum at $z\sim 3$. There have also been several large-scale \Lya~simulation projects. The Sherwood simulations \cite{Bolton:2017} had extremely high resolution models of the $z=5$ intergalactic medium, and \cite{Puchwein:2022} ran a suite of simulations, SHERWOOD-RELICS, to model the interaction between the intergalactic medium and hydrogen reionization. SHERWOOD-RELICS used a novel two-step procedure to generate inhomogeneous reionization models. A radiative transfer code was run in post-processing on the output of the simulation, generating a map of ionization times. This map was used to model reionization in a second run of the original simulation, allowing it to capture some reionization feedback effects.
+
+We improve on the state of the art in the simulations performed here. These improvements come both from our use of a ``full-physics'' galaxy formation model and from our larger boxes coupled with a high effective resolution. We double the effective resolution of our emulator by using the multi-fidelity technique from \cite{Ho:2022}. With this we are able to model the flux power spectrum over a wide-range of cosmologies at high (percent-level) accuracy.
 
 %The data: SDSS BOSS DR14. XQ-100. HIRES/MIKE.
 %Future data: 3D flux power spectrum, tomography.
+Most current \Lya~forest data is summarised by statistics along the line of sight to the quasar. The largest dataset is that from Sloan Digital Sky Survey (SDSS) quasars, most recently SDSS DR14 \cite{Chabanier:2019} and soon the Dark Energy Spectroscopic Instrument (DESI). This is both the dataset with the largest number of quasars and thus the smallest statistical error, and the dataset which probes the largest scales where the cosmological information is greatest. However, SDSS is limited both by low signal to noise and moderate spectral resolution, which does not allow it to probe the thermal cutoff of the intergalactic gas and measure small scales. There are thus independent sets of spectra, observing fewer quasars at higher spectral resolution. These include the XQ-100 survey \cite{Irsic:2017pk, Esposito:2022} at moderate spectral resolution, and the higher resolution KODIAQ/SQUAD \cite{KODIAQ:2022} data, as well as the spectra from HIRES/UVES \cite{Viel:2013wdm, Boera:2019}. In this paper we present a simulation model able to mock scales probed by SDSS DR14 and DESI ($k \lesssim 0.05$ s/km) at the percent level, comparable to the statistical accuracy of these datasets. We will show that we are also able to model smaller scales ($k \lesssim 0.1$) at the ten-percent level required by the statistical error in XQ-100 \cite{KODIAQ:2022}.
 
+Much of the information in future experiments will come from other statistics. The correlation function between quasars was measured by Ref.~\cite{Slosar:2011}, and has been used to detect the baryon acoustic oscillation (BAO) feature and thus constrain the expansion rate at $z\sim 2.3$ \cite{dSAgathe:2019, Cuceu:2022}. Concurrently, \Lya~tomography surveys with a high sightline density have allowed mapping coherent Mpc-scale overdensities \cite{Lee:CLAMATO, LATIS, Qezlou:2022}. The simulation suite and spectra presented here will allow future comparisons to these summary statistics.
 
 \section{Simulations}
 
@@ -503,7 +511,7 @@ The worst convergence is seen during helium reionization, which starts at $z=4$ 
 The scales measured by high resolution \Lya~forest spectra (XQ-100 and HIRES/MIKE) are $ k < 0.7$ s/km \cite{Irsic:2017}, which also marks the rough limit of the $2\%$ convergence for our high fidelity simulations (note the statistical error is $\sim 10\%$ for these scales). Our simulations are thus comparable to high resolution data, which we will address in future work.
 
 It is interesting to compare our results to earlier simulation suites. Ref.~\cite{Borde:2014} performed a convergence study using a $20$ Mpc/h box and $192^3$ - $1024^3$ particles. Our high fidelity node is equivalent in resolution to their $20, 512^3$ simulation, and exhibits similar convergence for $z < 3.6$, although our simulations are fully hydrodynamic while theirs make use of the simplified \Lya~forest star formation model. However, at $z=4.4$, their simulation loses $2-5\%$ of the flux power for $k > 0.01$ s/km. Although this degree of convergence is negligible compared to the observational errors at $z=4.4$, we do not observe a similar effect.
-We also found that our convergence at $z \sim 5$ was better than predicted by Ref.~\cite{2009MNRAS.398L..26B}. This is due to our inclusion of a temperature boost during hydrogen reionization \cite{DAloisio:2019}. We found that small test simulations without this boost had high redshift convergence behaviour similar to earlier work. The temperature boost heats the gas, increasing the thermal free-streaming length and Jeans' mass. This prevents small overdensities, which would normally be underresolved, from accreting gas.
+We also found that our convergence at $z \sim 5$ was better than predicted by Ref.~\cite{2009MNRAS.398L..26B, Bolton:2017}. This is due to our inclusion of a temperature boost during hydrogen reionization \cite{DAloisio:2019}. We found that small test simulations without this boost had high redshift convergence behaviour similar to earlier work. The temperature boost heats the gas, increasing the thermal free-streaming length and Jeans' mass. This prevents small overdensities, which would normally be underresolved, from accreting gas.
 
 %Describe the resolution and box size of the simulation. Justify this by citing the relevant 2014 paper and with the figure.
 %\spb{Note that the convergence at high redshift is a little better than Bolton and Becker 2010, because the heating effect of the ionization fronts smooths the high redshift gas and prevents the small unresolved halos from accreting anyway.}
@@ -606,7 +614,7 @@ Mention multi-fidelity.
 \section*{Acknowledgements}
 MAF is supported by a National Science Foundation Graduate Research Fellowship under grant No. DGE-1326120.
 MFH is supported by a National Aeronautics and Space Administration FINESST under grant No. ASTRO20-0022.
-SB is supported by NSF grant AST-1817256.
+SB is supported by NSF grant AST-1817256 and NASA-80NSSC21K1840.
 
 Computing resources were provided by Frontera LRAC AST21005.
 The authors acknowledge the Frontera computing project at the Texas Advanced Computing Center (TACC) for providing HPC and storage resources that have contributed to the research results reported within this paper.
