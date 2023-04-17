@@ -162,17 +162,8 @@ class MySpectra():
             ss = mkspec(snap, base, None, None, rf=False)
             if not self._check_redshift(ss.red):
                 return None
-        except OSError:
-            #Check the redshift is ok
-            red = 1./_get_header_attr_from_snap("Time", snap, base)-1.
-            if not self._check_redshift(red):
-                return None
-            #Make sure we have sightlines
-            (cofm, axis) = self._get_cofm(snap, base)
-            ss = mkspec(snap, base, cofm, axis, rf=True)
-            #Get optical depths and save
-            _ = ss.get_tau("H",1,1215)
-            ss.save_file()
+        except OSError as io:
+            return None
         #Check we have the same spectra
         try:
             assert np.all(ss.cofm == self.cofm)
