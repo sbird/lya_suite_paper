@@ -52,7 +52,7 @@ def regen_single_flux_power_emu(emudir, outdir="", mf=None):
     """Make and save a file of the flux power spectra with and without optical depth rescaling"""
     if mf is not None:
         mf = ConstMeanFlux(1)
-    minz = 2.2
+    minz = 2.1
     maxz = 5.0
     emu = Emulator(emudir, tau_thresh=1e6, mf=mf)
     emu.load()
@@ -109,22 +109,33 @@ def close(x, y):
     """Decide if two fp numbers are close"""
     return np.any(np.abs(x - y) < 0.01)
 
-def make_box_convergence(convfile):
+def make_box_convergence(convfile, convfile2):
     """Make a plot showing the convergence of the flux power spectrum with box size."""
-    hh = h5py.File(convfile)
-    #Low-res is current.
-    flux_powers_lr = hh["flux_powers"]["L120n1024"][:]
-    flux_powers_hr = hh["flux_powers"]["L60n512"][:]
-    kfkms_vhr = hh["kfkms"][:]
-    redshifts = hh["zout"][:]
-    nk = np.shape(kfkms_vhr)[0]
-    flux_powers_lr = flux_powers_lr.reshape((nk,-1))
-    flux_powers_hr = flux_powers_hr.reshape((nk,-1))
+    with h5py.File(convfile) as hh:
+        #Low-res is current.
+        flux_powers_lr = hh["flux_powers"]["L120n1024"][:]
+        flux_powers_hr = hh["flux_powers"]["L60n512"][:]
+        kfkms_vhr = hh["kfkms"][:]
+        redshifts = hh["zout"][:]
+        nk = np.shape(kfkms_vhr)[0]
+        flux_powers_lr = flux_powers_lr.reshape((nk,-1))
+        flux_powers_hr = flux_powers_hr.reshape((nk,-1))
+    with h5py.File(convfile2) as hh:
+        #Low-res is current.
+        flux_powers_lr2 = hh["flux_powers"]["orig"][:]
+        flux_powers_hr2 = hh["flux_powers"]["seed"][:]
+        kfkms_vhr2 = hh["kfkms"][:]
+        redshifts2 = hh["zout"][:]
+        nk = np.shape(kfkms_vhr2)[0]
+        flux_powers_lr2 = flux_powers_lr2.reshape((nk,-1))
+        flux_powers_hr2 = flux_powers_hr2.reshape((nk,-1))
+#     assert np.all(redshifts == redshifts2)
     fig = plt.figure()
+    dist_col = dc.get_distinct(2)
     axes = []
     index = 1
     for ii, zz in enumerate(redshifts):
-        if not close(zz, np.array([4.0, 3.0, 2.2])):
+        if not close(zz, np.array([4.0, 3.6, 3.2, 3.0, 2.6,2.2])):
             continue
         sharex=None
         sharey=None
@@ -134,22 +145,27 @@ def make_box_convergence(convfile):
             #sharey = axes[index -1 - ((index-1) % 3)]
         ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
         if sharex is None:
-            ax.set_xlim(1.5e-3, 2e-2)
-        ax.semilogx(kfkms_vhr[ii], flux_powers_lr[ii]/flux_powers_hr[ii], color="blue", ls="-")
-        ax.text(2.5e-3, 0.97, "z=%.2g" % zz)
-        ax.set_ylim(0.95, 1.05)
+            ax.set_xlim(1e-3, 2e-2)
+        ax.semilogx(kfkms_vhr[ii], flux_powers_lr[ii]/flux_powers_hr[ii], color=dist_col[0], ls="-", label="120/60")
+        ax.semilogx(kfkms_vhr2[ii], flux_powers_lr2[ii]/flux_powers_hr2[ii], color=dist_col[1], ls="--", label="Seed")
+        ax.text(1.5e-3, 0.95, "z=%.2g" % zz)
+        ax.set_ylim(0.93, 1.07)
         ax.grid(visible=True, axis='y')
         if (index-1) % 3 > 0:
-            ax.set_yticks([0.98,1.0, 1.02]) #, [str(0.97), str(1.0), str(1.03)])
+            ax.set_yticks([0.95, 0.98,1.0, 1.02, 1.05]) #, [str(0.97), str(1.0), str(1.03)])
             ax.set_yticklabels([])
         else:
-            ax.set_yticks([0.98,1.0, 1.02]) #, [str(0.97), str(1.0), str(1.03)])
+            ax.set_yticks([0.95, 0.98,1.0, 1.02, 1.05]) #, [str(0.97), str(1.0), str(1.03)])
             plt.ylabel(r"$P_F / P_F^{ref}$")
+        if index == 3:
+            ax.legend(loc="upper right", ncol=2, fontsize=7)
 #         if index > 8:
 #             ax.set_xlim(2e-3, 2e-2)
 #         if index > 8:
 #             ax.set_xticklabels([])
 #             ax.set_xticks([2e-3,5e-3,0.01,2e-2])
+        if index < 4:
+            plt.setp(ax.get_xticklabels(), visible=False)
         plt.xlabel("k (s/km)")
         axes.append(ax)
         index += 1
@@ -565,7 +581,7 @@ if __name__ == "__main__":
 #     make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
 #     make_res_convergence2()
 #     make_res_convergence_3()
-   #make_box_convergence("box_converge.hdf5")
+   make_box_convergence("box_converge.hdf5", "seed_converge.hdf5")
 #     single_parameter_plot()
 #     single_parameter_t0_plot(one=False)
 #     single_parameter_t0_plot(one=True)
