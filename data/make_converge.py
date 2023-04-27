@@ -211,7 +211,7 @@ def _get_header_attr_from_snap(attr, num, base):
     del f
     return value
 
-def converge(big, small, max_z=4.2, min_z=2.2, mf=True, savefile=None):
+def converge(big, small, max_z=4.2, min_z=2.1, mf=True, savefile=None):
     """Save different box sizes"""
     myspec_big = MySpectra(max_z=max_z, min_z=min_z, savefile=savefile)
     power_big = myspec_big.get_snapshot_list(big)
@@ -257,7 +257,7 @@ def box_converge(big, small, mf=True, savefile="box_converge.hdf5"):
 
 def res_converge(big, small, mf=True, savefile="res_converge.hdf5"):
     """Convergence with resolution"""
-    zout_big, power_small, kf, fpk_big_rebin, fpk_small_rebin = converge(big, small, mf=mf, max_z=5.4, min_z=1.95)
+    zout_big, power_small, kf, fpk_big_rebin, fpk_small_rebin = converge(big, small, mf=mf, max_z=5.4, min_z=1.95, savefile="lya_forest_spectra_grid_480.hdf5")
     with h5py.File(savefile, 'w') as ff:
         ff["zout"] = zout_big
         ff["kfkms"] = power_small.get_kf_kms(kf)
@@ -266,10 +266,10 @@ def res_converge(big, small, mf=True, savefile="res_converge.hdf5"):
         ff["flux_powers"]["L120n3072"] = fpk_big_rebin
         ff["flux_powers"]["L120n1536"] = fpk_small_rebin
 
-def seed_converge(mf=True, savefile="seed_converge.hdf5"):
+def seed_converge(datadir, mf=True, savefile="seed_converge.hdf5"):
     """Convergence with box size"""
-    orig = "~/data/Lya_forest/emu_full/ns0.881Ap2.25e-09herei3.75heref2.75alphaq1.32hub0.708omegamh20.144hireionz6.62bhfeedback0.06/output"
-    seed = "~/data/Lya_forest/emu_full/ns0.881Ap2.25e-09herei3.75heref2.75alphaq1.32hub0.708omegamh20.144hireionz6.62bhfeedback0.06-seed/output"
+    orig = datadir+"emu_full/ns0.881Ap2.25e-09herei3.75heref2.75alphaq1.32hub0.708omegamh20.144hireionz6.62bhfeedback0.06/output"
+    seed = datadir+"emu_full/ns0.881Ap2.25e-09herei3.75heref2.75alphaq1.32hub0.708omegamh20.144hireionz6.62bhfeedback0.06-seed/output"
     zout_big, power_small, kf, fpk_big_rebin, fpk_small_rebin = converge(orig, seed, mf=mf, savefile="lya_forest_spectra_grid_480.hdf5")
     with h5py.File(savefile, 'w') as ff:
         ff["zout"] = zout_big
