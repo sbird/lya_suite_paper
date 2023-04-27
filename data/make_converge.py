@@ -280,8 +280,10 @@ def seed_converge(datadir, mf=True, savefile="seed_converge.hdf5"):
         ff["flux_powers"]["seed"] = fpk_small_rebin
 
 if __name__ == "__main__":
-    box_converge("~/data/Lya_forest/benchmark2/L120n1024converge/output","~/data/Lya_forest/benchmark2/L60n512converge/output")
-    box_converge("~/data/Lya_forest/benchmark2/L120n1024converge/output","~/data/Lya_forest/benchmark2/L60n512converge/output", mf=False, savefile="box_converge_nomf.hdf5")
-    ressim = "ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output"
-    res_converge("~/scratch/Lya_forest/emu_full_hires/"+ressim,"~/scratch/Lya_forest/emu_full_extend/"+ressim)
-    res_converge("~/scratch/Lya_forest/emu_full_hires/"+ressim,"~/scratch/Lya_forest/emu_full_extend/"+ressim, mf=False, savefile="res_converge_nomf.hdf5")
+#     box_converge("~/data/Lya_forest/benchmark2/L120n1024converge/output","~/data/Lya_forest/benchmark2/L60n512converge/output")
+#     box_converge("~/data/Lya_forest/benchmark2/L120n1024converge/output","~/data/Lya_forest/benchmark2/L60n512converge/output", mf=False, savefile="box_converge_nomf.hdf5")
+    datadir= "/bigdata/birdlab/shared/Lya_emu_spectra/"
+#     ressim = "ns0.859Ap1.29e-09herei3.92heref2.72alphaq1.87hub0.693omegamh20.141hireionz7.15bhfeedback0.0579/output"
+#     res_converge(datadir+"emu_full_hires/"+ressim,datadir+"emu_full/"+ressim)
+#     res_converge(datadir+"emu_full_hires/"+ressim,datadir+"emu_full/"+ressim, mf=False, savefile="res_converge_nomf.hdf5")
+    seed_converge(datadir=datadir)
