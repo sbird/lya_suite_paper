@@ -3,7 +3,7 @@ import h5py
 import numpy as np
 from matplotlib import pyplot as plt
 
-basedir = 'dtau-48-46/'
+basedir = 'dtau-48-48/'
 figbase = '../figures/'
 
 c_midnight = "pink"

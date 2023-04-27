@@ -443,8 +443,8 @@ def save_fig(name, plotdir):
 
 def make_loo_values():
     """Generate the LOO errors for the default saved flux power spectra."""
-    emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-46")
-    hremudir = os.path.join(os.path.dirname(__file__), "dtau-48-46/hires")
+    emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-48")
+    hremudir = os.path.join(os.path.dirname(__file__), "dtau-48-48/hires")
     like = LikelihoodClass(basedir=emulatordir, HRbasedir=hremudir, data_corr=False, tau_thresh=1e6, loo_errors=True, traindir=None, use_meant=False)
     like.calculate_loo_errors(savefile="loo_fps_3.hdf5")
 #    likesf = LikelihoodClass(basedir=emulatordir, data_corr=False, tau_thresh=1e6, loo_errors=True, traindir=None, use_meant=False)
@@ -453,8 +453,8 @@ def make_loo_values():
 def single_parameter_plot(zzs=None, plotdir='../figures'):
     """Plot change in each parameter of an emulator from direct simulations."""
     #emulatordir = os.path.join(os.path.dirname(__file__), "emu_full_extend")
-    emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-46")
-    hremudir = os.path.join(os.path.dirname(__file__), "dtau-48-46/hires")
+    emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-48")
+    hremudir = os.path.join(os.path.dirname(__file__), "dtau-48-48/hires")
     like = LikelihoodClass(basedir=emulatordir, HRbasedir=hremudir, data_corr=False, tau_thresh=1e6, loo_errors=True, traindir=emulatordir+"/trained_mf")
     plimits = like.param_limits
     means = np.mean(plimits, axis=1)
