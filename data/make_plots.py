@@ -445,7 +445,7 @@ def make_loo_values():
     """Generate the LOO errors for the default saved flux power spectra."""
     emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-48")
     hremudir = os.path.join(os.path.dirname(__file__), "dtau-48-48/hires")
-    like = LikelihoodClass(basedir=emulatordir, HRbasedir=hremudir, data_corr=False, tau_thresh=1e6, loo_errors=True, traindir=None, use_meant=False)
+    like = LikelihoodClass(basedir=emulatordir, HRbasedir=hremudir, data_corr=False, tau_thresh=1e6, loo_errors=False, traindir=None, use_meant=False)
     like.calculate_loo_errors(savefile="loo_fps_3.hdf5")
 #    likesf = LikelihoodClass(basedir=emulatordir, data_corr=False, tau_thresh=1e6, loo_errors=True, traindir=None, use_meant=False)
 #    likesf.calculate_loo_errors(savefile="loo_fps_2.hdf5")
