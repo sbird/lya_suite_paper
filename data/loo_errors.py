@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 basedir = 'dtau-48-48/'
 figbase = '../figures/'
 
-c_midnight = "pink"
+c_midnight = "grey"
 c_sunshine = "gold"
 # leave-one-out for LF FPS
 ff = h5py.File(basedir+'loo_fps.hdf5', 'r')
@@ -29,11 +29,12 @@ ax[0].hist(errSTD, bins=bins, color=c_midnight, histtype='stepfilled', alpha=0.9
 bins = np.linspace(-3, 3, 56)
 ax[0].hist(MFerrSTD, bins=bins, color=c_sunshine, histtype='stepfilled', alpha=0.55, weights=np.ones(MFerr.size)*48/3*56/200)
 ax[0].set_yticks([])
+ax[0].set_xticks([-3,-2,-1,0, 1,2,3], labels=[-3,-2,-1,0, 1,2,3], fontsize=20)
 ax[0].tick_params(which='both', direction='inout', right=True, labelright=True, labelleft=False, length=12)
 ax[0].tick_params(which='minor', length=8, labelright=False, labelleft=False)
 ax[0].set_xlabel(r'$\|P_F^{{pred}}-P_F^{{true}}\|/\sigma^{{pred}}$', fontsize=26)
 bins2 = np.linspace(-3, 3, 200)
-ax[0].plot(bins, 4200 * np.exp(-0.5*bins**2), color="black")
+ax[0].set_xlim([-3,3])
 ax[0].set_yscale('log')
 
 logbins = np.logspace(np.log10(err.min()), np.log10(err.max()), 280)
@@ -42,9 +43,11 @@ logbins = np.logspace(np.log10(MFerr.min()), np.log10(MFerr.max()), 56)
 ax[1].hist(MFerr, bins=logbins, color=c_sunshine, histtype='stepfilled', alpha=0.55, label='Multi-Fidelity, HF', weights=np.ones(MFerr.size)*48/3*56/280)
 ax[1].tick_params(which='both', direction='inout', right=True, labelright=True, labelleft=False, length=12)
 ax[1].tick_params(which='minor', length=8, labelright=False, labelleft=False)
+plt.xticks(fontsize=20)
+plt.yticks(fontsize=20)
 ax[1].set_xlabel(r'$\|P_F^{{pred}}/P_F^{{true}}-1\|$', fontsize=26)
 ax[1].set_xscale('log')
-ax[1].set_xlim([2e-5,2e-1])
+ax[1].set_xlim([2e-5,0.1])
 ax[1].legend(loc='upper left', fontsize=26)
 
 fig.patch.set_facecolor('none')
