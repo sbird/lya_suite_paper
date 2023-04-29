@@ -100,9 +100,14 @@ def plot_dla_cddf():
         basedir = os.path.join(emudir, sims[i])
         basedir = os.path.join(basedir, "output")
         ps = PlottingSpectra(num=nums[i], base=basedir, savefile="rand_spectra_DLA.hdf5")
-        ps.plot_cddf(minN=19, moment=True, dlogN=0.1, maxN=22.4)
+        ps.plot_cddf(minN=19, moment=True, dlogN=0.2, maxN=22.4)
     ho21_cddf(redshift=2.2, moment=True)
-    plt.ylabel("N f(N)")
+    plt.xlim(10**(19.5), 10**(22.5))
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.ylabel(r"N f(N)", fontsize=20)
+    plt.xlabel(r"N (cm$^{-2}$)", fontsize=20)
+    plt.tight_layout()
     plt.savefig("../figures/cddf_hires.pdf")
 
 def close(x, y):
@@ -145,10 +150,16 @@ def make_box_convergence(convfile, convfile2):
             #sharey = axes[index -1 - ((index-1) % 3)]
         ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
         if sharex is None:
-            ax.set_xlim(1e-3, 2e-2)
-        ax.semilogx(kfkms_vhr[ii], flux_powers_lr[ii]/flux_powers_hr[ii], color=dist_col[0], ls="-", label="120/60")
-        ax.semilogx(kfkms_vhr2[ii], flux_powers_lr2[ii]/flux_powers_hr2[ii], color=dist_col[1], ls="--", label="Seed")
-        ax.text(1.5e-3, 0.95, "z=%.2g" % zz)
+            ax.set_xlim(1e-3, 4e-2)
+        label="120/60"
+        if index != 1:
+            label=""
+        ax.semilogx(kfkms_vhr[ii], flux_powers_lr[ii]/flux_powers_hr[ii], color=dist_col[0], ls="-", label=label)
+        label="Seed"
+        if index != 3:
+            label=""
+        ax.semilogx(kfkms_vhr2[ii], flux_powers_lr2[ii]/flux_powers_hr2[ii], color=dist_col[1], ls="--", label=label)
+        ax.text(1.5e-3, 0.96, "z=%.2g" % zz)
         ax.set_ylim(0.93, 1.07)
         ax.grid(visible=True, axis='y')
         if (index-1) % 3 > 0:
@@ -157,8 +168,8 @@ def make_box_convergence(convfile, convfile2):
         else:
             ax.set_yticks([0.95, 0.98,1.0, 1.02, 1.05]) #, [str(0.97), str(1.0), str(1.03)])
             plt.ylabel(r"$P_F / P_F^{ref}$")
-        if index == 3:
-            ax.legend(loc="upper right", ncol=2, fontsize=7)
+        if index == 3 or index == 1:
+            ax.legend(loc="upper right", ncol=1, fontsize=10, frameon=False)
 #         if index > 8:
 #             ax.set_xlim(2e-3, 2e-2)
 #         if index > 8:
@@ -272,21 +283,24 @@ def make_res_convergence2(convfile="fluxpower_converge_2.hdf5", mf_hires="fpk_hi
         ii_lr = np.where(np.abs(redshifts_lr - zz) < 0.01)[0][0]
         for jj in range(nhires):
             label = "%.2g kpc/h" % (120000./1536.)
-            if jj > 0:
+            if jj > 0 or index != 2:
                 label = ""
             ax.semilogx(kfkms_vhr2[jj, ii], flux_powers_lr2[paraminds[jj], ii_lr]/flux_powers_hr2[jj, ii], label=label, color=dist_col[0], ls="-")
         zz2 = np.where(np.abs(redshifts - zz) < 0.01)
-        ax.semilogx(kfkms_vhr[zz2][0], flux_powers_hr[zz2][0]/flux_powers_vhr[zz2][0], label="%.2g kpc/h" % (15000./384.), ls="--", color=dist_col[1])
-        ax.text(0.025, 1.06, "z=%.1f" % zz)
+        label = "%.2g kpc/h" % (15000./384.)
+        if index != 1:
+            label = ""
+        ax.semilogx(kfkms_vhr[zz2][0], flux_powers_hr[zz2][0]/flux_powers_vhr[zz2][0], label=label, ls="--", color=dist_col[1])
+        ax.text(0.0018, 0.96, "z=%.1f" % zz)
         ax.grid(visible=True, axis='y')
-        ax.set_ylim(0.95, 1.10)
-        ax.set_yticks([0.95, 0.98, 1.0, 1.02, 1.06]) #, [str(1.0), str(1.02), str(1.04)])
+        ax.set_ylim(0.95, 1.08)
+        ax.set_yticks([0.95, 0.98, 1.0, 1.02, 1.05]) #, [str(1.0), str(1.02), str(1.04)])
         if (index-1) % 3 > 0:
             plt.setp(ax.get_yticklabels(), visible=False)
         else:
             plt.ylabel(r"$P_F / P_F^{ref}$")
-        if index == 1:
-            ax.legend(loc="upper left", frameon=False, fontsize='small')
+        if index == 1 or index == 2:
+            ax.legend(loc="upper left", frameon=False, fontsize='small', ncol=1)
 #         print("z=%g, index %d\n" % (zz, index))
         if index < 10:
             plt.setp(ax.get_xticklabels(), visible=False)
@@ -393,7 +407,7 @@ def make_res_convergence_3(mf_hires="fpk_highk/hires", mf_lowres="fpk_highk"):
     plt.savefig("../figures/resolution-convergence_test.pdf")
     plt.clf()
 
-def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolution_All_Statistics.txt"):
+def make_temperature_variation(tempfile, ex=6, gkfile="Gaikwad_2020b_T0_Evolution_All_Statistics.txt"):
     """Make a plot of the possible temperature variations over time."""
     obs = np.loadtxt(gkfile)
     plt.xlim(5.4, 2.2)
@@ -405,8 +419,11 @@ def make_temperature_variation(tempfile, ex=5, gkfile="Gaikwad_2020b_T0_Evolutio
     plt.errorbar(obs[:,0], obs[:,9]/1e4, fmt='o', xerr=0.1, yerr=obs[:,10]/1e4)
     plt.plot(redshift, hh["meanT"][:][ex]/1e4, color="black", ls="-")
     print(hh["params"][:][ex])
-    plt.xlabel("z")
-    plt.ylabel(r"$T_0$ ($10^4$ K)")
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.xlabel("z", fontsize=20)
+    plt.ylabel(r"$T_0$ ($10^4$ K)", fontsize=20)
+    plt.tight_layout()
     plt.savefig("../figures/mean-temperature.pdf")
     plt.clf()
 
@@ -423,20 +440,25 @@ def make_res_convergence_t0(tempfile, hirestempfile):
     #Plot each simulation's resolution correction.
     for i in range(nhires):
         ratio = meanT["meanT"][:][paraminds[i], :] / meanThires["meanT"][:][i,:]
-        plt.plot(redshift, ratio, color=dist_col[i], label="ns=%.3g" % meanThires["params"][:][i,0], ls=lss[i])
-    plt.legend()
-    plt.xlabel("z")
-    plt.ylabel(r"$T_0(N = 1536) / T_0 (N = 3072)$")
+        plt.plot(redshift, ratio, color=dist_col[i], label=r"$n_s=%.3g$" % meanThires["params"][:][i,0], ls=lss[i])
+    plt.legend(fontsize=14)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.xlabel("z", fontsize=20)
+    plt.ylabel(r"$T_0(N = 1536) / T_0 (N = 3072)$", fontsize=20)
+    plt.tight_layout()
     plt.savefig("../figures/mean-temperature-resolution.pdf")
     plt.clf()
 
 def save_fig(name, plotdir):
     """Format and save a figure"""
     plt.xlim(1e-3,2e-2)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
     #plt.ylim(bottom=0.9, top=1.1)
-    plt.xlabel(r"$k_F$")
-    plt.ylabel(r"$\Delta P_F(k)$ ($%s$)" % name[1])
-    plt.legend(ncol=1,fontsize=10)
+    plt.xlabel(r"$k_F$", fontsize=20)
+    plt.ylabel(r"$\Delta P_F(k)$ ($%s$)" % name[1], fontsize=20)
+    plt.legend(ncol=1,fontsize=12)
     plt.tight_layout()
     plt.savefig(os.path.join(plotdir,"single_param_%s.pdf" % name[0]))
     plt.clf()
@@ -445,10 +467,10 @@ def make_loo_values():
     """Generate the LOO errors for the default saved flux power spectra."""
     emulatordir = os.path.join(os.path.dirname(__file__), "dtau-48-48")
     hremudir = os.path.join(os.path.dirname(__file__), "dtau-48-48/hires")
-    like = LikelihoodClass(basedir=emulatordir, HRbasedir=hremudir, data_corr=False, tau_thresh=1e6, loo_errors=False, traindir=None, use_meant=False)
-    like.calculate_loo_errors(savefile="loo_fps_3.hdf5")
-#    likesf = LikelihoodClass(basedir=emulatordir, data_corr=False, tau_thresh=1e6, loo_errors=True, traindir=None, use_meant=False)
-#    likesf.calculate_loo_errors(savefile="loo_fps_2.hdf5")
+#     like = LikelihoodClass(basedir=emulatordir, HRbasedir=hremudir, data_corr=False, tau_thresh=1e6, loo_errors=False, traindir=None, use_meant=False)
+#     like.calculate_loo_errors(savefile="loo_fps_3.hdf5")
+    likesf = LikelihoodClass(basedir=emulatordir, data_corr=False, tau_thresh=1e6, loo_errors=False, traindir=None, use_meant=False)
+    likesf.calculate_loo_errors(savefile="loo_fps_2.hdf5")
 
 def single_parameter_plot(zzs=None, plotdir='../figures'):
     """Plot change in each parameter of an emulator from direct simulations."""
@@ -484,6 +506,10 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
             zzs = np.array([3.2, 4.4])
         elif name[0] == 'bhfeedback':
             zzs = np.array([3.2, 2.2])
+        elif name[0] == 'Ap':
+            lblstr = r"$%s\times 10^9 =%.2g$, $z=%.2g$"
+            upper*=1e9
+            lower*=1e9
         else:
             zzs = np.array([2.2, 3.2, 4.4])
         print(name[0], zzs)
@@ -498,9 +524,11 @@ def save_fig_t0(plotdir, extra=""):
     """Format and save a figure"""
     #plt.xlim(1e-3,2e-2)
     #plt.ylim(bottom=0.9, top=1.1)
-    plt.xlabel(r"$z$")
-    plt.ylabel(r"$\Delta T0(z)$")
-    plt.legend(ncol=1,fontsize=10)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    plt.xlabel(r"$z$", fontsize=20)
+    plt.ylabel(r"$\Delta T0(z)$", fontsize=20)
+    plt.legend(ncol=1,fontsize=14, loc="upper left")
     plt.tight_layout()
     plt.savefig(os.path.join(plotdir,"single_param_t0"+extra+".pdf"))
     plt.clf()
@@ -577,12 +605,12 @@ def make_spectra_convergence():
 
 if __name__ == "__main__":
 #     get_flux_power_resolution("emu_full_hires", "emu_full_extend")
-#     make_temperature_variation("dtau-48-46/emulator_meanT.hdf5")
-#     make_res_convergence_t0("dtau-48-46/emulator_meanT.hdf5", "dtau-48-46/hires/emulator_meanT.hdf5")
+#     make_temperature_variation("dtau-48-48/emulator_meanT.hdf5")
+#     make_res_convergence_t0("dtau-48-48/emulator_meanT.hdf5", "dtau-48-48/hires/emulator_meanT.hdf5")
 #     make_res_convergence2()
 #     make_res_convergence_3()
-   make_box_convergence("box_converge.hdf5", "seed_converge.hdf5")
+    make_box_convergence("box_converge.hdf5", "seed_converge.hdf5")
 #     single_parameter_plot()
 #     single_parameter_t0_plot(one=False)
 #     single_parameter_t0_plot(one=True)
-    # plot_dla_cddf()
+#     plot_dla_cddf()
