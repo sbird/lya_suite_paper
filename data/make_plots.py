@@ -440,7 +440,7 @@ def make_res_convergence_t0(tempfile, hirestempfile):
     #Plot each simulation's resolution correction.
     for i in range(nhires):
         ratio = meanT["meanT"][:][paraminds[i], :] / meanThires["meanT"][:][i,:]
-        plt.plot(redshift, ratio, color=dist_col[i], label=r"$n_s=%.3g$" % meanThires["params"][:][i,0], ls=lss[i])
+        plt.plot(redshift, ratio, color=dist_col[i], label=r"$n_P=%.3g$" % meanThires["params"][:][i,0], ls=lss[i])
     plt.legend(fontsize=14)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
@@ -606,10 +606,10 @@ def make_spectra_convergence():
 if __name__ == "__main__":
 #     get_flux_power_resolution("emu_full_hires", "emu_full_extend")
 #     make_temperature_variation("dtau-48-48/emulator_meanT.hdf5")
-#     make_res_convergence_t0("dtau-48-48/emulator_meanT.hdf5", "dtau-48-48/hires/emulator_meanT.hdf5")
+    make_res_convergence_t0("dtau-48-48/emulator_meanT.hdf5", "dtau-48-48/hires/emulator_meanT.hdf5")
 #     make_res_convergence2()
 #     make_res_convergence_3()
-    make_box_convergence("box_converge.hdf5", "seed_converge.hdf5")
+#     make_box_convergence("box_converge.hdf5", "seed_converge.hdf5")
 #     single_parameter_plot()
 #     single_parameter_t0_plot(one=False)
 #     single_parameter_t0_plot(one=True)
