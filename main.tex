@@ -94,7 +94,7 @@
 \newcommand{\edit}[1]{#1}
 
 %opening
-\title{A New Suite of Lyman-$\alpha$ Forest Simulations for Cosmology}
+\title{{PRIYA:} A New Suite of Lyman-$\alpha$ Forest Simulations for Cosmology}
 
 \author[a]{Simeon Bird,\note{Corresponding author}}
 \affiliation[a]{Department of Physics \& Astronomy, University of California  Riverside,\\900 University Avenue, Riverside, CA 92521, USA}
@@ -102,12 +102,18 @@
 \author[a]{Ming-Feng Ho,}
 \author[a]{Mahdi Qezlou,}
 \author[a]{Reza Monadi,}
-\author[b]{Others: Yueying, Tiziana, Nianyi, Rupert?}
+\author[b]{Yueying Ni, }
+\author[c]{Nianyi Chen,}
+\author[c,d]{Rupert Croft, }
+\author[c,d]{Tiziana Di Matteo.}
+\affiliation[b]{Harvard-Smithsonian Center for Astrophysics, 60 Garden Street, Cambridge, MA 02138, USA}
+\affiliation[c]{McWilliams Center for Cosmology, Department of Physics, Carnegie Mellon University, Pittsburgh, PA 15213}
+\affiliation[d]{NSF AI Planning Institute for Physics of the Future, Carnegie Mellon University, Pittsburgh, PA 15213, USA}
 \emailAdd{sbird@ucr.edu}
 % \emailAdd{mfern027@ucr.edu}
 
 \abstract{
-We present a new suite of $43$ simulations of the Lyman-$\alpha$ forest, spanning a $9$-dimensional parameter space, including $4$ cosmological parameters and $5$ astrophysical/thermal parameters. These simulations advance on earlier simulations suites by larger particle loads, by incorporating new physical models for hydrogen and helium reionization, and by self-consistently incorporating a model for AGN feedback. Parameters are chosen based on a Latin hypercube design and a Gaussian process is used to interpolate to arbitrary parameter combinations. Our simulation suite will be used to interpret existing Lyman-$\alpha$ forest 1D flux power spectra from SDSS and future DESI data releases.
+We present a new suite of cosmological simulations, based on the code and hydrodynamic model of the ASTRID simulation, and designed for cosmological analyses of the Lyman-$\alpha$ forest. Our simulation suite spans a $9$-dimensional parameter space, including $4$ cosmological parameters and $5$ astrophysical/thermal parameters. We use a multi-fidelity emulation technique to combine $48$ low fidelity simulations with $1536^3$ particles in a $120$ Mpc/h box with $3$ high fidelity simulations with $3072^3$ particles in a a $120$ Mpc/h box. All our simulations include a full physics model for galaxy formation, including supernova and AGN feedback, and thus also contain a realistic population of DLAs. We advance on earlier simulations suites by larger particle loads, by incorporating new physical models for hydrogen and helium reionization, and by self-consistently incorporating a model for AGN feedback. Simulation parameters are chosen based on a Latin hypercube design and a Gaussian process is used to interpolate to arbitrary parameter combinations. We build an emulator for the 1D flux power spectrum and show that our final interpolation error is $< 1\%$ and that our simulations produce a flux power spectrum converged at the percent level for $z=5.4$ - $2.2$. Our simulation suite will be used to interpret existing Lyman-$\alpha$ forest 1D flux power spectra from SDSS and future DESI data releases.
 }
 
 \begin{document}
@@ -126,7 +132,7 @@ The distribution of neutral hydrogen in the Universe, as traced by \Lya~forest a
 The enormous sample of quasar spectra currently available from the Sloan Digital Sky Survey (SDSS) means that the constraining power of the \Lya~forest is currently limited by systematic uncertainty, especially in creating large and accurate enough simulation models and in understanding the instrumental characteristics of the spectrograph.
 Creating an accurate simulation of the \Lya~forest requires the ability to probe the Jeans scales of the collapsing gas and thus a mean interparticle spacing of $\sim 39$ kpc/h \cite{Borde:2014}. Conversely, suppressing cosmic variance in the simulation requires a box size of $\sim 100$ Mpc/h.
 
-Here we present a new suite of simulations using the \mpgadget~code developed for the ASTRID simulation \cite{Ni:2021, Bird:2022}. Our largest simulations have a box size of $120$ Mpc/h and $2\times 3072^3$ particles, meeting the criteria for resolving the \Lya~forest.
+Here we present the PRIYA suite of simulations, which are run using the \mpgadget~code developed for the ASTRID project \cite{Ni:2021, Bird:2022}. Our largest simulations have a box size of $120$ Mpc/h and $2\times 3072^3$ particles, meeting the criteria for resolving the \Lya~forest.
 We show that we can model scales from $k \sim 2\times 10^{-3}$ - $k \sim 0.1$ s/km and redshifts $2.2 - 5.4$ to an accuracy of a few percent, as required by current survey data. In addition, the simulations contain a full hydrodynamic galaxy formation model including stellar and black hole physics. The main output is the \Lya~spectra, of which we have generated $691,200$ from each snapshot, and the derived flux power spectra.
 We use these simulations to build an emulator for the 1D flux power spectrum, and show that the emulator is able to predict the output flux power spectrum from a simulation to an accuracy of a few percent over a wide range of cosmological parameters.
 
@@ -662,9 +668,9 @@ Even though the supernova wind model is fixed, one of the high fidelity simulati
 \section{Conclusions}
 \label{sec:conclusions}
 
-We present a new, large, suite of cosmological simulations of the \Lya~forest. We have used the multi-fidelity technique from \cite{Ho:2022, Fernandez:2022} to combine simulations at different resolutions, and build a cosmological emulator covering the parameter space spanned by the simulations. We include two cosmological parameters, the spectral slope $n_s$ and the perturbation amplitude $A_P$. We also vary $h$ and the growth factor $\Omega_M h^2$. These last two have a relatively small effect on the \Lya~forest on these scales, but we include them to ensure that the uncertainty resulting from them can be properly marginalised over. We include astrophysical parameters for changes in the mean flux (in post-processing), for the strength of AGN feedback, the start and end redshifts of helium reionization, as well as the resulting temperature boost, and the redshift of hydrogen reionization.
+We present the PRIYA simulation suite, a new, large, suite of cosmological simulations of the \Lya~forest. We have used the multi-fidelity technique from \cite{Ho:2022, Fernandez:2022} to combine simulations at different resolutions, and build a cosmological emulator covering the parameter space spanned by the simulations. We include two cosmological parameters, the spectral slope $n_s$ and the perturbation amplitude $A_P$. We also vary $h$ and the growth factor $\Omega_M h^2$. These last two have a relatively small effect on the \Lya~forest on these scales, but we include them to ensure that the uncertainty resulting from them can be properly marginalised over. We include astrophysical parameters for changes in the mean flux (in post-processing), for the strength of AGN feedback, the start and end redshifts of helium reionization, as well as the resulting temperature boost, and the redshift of hydrogen reionization.
 
-Our simulations are some of the largest ever performed in a Latin Hypercube suite. We have a $120$ Mpc/h box, enough for a fair cosmological sample with minimal cosmic variance at $z=2$ and a softening length of roughly kpc, comparable to other galaxy formation simulations. Note that our highest resolution simulations have a moderately higher resolution than, for example, the Illustris \cite{Vogelsberger:2014} or ASTRID \cite{Bird:2022, Ni:2021} simulations. We have performed $48$ low resolution simulations and $3$ high resolution simulations, which is sufficient to reduce average emulation error to the percent level, as demonstrated by our leave-one-out analysis. We computed the predicted single-parameter variations in the 1D flux power spectrum for each cosmological and astrophysical parameter, and shown that these agree with physical expectations or literature predictions.
+The PRIYA simulations are some of the largest ever performed in a Latin Hypercube suite. We have a $120$ Mpc/h box, enough for a fair cosmological sample with minimal cosmic variance at $z=2$ and a softening length of roughly kpc, comparable to other galaxy formation simulations. Note that our highest resolution simulations have a moderately higher resolution than, for example, the Illustris \cite{Vogelsberger:2014} or ASTRID \cite{Bird:2022, Ni:2021} simulations. We have performed $48$ low resolution simulations and $3$ high resolution simulations, which is sufficient to reduce average emulation error to the percent level, as demonstrated by our leave-one-out analysis. We computed the predicted single-parameter variations in the 1D flux power spectrum for each cosmological and astrophysical parameter, and shown that these agree with physical expectations or literature predictions.
 
 We show that our simulation suite can bracket the observed thermal history of the IGM. We show how the thermal history is affected by the parameters of our model, in particular the start and end of helium reionization. Note that the thermal history is measured by comparing simulations to observed statistics of high resolution quasar spectra, such as the flux power spectrum on scales $0.01$ - $0.1$ s/km. Since our simulations provide alternative models of the flux power spectrum, in future work we may make direct constraints on our model via the small-scale flux power spectrum, rather than through the derived thermal history.
 
