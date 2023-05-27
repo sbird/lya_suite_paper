@@ -434,13 +434,13 @@ def make_res_convergence_t0(tempfile, hirestempfile):
     meanT = h5py.File(tempfile)
     nhires = np.size(meanThires["params"][:][:,0])
     paraminds = [np.argmin(np.sum((meanThires["params"][:][ii,:]- meanT["params"][:])**2,axis=1)) for ii in range(nhires)]
-    dist_col = dc.get_distinct(nhires)
+    dist_col = dc.get_distinct(nhires*2)
     redshift = meanThires["zout"][:]
     lss = ["-", "--", ":"]
     #Plot each simulation's resolution correction.
     for i in range(nhires):
         ratio = meanT["meanT"][:][paraminds[i], :] / meanThires["meanT"][:][i,:]
-        plt.plot(redshift, ratio, color=dist_col[i], label=r"$\alpha_q=%.2g$" % meanThires["params"][:][i,4], ls=lss[i])
+        plt.plot(redshift, ratio, color=dist_col[i+3], label=r"$\alpha_q=%.2g$" % meanThires["params"][:][i,4], ls=lss[i])
     plt.legend(fontsize=14)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
@@ -456,7 +456,7 @@ def save_fig(name, plotdir):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     #plt.ylim(bottom=0.9, top=1.1)
-    plt.xlabel(r"$k_F$", fontsize=20)
+    plt.xlabel(r"$k_F$ (s/km)", fontsize=20)
     plt.ylabel(r"$P_F(k)$ ratio ($%s$)" % name[1], fontsize=20)
     plt.legend(ncol=1,fontsize=12)
     plt.tight_layout()
@@ -615,6 +615,6 @@ if __name__ == "__main__":
 #     make_res_convergence_3()
 #     make_box_convergence("box_converge.hdf5", "seed_converge.hdf5")
     single_parameter_plot()
-    single_parameter_t0_plot(one=False)
-    single_parameter_t0_plot(one=True)
+#     single_parameter_t0_plot(one=False)
+#     single_parameter_t0_plot(one=True)
 #     plot_dla_cddf()
