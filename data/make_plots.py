@@ -440,7 +440,7 @@ def make_res_convergence_t0(tempfile, hirestempfile):
     #Plot each simulation's resolution correction.
     for i in range(nhires):
         ratio = meanT["meanT"][:][paraminds[i], :] / meanThires["meanT"][:][i,:]
-        plt.plot(redshift, ratio, color=dist_col[i+3], label=r"$\alpha_q=%.2g$" % meanThires["params"][:][i,4], ls=lss[i])
+        plt.plot(redshift, ratio, color=dist_col[i + 2*(i > 1)], label=r"$\alpha_q=%.2g$" % meanThires["params"][:][i,4], ls=lss[i], linewidth=1.8)
     plt.legend(fontsize=14)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
@@ -614,7 +614,7 @@ if __name__ == "__main__":
 #     make_res_convergence2()
 #     make_res_convergence_3()
 #     make_box_convergence("box_converge.hdf5", "seed_converge.hdf5")
-    single_parameter_plot()
+#     single_parameter_plot()
 #     single_parameter_t0_plot(one=False)
 #     single_parameter_t0_plot(one=True)
 #     plot_dla_cddf()
