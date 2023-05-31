@@ -145,7 +145,7 @@ The main improvements in the simulation suite we present here come from our larg
 
 %The data: SDSS BOSS DR14. XQ-100. HIRES/MIKE.
 %Future data: 3D flux power spectrum, tomography.
-Most current \Lya~forest data is summarised by statistics along the line of sight to the quasar. The largest dataset is that from Sloan Digital Sky Survey (SDSS) quasars, most recently SDSS DR14 \cite{Chabanier:2019} and soon the Dark Energy Spectroscopic Instrument (DESI). This is both the dataset with the largest number of quasars (and thus the smallest statistical error), and the dataset which probes the largest scales where the cosmological information is greatest. However, SDSS is limited both by low signal to noise and moderate spectral resolution, which does not allow it to probe the thermal cutoff of the intergalactic gas and measure small scales. There are thus independent sets of spectra, observing fewer quasars at higher spectral resolution. These include the XQ-100 survey \cite{Irsic:2017pk, Esposito:2022} at moderate spectral resolution, and the higher resolution KODIAQ/SQUAD \cite{KODIAQ:2022} data, as well as the spectra from HIRES/UVES \cite{Viel:2013wdm, Boera:2019}. In this paper we present a simulation model designed to mock scales probed by SDSS DR14 and DESI ($k \lesssim 0.05$ s/km) at the percent level, comparable to the statistical accuracy of these datasets. We will show that we are also able to model smaller scales ($k \lesssim 0.1$ s/km) at the ten-percent level required by the statistical error in XQ-100 \cite{KODIAQ:2022}.
+Most current \Lya~forest data is summarised by statistics along the line of sight to the quasar. The largest dataset is that from Sloan Digital Sky Survey (SDSS) quasars, most recently Data Release (DR) 17, although the last flux power spectrum computation used SDSS DR14 \cite{Chabanier:2019}. The Dark Energy Spectroscopic Instrument (DESI) will also soon report results. This is both the dataset with the largest number of quasars (and thus the smallest statistical error), and the dataset which probes the largest scales where the cosmological information is greatest. However, SDSS is limited both by low signal to noise and moderate spectral resolution, which does not allow it to probe the thermal cutoff of the intergalactic gas and measure small scales. There are thus independent sets of spectra, observing fewer quasars at higher spectral resolution. These include the XQ-100 survey \cite{Irsic:2017pk, Esposito:2022} at moderate spectral resolution, and the higher resolution KODIAQ/SQUAD \cite{KODIAQ:2022} data, as well as the spectra from HIRES/UVES \cite{Viel:2013wdm, Boera:2019}. In this paper we present a simulation model designed to mock scales probed by SDSS DR14 and DESI ($k \lesssim 0.05$ s/km) at the percent level, comparable to the statistical accuracy of these datasets. We will show that we are also able to model smaller scales ($k \lesssim 0.1$ s/km) at the ten-percent level required by the statistical error in XQ-100 \cite{KODIAQ:2022}.
 
 \section{Simulations}
 
@@ -283,14 +283,14 @@ Setting the bubble size variance to zero decreased the temperature of the IGM by
 \subsection{Star Formation and Stellar Feedback}
 \label{sec:stellar}
 
-Our star formation and stellar feedback model follows the \astrid~simulation and is explained in detail in Ref~\cite{Bird:2022}.
-Stars form on an effective equation of state in dense gas, following Ref.~\cite{Springel:2003}. Gas particles are converted directly to stars of the same mass. Note that \astrid~formed stars with $1/4$ of the mass of the gas particle. This increases the effective resolution of the stellar component of galaxies, but has no effect on the \Lya~forest, and so for our simulation suite simply increases computational cost. We disable metal return from stars, as it can be computationally expensive, and we are building an emulator for the neutral hydrogen of the \Lya~forest. We also disable metal cooling, which Ref.~\cite{Viel:2013} showed has a small effect on the \Lya~forest flux power spectrum. Similarly, we do not include the (metallicity dependent) correction to the high redshift star formation rate due to the formation of molecular hydrogen implemented in \astrid, which has a very small effect for $z < 6$.
+Our star formation and stellar feedback model follows the \astrid~simulation and is explained in detail in Ref.~\cite{Bird:2022}.
+Stars form on an effective equation of state in dense gas, following Ref.~\cite{Springel:2003}. Gas particles are converted directly to stars of the same mass. Note that \astrid~formed stars with $1/4$ of the mass of the gas particle. This increases the effective resolution of the stellar component of galaxies, but has no effect on the \Lya~forest, and so for our simulation suite simply increases computational cost. We disable metal return from stars, as it can be computationally expensive. Ref.~\cite{Viel:2013} showed that metal cooling has a small effect on the \Lya~forest flux power spectrum. Similarly, we do not include the (metallicity dependent) correction to the high redshift star formation rate due to the formation of molecular hydrogen implemented in \astrid, which has a very small effect for $z < 6$. %Should we wish to build an emulator for the metal lines in future, we would be able to paint metal lines are not directly necessary.
 
 A stellar wind feedback model is included following Ref.~\citep{Okamoto:2010} and Ref.~\cite{Bird:2022}. Wind speeds are proportional to the local one dimensional dark matter velocity dispersion $\sigma_\mathrm{DM}$:
 \begin{equation}
 v_w = \kappa_w \sigma_\mathrm{DM} \,,
 \end{equation}
-where $v_w$ is the wind speed. $\kappa_w$ is a dimensionless parameter, which we take to be $3.7$ following Ref.~\cite{Vogelsberger:2013}. We have mildly altered the model from \cite{Bird:2022} by implementing a minimum wind velocity, $v_w \geq 100$ km/s, in order to improve convergence with resolution.
+where $v_w$ is the wind speed. $\kappa_w$ is a dimensionless parameter, which we take to be $3.7$ following Ref.~\cite{Vogelsberger:2013}. In order to improve convergence with resolution, we added a minimum wind velocity, $v_w \geq 100$ km/s, following the IllustrisTNG model \cite{Pillepich:2018}.
 
 Winds are sourced by newly formed star particles, which randomly pick gas particles from within their SPH smoothing length to become wind particles. The total mass loading is $(v_w/ 350 \mathrm{km/s})^{-2}$ where $350$ km/s is in physical units. Particles recouple when their surrounding density drops by a factor of $10$, or after $60$ Myr.\footnote{In Ref.~\cite{Bird:2022} we had a subdominant recoupling condition: gas would recouple after $20 \mathrm{kpc} / v_w$. In practice this affected only a small fraction of the wind, as for a typical star forming halo with a virial velocity of $200$ km/s the recoupling time was $100$ Myr, and gas always recoupled after $60$ Myr. We have thus removed this condition for model simplicity.} Particles in the wind cool, but do not experience or produce pressure forces, nor may they be accreted onto a black hole. However, to improve the stability of the SPH density estimates, they are included when computing SPH smoothing lengths.
 
@@ -354,10 +354,10 @@ This preserves the ionization and velocity gradients inside a spectral pixel mor
 
 We compute the power spectrum of the flux overdensity, $P_F(k)$, as:
 \begin{align}
- \delta_F(x) &= \mathcal{F}(x) / \bar{\mathcal{F}} - 1 \\
- P_F(k) &= < \hat{\delta}_F(k) \hat{\delta}_F^*(k) >
+ \delta_F(x) &= \mathcal{F}(x) / \widebar{\mathcal{F}} - 1 \\
+ P_F(k) &= < L^{-1} \hat{\delta}_F(k) \hat{\delta}_F^*(k) >
 \end{align}
-Here $\mathcal{F}$ is the flux, related to the optical depth as $\mathcal{F} = \exp{(-\tau)}$. $\bar{\mathcal{F}}$ is the mean flux, taken over all sightlines. We also define the mean optical depth, $\tau_\mathrm{eff} = -\log \bar{\mathcal{F}}$. The overall flux power spectrum $P_F(k) $ is an average of the 1D Fourier transform of the flux, $\hat{\delta}_F(k)$, along each sightline.
+Here $\mathcal{F}$ is the (dimensionless) flux, related to the optical depth as $\mathcal{F}(x) = \exp{(-\tau(x))}$. $L$ is the length of the sightline. $\widebar{\mathcal{F}}$ is the mean flux, taken over all sightlines. We also define the mean optical depth, $\tau_\mathrm{eff} = -\log \widebar{\mathcal{F}}$. The overall flux power spectrum $P_F(k) $ is an average of the 1D Fourier transform of the flux, $\hat{\delta}_F(k)$, along each sightline.
 
 We generate a regular grid of $480^2$ sightlines for each simulation snapshot, with a mean separation of $250$ kpc/h. We verified explicitly that we are converged with the number of sightlines: a grid of $720^2$ sightlines produced a flux power spectrum differing by less than $0.1\%$. We generate three grids, one through each axis of the box. This reduces the sample variance in the flux power spectrum on the largest scales by a factor of $3$.
 
@@ -382,7 +382,7 @@ Thus by construction $d\tau_0$ does not affect the $z=3$ flux power spectrum, an
     \includegraphics[width=0.75\textwidth]{figures/sample_params.pdf}
     \caption{\label{fig:samples}
     Parameter limits for each of the nine parameters varied in the simulation suites.
-    Grey crosses show samples at low fidelity  red circles show samples at high fidelity.
+    Grey crosses show samples at low fidelity. Red circles show samples at high fidelity.
     }
 \end{figure}
 
@@ -454,7 +454,7 @@ As in Ref.~\cite{Fernandez:2022}, we rescale the training samples by the median 
 \end{equation}
 where $d$ is the dimensionality of the input parameters.
 
-The multi-fidelity part of the model uses the linear multi-fidelity model \citep{10.1093/biomet/87.1.1}. A high fidelity prediction is given by
+The multi-fidelity part of the model uses the linear multi-fidelity model \citep{10.1093/biomet/87.1.1}. Using this model, which Ref.~\cite{Fernandez:2022} showed to be accurate, a high fidelity prediction is given by
 \begin{equation}
     P_F^{^\mathrm{HF}}(k, z, \boldsymbol{\theta}) = \rho(k, z) \cdot P_F^{^\mathrm{LF}}(k, z, \boldsymbol{\theta}) + \delta(k, z, \boldsymbol{\theta}),
     \label{eq:ko_model}
@@ -483,14 +483,14 @@ Ref.~\cite{Fernandez:2022} achieved sub-$1\%$ accuracy using $30$ low fidelity a
 
 %In Ref.~\cite{Ho:2023}, we show that average emulator error is a power law in the number of simulations, with an exponent of $-4.5/d$, where $d$ is the number of dimensions in the emulator. We thus expect that average error would be $\sim 20\%$ better
 
-For comparison, the flux power spectrum from BOSS DR14 \cite{Chabanier:2019}, which is dominated by systematics, has a diagonal error between $1.5\%$ (at $z=2.8$ and k = $5\times 10^{-3}$ s/km) and $\sim 15\%$ (at $z=4.6$). Thus, although our interpolation errors are not perfectly calibrated, even the conservative estimates above are smaller than the observational uncertainties.
+For comparison, the diagonal elements of the covariance function of the flux power spectrum from DR14 are between $1.5\%$ (at $z=2.8$ and k = $5\times 10^{-3}$ s/km) and $\sim 15\%$ (at $z=4.6$) \cite{Chabanier:2019}. Thus, although our interpolation errors are not perfectly calibrated, the conservative estimates above are smaller than the observational uncertainties.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/fpsemu_errors.pdf}
     \caption{\label{fig:fps_error}
     Leave-one-out errors for the \Lya~forest flux power spectrum emulator.
-    The left panel shows the absolute error in units of prediction uncertainty. The solid black line shows a unit Gaussian normalised to the central height of the emulator error.
+    The left panel shows the error in units of prediction uncertainty. The solid black line shows a unit Gaussian normalised to the central height of the emulator error.
     The right panel shows the relative errors, an estimate of how well the emulator predicts the flux power spectrum.
     The distributions show the prediction error for each redshift of each flux power sample included in the final training sample.
     The grey distribution shows the emulator error for a single-fidelity emulator, predicting the flux power for the LF simulations.
@@ -508,7 +508,7 @@ For comparison, the flux power spectrum from BOSS DR14 \cite{Chabanier:2019}, wh
     \includegraphics[width=\textwidth]{figures/t0emu_errors.pdf}
     \caption{\label{fig:t0_error}
     Leave-one-out errors for the IGM mean temperature emulator.
-    The left panel shows the absolute error in units of prediction uncertainty. The solid black line shows a unit Gaussian normalised to the central height of the emulator error. The right panel shows the relative errors.
+    The left panel shows the error in units of prediction uncertainty. The solid black line shows a unit Gaussian normalised to the central height of the emulator error. The right panel shows the relative errors.
     The grey distribution shows the emulator error for a single-fidelity emulator, predicting the mean temperature for the LF simulations.
     The yellow distribution shows the errors for a multi-fidelity emulator, predicting the mean temperature for the HF simulations. Solid black line shows a unit Gaussian normalised to the central height of the emulator error.
     }
@@ -523,7 +523,7 @@ We then built an emulator for the mean IGM temperature, using the same kernel as
 \begin{figure*}
 \includegraphics[width=1.0\textwidth]{figures/lr_lya_tube_20mpc.pdf}
 \includegraphics[width=1.0\textwidth]{figures/hr_lya_tube_20mpc.pdf}
- \caption{Visualisations of the HF1 (see Table~\protect\ref{tab:highfidelity} low and high fidelity simulations at $z=2.2$. Shown are $20\times 20$ Mpc/h tubes across the full $120$ Mpc/h box. A sightline is drawn in gold through the center of the simulation box. The colours indicate the density of the gas, weighted by internal energy, with redder colours indicating higher temperature. Low and high fidelity simulations are similar, demonstrating that our low fidelity simulations are already reasonably well converged.}
+ \caption{Visualisations of the HF1 (see Table~\protect\ref{tab:highfidelity}) low and high fidelity simulations at $z=2.2$. Shown are $20\times 20$ Mpc/h tubes across the full $120$ Mpc/h box. A sightline is drawn in gold through the center of the simulation box. The colours indicate the density of the gas, weighted by internal energy, with redder colours indicating higher temperature. Low and high fidelity simulations are similar, demonstrating that our low fidelity simulations are already reasonably well converged.}
  \label{fig:visualisation}
 \end{figure*}
 
@@ -577,7 +577,7 @@ We also found that our convergence at $z \sim 5$ was better than predicted by Re
  %[8.22750000e-01 1.92333333e-09 3.79000000e+00 3.09000000e+00
  %1.79500000e+00 6.85000000e-01 1.44500000e-01 7.07500000e+00
  %6.66666667e-02]
- (Right) Ratio between the IGM mean temperature in low resolution simulations to the high resolution simulations, each labelled by their $\alpha_q$ value. Convergence is at the level of $1\%$ while the observational error on the temperature is $5-10\%$.
+ (Right) Ratio between the IGM mean temperature in low resolution simulations to the high resolution simulations, each labelled by their $\alpha_q$ value. Convergence is at the level of $3\%$ while the observational error on the temperature is $5-10\%$.
 }
  \label{fig:meanigmtempdens}
 \end{figure*}
@@ -646,7 +646,7 @@ At $z=4.4$, for a low hydrogen reionization midpoint, the emulator predicts a si
 \centering
 \includegraphics[width=0.48\columnwidth]{figures/single_param_bhfeedback.pdf}
 \includegraphics[width=0.48\textwidth]{figures/cddf_hires.pdf}
- \caption{(Left) Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing the strength of black hole feedback, $\epsilon_\mathrm{AGN}$ for three representative redshifts. All other parameters are fixed to the midpoint of their range. Shown is the ratio of the 1D flux power spectrum between the central parameter value ($\epsilon_\mathrm{AGN} = 0.05$) and the values shown in the legend.  (Right) Column density distribution function (CDDF) of high column density absorbers from our $3$ high resolution simulations at $z=2.2$, compared to SDSS DR16 \cite{2021MNRAS.507..704H}.}
+ \caption{(Left) Predicted effect on the flux power spectra from the full multi-fidelity emulator when changing the strength of black hole feedback, $\epsilon_\mathrm{AGN}$ for $z=3.2$ and $z=2.2$. All other parameters are fixed to the midpoint of their range. Shown is the ratio of the 1D flux power spectrum between the central parameter value ($\epsilon_\mathrm{AGN} = 0.05$) and the values shown in the legend.  (Right) Column density distribution function (CDDF) of high column density absorbers from our $3$ high resolution simulations at $z=2.2$, compared to the DLA catalogue of Ref.~\cite{2021MNRAS.507..704H}, derived from SDSS DR16.}
  \label{fig:DLACDDF}
 \end{figure*}
 
@@ -680,7 +680,7 @@ Even though the supernova wind model is fixed, one of the high fidelity simulati
 \section{Conclusions}
 \label{sec:conclusions}
 
-We present the PRIYA simulation suite, a new, large, suite of cosmological simulations of the \Lya~forest. We have used the multi-fidelity technique from \cite{Ho:2022, Fernandez:2022} to combine simulations at different resolutions, and build a cosmological emulator covering the parameter space spanned by the simulations. We include two cosmological parameters, the spectral slope $n_P$ and the perturbation amplitude $A_P$. We also vary $h$ and the growth factor $\Omega_M h^2$. These last two have a relatively small effect on the \Lya~forest on these scales, but we include them to ensure that the uncertainty resulting from them can be properly marginalised over. We include astrophysical parameters for changes in the mean flux (in post-processing), for the strength of AGN feedback, the start and end redshifts of helium reionization, as well as the resulting temperature boost, and the redshift of hydrogen reionization.
+We present the PRIYA simulation suite, a new, large, suite of cosmological simulations of the \Lya\ forest. We have used the multi-fidelity technique from \cite{Ho:2022, Fernandez:2022} to combine simulations at different resolutions, and build a cosmological emulator covering the parameter space spanned by the simulations. We include two cosmological parameters, the spectral slope $n_P$ and the perturbation amplitude $A_P$. We also vary $h$ and the growth factor $\Omega_M h^2$. These last two have a relatively small effect on the \Lya~forest on these scales, but we include them to ensure that the uncertainty resulting from them can be properly marginalised over. We include astrophysical parameters for changes in the mean flux (in post-processing), for the strength of AGN feedback, the start and end redshifts of helium reionization, as well as the resulting temperature boost, and the redshift of hydrogen reionization.
 
 The PRIYA simulations are some of the largest ever performed in a Latin Hypercube suite. We have a $120$ Mpc/h box, enough for a fair cosmological sample with minimal cosmic variance at $z=2$. Our simulations have $1536^3$ and $3072^3$ particles and thus mean interparticle spacings of $78$ and $39$ kpc/h. Our highest resolution simulations thus have a moderately higher resolution than, for example, the Illustris \cite{Vogelsberger:2014} or ASTRID \cite{Bird:2022, Ni:2021} simulations. We have performed $48$ low resolution simulations and $3$ high resolution simulations, which is sufficient to reduce average emulation error to the percent level, as demonstrated by our leave-one-out analysis. We required, on average, $7,000$ node-hours for each low resolution simulation and $90,000$ node-hours for each high resolution simulation. However, individual simulations cost up to a factor of $2$ more or less, depending on the value of $A_P$ simulated. We computed the predicted single-parameter variations in the 1D flux power spectrum for each cosmological and astrophysical parameter, and shown that these agree with physical expectations or literature predictions.
 
