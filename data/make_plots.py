@@ -293,6 +293,9 @@ def make_res_convergence2(convfile="fluxpower_converge_2.hdf5", mf_hires="fpk_hi
         ax.semilogx(kfkms_vhr[zz2][0], flux_powers_hr[zz2][0]/flux_powers_vhr[zz2][0], label=label, ls="--", color=dist_col[1])
         ax.text(0.0018, 0.96, "z=%.1f" % zz)
         ax.grid(visible=True, axis='y')
+        #Vertical lines at the smallest eBOSS and DESI scales
+        ax.axvline(x=0.019512, color="grey", ls="--")
+        ax.axvline(x=3.35521e-02, color="grey", ls="--")
         ax.set_ylim(0.95, 1.08)
         ax.set_yticks([0.95, 0.98, 1.0, 1.02, 1.05]) #, [str(1.0), str(1.02), str(1.04)])
         if (index-1) % 3 > 0:
@@ -610,8 +613,8 @@ def make_spectra_convergence():
 if __name__ == "__main__":
 #     get_flux_power_resolution("emu_full_hires", "emu_full_extend")
 #     make_temperature_variation("dtau-48-48/emulator_meanT.hdf5")
-    make_res_convergence_t0("dtau-48-48/emulator_meanT.hdf5", "dtau-48-48/hires/emulator_meanT.hdf5")
-#     make_res_convergence2()
+#     make_res_convergence_t0("dtau-48-48/emulator_meanT.hdf5", "dtau-48-48/hires/emulator_meanT.hdf5")
+    make_res_convergence2()
 #     make_res_convergence_3()
 #     make_box_convergence("box_converge.hdf5", "seed_converge.hdf5")
 #     single_parameter_plot()
