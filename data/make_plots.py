@@ -151,7 +151,7 @@ def make_box_convergence(convfile, convfile2):
         ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
         if sharex is None:
             ax.set_xlim(1e-3, 4e-2)
-        label="120/60"
+        label="Boxsize"
         if index != 1:
             label=""
         ax.semilogx(kfkms_vhr[ii], flux_powers_lr[ii]/flux_powers_hr[ii], color=dist_col[0], ls="-", label=label)
@@ -282,12 +282,12 @@ def make_res_convergence2(convfile="fluxpower_converge_2.hdf5", mf_hires="fpk_hi
         ax = fig.add_subplot(4,3, index, sharex=sharex, sharey=sharey)
         ii_lr = np.where(np.abs(redshifts_lr - zz) < 0.01)[0][0]
         for jj in range(nhires):
-            label = "%.2g kpc/h" % (120000./1536.)
+            label = "%.2g/%.2g kpc/h" % (120000./1536., 120000/3072.)
             if jj > 0 or index != 2:
                 label = ""
             ax.semilogx(kfkms_vhr2[jj, ii], flux_powers_lr2[paraminds[jj], ii_lr]/flux_powers_hr2[jj, ii], label=label, color=dist_col[0], ls="-")
         zz2 = np.where(np.abs(redshifts - zz) < 0.01)
-        label = "%.2g kpc/h" % (15000./384.)
+        label = "%.2g/%.2g kpc/h" % (15000./384., 15000/512.)
         if index != 1:
             label = ""
         ax.semilogx(kfkms_vhr[zz2][0], flux_powers_hr[zz2][0]/flux_powers_vhr[zz2][0], label=label, ls="--", color=dist_col[1])
@@ -502,9 +502,11 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
         lower[i] = 0.8*(plimits[i,0] - means[i]) + means[i]
         okf2, lowerfv, _ = like.get_predicted(lower)
         assert np.all(np.abs(okf[-1] / okf2[-1] -1) < 1e-3)
+        lblstr2 = r"$%s=%.2g$"
         lblstr = r"$%s=%.2g$, $z=%.2g$"
         if name[0] == 'omegamh2':
             lblstr = r"$%s=%.3g$, $z=%.2g$"
+            lblstr2 = r"$%s=%.3g$"
         if name[0] == 'herei':
             zzs = np.array([3.6, 3.2])
         elif name[0] == 'heref' or name[0] == 'alphaq':
@@ -515,6 +517,7 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
             zzs = np.array([3.2, 2.2])
         elif name[0] == 'Ap':
             lblstr = r"$%s\times 10^9 =%.2g$, $z=%.2g$"
+            lblstr = r"$%s\times 10^9 =%.2g$"
             upper*=1e9
             lower*=1e9
         else:
@@ -522,8 +525,10 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
         print(name[0], zzs)
         for (j,zz) in enumerate(zzs):
             zind = np.argmin(np.abs(like.zout - zz))
-            plt.semilogx(okf[zind], upperfv[zind]/defaultfv[zind], label= lblstr % (name[1], upper[i], zz), color=dist_col[2*j % 12])
-            plt.semilogx(okf[zind], lowerfv[zind]/defaultfv[zind], label= lblstr % (name[1], lower[i], zz), ls="--", color=dist_col[(2*j+1) %12])
+            plt.semilogx(okf[zind], upperfv[zind]/defaultfv[zind], label= lblstr % (name[1], upper[i], zz), color=dist_col[2*j % 12], linewidth=2)
+            plt.semilogx(okf[zind], lowerfv[zind]/defaultfv[zind], label= lblstr % (name[1], lower[i], zz), ls="--", color=dist_col[(2*j) %12], linewidth=2)
+        zind = np.argmin(np.abs(like.zout - zz[0]))
+        plt.semilogx(okf[zind], np.ones_like(okf[zind]), label= lblstr2 % (name[1], means[i]), color="grey", linewidth=0.5)
         save_fig(name, plotdir)
     return like
 
@@ -616,8 +621,8 @@ if __name__ == "__main__":
 #     make_res_convergence_t0("dtau-48-48/emulator_meanT.hdf5", "dtau-48-48/hires/emulator_meanT.hdf5")
     make_res_convergence2()
 #     make_res_convergence_3()
-#     make_box_convergence("box_converge.hdf5", "seed_converge.hdf5")
-#     single_parameter_plot()
+    make_box_convergence("box_converge.hdf5", "seed_converge.hdf5")
+    single_parameter_plot()
 #     single_parameter_t0_plot(one=False)
 #     single_parameter_t0_plot(one=True)
 #     plot_dla_cddf()
