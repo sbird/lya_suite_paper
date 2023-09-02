@@ -4,3 +4,5 @@
 *.log
 *.out
 figures/*.png
+main.pdf
+main.toc

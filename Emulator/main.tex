@@ -1,0 +1,63 @@
+\documentclass[a4paper,11pt]{article}
+\pdfoutput=1
+\usepackage{jcappub}
+% \usepackage[T1]{fontenc} % if needed
+
+\usepackage{enumitem}
+\setlist[enumerate]{itemsep=1mm}
+
+\newcommand{\lya}{Lyman-$\alpha$\ }
+% martin comment function
+\newcommand{\maf}[1]{{\textcolor{red}{[{\bf MAF}: #1]}}}
+% simeon comment function
+\newcommand{\spb}[1]{{\textcolor{magenta}{[{\bf SPB}: #1]}}}
+
+\title{\boldmath Inference via a \lya Forest Emulator}
+
+\author{M.A. Fernandez,}\emailAdd{mfern027@ucr.edu}
+\author{Ming-Feng Ho,}\emailAdd{mho026@ucr.edu}
+\author{and Simeon Bird}\emailAdd{sbird@ucr.edu}
+\affiliation{Department of Physics and Astronomy, University of California Riverside, 900 University Ave, Riverside, CA 92521}
+% \author[a,2]{and Fourth}
+% \affiliation[a]{One University,\\some-street, Country}
+
+\abstract{
+In this work we use our recently developed \lya forest multi-fidelity emulator for cosmological and astrophysical inference.
+A separate emulator is constructed to include the mean temperature of the intergalactic medium, in addition to the \lya forest flux power spectrum.
+Our emulator is trained on large volume ($(120 \text{h/Mpc})^3$) and high particle load ($48$ simulations using $1536^3$ \& $3$ simulations using $3072^3$) simulations, and makes predictions with $\approx1\%$ error.
+The emulator is used within a Markov Chain Monte Carlo framework, with a new likelihood function, to constrain a set of nine parameters that are varied across the simulation suites.
+We find that the posteriors from our analysis depend strongly on the inclusion or omission of the lowest two redshift bins.
+When these redshifts are included, we find a preference for a low primordial power index, $n_P=0.879\pm0.012$, and a primordial power amplitude, $A_s=\left(1.90\pm0.13\times10^{-9}\right)$, consistent with Planck.
+When these redshifts are omitted, we find $n_P=0.927\pm0.017$, consistent with Planck, and a primordial power amplitude, $A_s=\left(1.76\pm0.13\times10^{-9}\right)$, within $2\sigma$ of Planck.
+The affect of the redshift range is also seen in the midpoint of reionization, which is z$^{\text{H~{\sc i}}}=6.85\pm0.28$ using the full redshift range, and z$^{\text{H~{\sc i}}}=7.87\pm0.25$ when using the reduced redshift range.
+The timing and duration of helium reionization is consistent between these two, running from z$^{\text{He~{\sc ii}}}_i\approx4.0-2.8$.
+}
+
+
+\begin{document}
+\maketitle
+\flushbottom
+
+\input{sections/introduction}
+\input{sections/emulator}
+\input{sections/simulations}
+\input{sections/inference}
+\input{sections/results}
+\input{sections/conclusions}
+
+\acknowledgments
+MAF is supported by a National Science Foundation Graduate Research Fellowship under grant No. DGE-1326120.
+SB is supported by NSF grant AST-1817256.
+Computing resources were provided by Frontera LRAC AST21005.
+The authors acknowledge the Frontera computing project at the Texas Advanced Computing Center (TACC) for providing HPC and storage resources that have contributed to the research results reported within this paper.
+Frontera is made possible by National Science Foundation award OAC-1818253.
+URL: \url{http://www.tacc.utexas.edu}
+
+\appendix
+\input{sections/appendices}
+
+
+\bibliographystyle{JHEP.bst}
+\bibliography{refs}
+
+\end{document}
