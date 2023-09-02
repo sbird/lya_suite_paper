@@ -520,6 +520,7 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
             lblstr2 = r"$%s\times 10^9 =%.2g$"
             upper*=1e9
             lower*=1e9
+            meansl=means[i]*1e9
         else:
             zzs = np.array([2.2, 3.2, 4.4])
         print(name[0], zzs)
@@ -527,7 +528,7 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
             zind = np.argmin(np.abs(like.zout - zz))
             plt.semilogx(okf[zind], upperfv[zind]/defaultfv[zind], label= lblstr % (name[1], upper[i], zz), color=dist_col[2*j % 12], linewidth=2)
             plt.semilogx(okf[zind], lowerfv[zind]/defaultfv[zind], label= lblstr % (name[1], lower[i], zz), ls="--", color=dist_col[(2*j) %12], linewidth=2)
-        plt.semilogx(okf[zind], np.ones_like(okf[zind]), label= lblstr2 % (name[1], means[i]), color="grey", linewidth=0.5)
+        plt.hlines(1, xmin=1e-3, xmax=2e-2, label= lblstr2 % (name[1], meansl), color="grey", linewidth=0.8)
         save_fig(name, plotdir)
     return like
 
