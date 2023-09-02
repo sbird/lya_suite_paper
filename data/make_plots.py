@@ -504,6 +504,7 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
         assert np.all(np.abs(okf[-1] / okf2[-1] -1) < 1e-3)
         lblstr = r"$%s=%.2g$, $z=%.2g$"
         lblstr2 = r"$%s=%.2g$"
+        meansl=means[i]
         if name[0] == 'omegamh2':
             lblstr = r"$%s=%.3g$, $z=%.2g$"
             lblstr2 = r"$%s=%.3g$"
