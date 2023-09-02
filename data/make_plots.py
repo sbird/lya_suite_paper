@@ -502,8 +502,8 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
         lower[i] = 0.8*(plimits[i,0] - means[i]) + means[i]
         okf2, lowerfv, _ = like.get_predicted(lower)
         assert np.all(np.abs(okf[-1] / okf2[-1] -1) < 1e-3)
-        lblstr2 = r"$%s=%.2g$"
         lblstr = r"$%s=%.2g$, $z=%.2g$"
+        lblstr2 = r"$%s=%.2g$"
         if name[0] == 'omegamh2':
             lblstr = r"$%s=%.3g$, $z=%.2g$"
             lblstr2 = r"$%s=%.3g$"
@@ -517,7 +517,7 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
             zzs = np.array([3.2, 2.2])
         elif name[0] == 'Ap':
             lblstr = r"$%s\times 10^9 =%.2g$, $z=%.2g$"
-            lblstr = r"$%s\times 10^9 =%.2g$"
+            lblstr2 = r"$%s\times 10^9 =%.2g$"
             upper*=1e9
             lower*=1e9
         else:
@@ -527,7 +527,6 @@ def single_parameter_plot(zzs=None, plotdir='../figures'):
             zind = np.argmin(np.abs(like.zout - zz))
             plt.semilogx(okf[zind], upperfv[zind]/defaultfv[zind], label= lblstr % (name[1], upper[i], zz), color=dist_col[2*j % 12], linewidth=2)
             plt.semilogx(okf[zind], lowerfv[zind]/defaultfv[zind], label= lblstr % (name[1], lower[i], zz), ls="--", color=dist_col[(2*j) %12], linewidth=2)
-        zind = np.argmin(np.abs(like.zout - zz[0]))
         plt.semilogx(okf[zind], np.ones_like(okf[zind]), label= lblstr2 % (name[1], means[i]), color="grey", linewidth=0.5)
         save_fig(name, plotdir)
     return like
