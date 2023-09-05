@@ -47,7 +47,11 @@
     }
 \end{figure}
 
-In this Appendix we evaluate the impact of including the Gaussian Process interpolation error, $\boldsymbol{\sigma}_{GP}$, on the posterior parameters, as discussed in Equation~\ref{eq:covariance}. Figure~\ref{fig:loo_v_emu} compares the effect of including emulator errors, showing the training samples, GP emulator errors and scale-averaged leave-one-out errors. The leave-one-out error is independent of position in parameter space, whereas the GP error is larger towards the edge of parameter space. The effect of the GP error is less than $2-\sigma$ for all parameters. The largest effect is on the growth function $\Omega_M h^2$ and the redshift of hydrogen reionization, which are both poorly constrained by the flux power spectrum data.
+In this Appendix we evaluate the impact of including the Gaussian Process interpolation error, $\boldsymbol{\sigma}_{GP}$, on the posterior parameters, as discussed in Equation~\ref{eq:covariance}.
+Figure~\ref{fig:loo_v_emu} compares the effect of including emulator errors, showing the training samples, GP emulator errors and scale-averaged leave-one-out errors.
+The leave-one-out error is independent of position in parameter space, whereas the GP error is larger towards the edge of parameter space.
+The effect of the GP error is less than $2\sigma$ for all parameters.
+The largest effect is on the growth function $\Omega_M h^2$ and the redshift of hydrogen reionization, which are both poorly constrained by the flux power spectrum data.
 The parameters of the helium reionization model also shift slightly. 
 %\begin{figure}
 %    \centering
@@ -110,7 +114,10 @@ The parameters of the helium reionization model also shift slightly.
 In this section we compare posteriors obtained using a previous observational data set, specifically the flux power spectrum from \cite{2013A&A...559A..85P}, which is based on BOSS DR9 quasar spectra.
 Figure~\ref{fig:dr9_corner} shows the posteriors for chains run with DR14, with both reduced and full redshift ranges, and chains with DR9, again with the reduced and full redshift ranges.
 
-We show chains using only the flux power spectrum likelihood, to emphasise any differences between the datasets. Differences between DR9 and DR14 are small, although, as expected, the posterior parameter ranges for DR9 are moderately larger than for DR14. The largest parameter shift is $d\tau_0$, which shifts by $< 0.5 \sigma$. The shift from the omission of the lowest redshift bins is consistent between the two observational data sets. Both exhibit the same internal tension.
+We show chains using only the flux power spectrum likelihood, to emphasise any differences between the datasets.
+Differences between DR9 and DR14 are small, although, as expected, the posterior parameter ranges for DR9 are moderately larger than for DR14.
+The largest parameter shift is $d\tau_0$, which shifts by $< 0.5 \sigma$. The shift from the omission of the lowest redshift bins is consistent between the two observational data sets.
+Both exhibit the same internal tension.
 
 \section{Mean Temperature Only Posteriors}\label{sec:t0-only}
 
@@ -126,12 +133,15 @@ We show chains using only the flux power spectrum likelihood, to emphasise any d
 
 In this section, we present results from chains run using only the mean temperature likelihood.
 Shown in Figure~\ref{fig:t0_datasets} are four chains, each using one of the observational mean temperatures, derived from different \lya forest summary statistics: the flux power spectrum, the Doppler width distribution, the curvature statistic, and a wavelet decomposition.
-Most of the cosmology parameters are entirely unconstrained by the mean temperature and are omitted from the Figure. We show $A_p$ for reference.
+Most of the cosmology parameters are entirely unconstrained by the mean temperature and are omitted from the Figure.
+We show $A_p$ for reference.
 The three He~{\sc ii} reionization parameters are well constrained by the mean temperature history.
-There is very little difference between the different mean temperature observations, with the BPDF derived temperature differing the most, specifically preferring a later start to He~{\sc ii} reionization, and less heating, corresponding to a lower mean IGM temperature. However, differences are well within $1\sigma$.
+There is very little difference between the different mean temperature observations, with the BPDF derived temperature differing the most, specifically preferring a later start to He~{\sc ii} reionization, and less heating, corresponding to a lower mean IGM temperature.
+However, differences are well within $1\sigma$.
 
 The midpoint of H~{\sc i} reionization has a marginal preference for a late midpoint, but is very weakly constrained.
-The mean temperature provides information on $z_{HI}$ as the IGM cools from the completion of H~{\sc i} reionization, setting the temperature before the onset of helium reionization. Incorporating measurements of the mean IGM temperature at $z > 3.8$  \cite[e.g.~][]{2023arXiv230402038G} could substantially improve these constraints and we may do so in future work.
+The mean temperature provides information on $z_{HI}$ as the IGM cools from the completion of H~{\sc i} reionization, setting the temperature before the onset of helium reionization.
+Incorporating measurements of the mean IGM temperature at $z > 3.8$  \cite[e.g.~][]{2023arXiv230402038G} could substantially improve these constraints and we may do so in future work.
 
 \section{Full Posteriors}
 \label{sec:full_posteriors}
@@ -144,7 +154,8 @@ The mean temperature provides information on $z_{HI}$ as the IGM cools from the 
     }
 \end{figure}
 
-Figure~\ref{fig:full_posterior} presents the full posteriors, including the correlations between the cosmology and astrophysics parameter sets, using the same chains discussed extensively in Section~\ref{sec:results}. Correlations are discussed in Section~\ref{sec:correlations}.
+Figure~\ref{fig:full_posterior} presents the full posteriors, including the correlations between the cosmology and astrophysics parameter sets, using the same chains discussed extensively in Section~\ref{sec:results}.
+Correlations are discussed in Section~\ref{sec:correlations}.
 %For the chains run using both the mean temperature and flux power, the main correlations are: a slightly negative correlation between $n_P$ and $A_p$; a negative correlation between z$^{\text{He~{\sc ii}}}_i$ and both $\alpha_q$ and z$^{\text{He~{\sc ii}}}_f$; a positive correlation between z$^{\text{He~{\sc ii}}}_i$ and z$^{\text{H~{\sc i}}}$; a negative correlation between $\alpha_q$ and z$^{\text{H~{\sc i}}}$; and a positive correlation between $\alpha_q$ and z$^{\text{He~{\sc ii}}}_f$.
 
 %The only correlation between astrophysics and cosmology is a positive correlation between $A_p$ and $\alpha_q$.
