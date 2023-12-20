@@ -199,10 +199,10 @@ We generate initial condition for our simulations as in Ref.~\cite{Bird:2020}. W
 
 The purpose of the simulation suite is to constrain cosmological parameters, and so we vary the power spectrum of the initial conditions. Specifically, we define the primordial power spectrum as:
 \begin{equation}
- P(k) = A_P \left(\frac{k}{ 0.78 \mathrm{h/Mpc}}\right)^{n_P-1}\,.
+ P(k) = A_P \left(\frac{k}{ 0.78 \,\mathrm{Mpc}^{-1}}\right)^{n_P-1}\,.
  \label{eq:pk}
 \end{equation}
-Here $n_P$ is the spectral index measured on small scales. $A_p$ is the amplitude of perturbations at $k = 0.78$ h/Mpc. Note that $n_P$ and $A_P$ are distinct from $n_s$ and $A_s$, which are measured at $k_0 = 0.05$ Mpc$^{-1}$. We choose the scale $k = 0.78$ h/Mpc to reduce correlation between the amplitude and slope of the power spectrum measured by the forest \cite{Bird:2019}. We vary $A_P$ in the range $1.2 \times 10^{-9}$ and $2.6 \times 10^{-9}$, and $n_P$  between $0.8$ and $0.995$. These ranges are chosen to include the posterior constraint from Planck \cite{Planck:2018}.
+Here $n_P$ is the spectral index measured on small scales. $A_p$ is the amplitude of perturbations at $k = 0.78 \,\mathrm{Mpc}^{-1}$. Note that $n_P$ and $A_P$ are distinct from $n_s$ and $A_s$, which are measured at $k_0 = 0.05$ Mpc$^{-1}$. We choose the scale $k = 0.78\, \mathrm{Mpc}^{-1}$ to reduce correlation between the amplitude and slope of the power spectrum measured by the forest \cite{Bird:2019}. We vary $A_P$ in the range $1.2 \times 10^{-9}$ and $2.6 \times 10^{-9}$, and $n_P$  between $0.8$ and $0.995$. These ranges are chosen to include the posterior constraint from Planck \cite{Planck:2018}.
 
 We also include free parameters for the growth rate, $\Omega_M h^2$, and Hubble parameter, $h$. We vary $h$ over the range $0.65$ - $0.75$ and $\Omega_M h^2$ between $0.14$ and $0.146$. The growth rate $\Omega_M h^2$ has a moderate effect on the \Lya~forest, but is generally measured better by other probes. As our simulation box is set up using kpc/h units, the Hubble parameter $h$ does not affect the gravitational evolution of the code.
 
@@ -267,7 +267,7 @@ Setting the bubble size variance to zero decreased the temperature of the IGM by
   Parameter & Minimum & Maximum & Description \\
     \hline
     $n_P$  &  $0.8$  & $0.995$ & Scalar spectral index \\
-    $A_P$  &  $2.2 \times 10^{-9}$  & $2.6 \times 10^{-9}$ & Power amplitude at $k = 0.78$ h/Mpc \\
+    $A_P$  &  $2.2 \times 10^{-9}$  & $2.6 \times 10^{-9}$ & Power amplitude at $k = 0.78$ Mpc$^{-1}$ \\
     $h$    & $0.65$  & $0.75$ & Hubble parameter \\
     $\Omega_M h^2$ & $0.14$ & $0.146$ & Total matter density \\
     $z_{Hei}$      & $3.5$  & $4.1$  & Start redshift of HeII reionization \\
