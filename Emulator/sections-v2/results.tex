@@ -2,7 +2,7 @@
 
 In this Section, we report posterior constraints on the parameters listed in Table~\ref{tab:emulatorparams}.
 Section~\ref{sec:cosmo} discusses the results for those parameters which are most strongly constrained by the flux power spectrum data.
-These are: the optical depth parameters, $\tau_0$ and $d\tau_0$, the power spectrum parameters, $n_P$ and $A_p$, and the growth function $\Omega_M h^2$.
+These are: the optical depth parameters, $\tau_0$ and $d\tau_0$, the power spectrum parameters, $n_P$ and $A_p$, and the \textbf{matter density} $\Omega_M h^2$ \textbf{(which is also the growth function during matter domination)}.
 Section~\ref{sec:astro} then discusses the constraints on the other parameters, and shows the best fit to the mean IGM temperature data.
 These are the three parameters defining the He~{\sc{ii}} reionization model, z$^{\text{He~{\sc ii}}}_i$, z$^{\text{He~{\sc ii}}}_f$, and $\alpha_q$; the parameter for the midpoint of H~{\sc{i}} reionization, z$^{\text{H~{\sc i}}}$, the strong absorber models, $\alpha_{LLS}$ and $\alpha_{DLA}$), the Silicon III correction (fSiIII) and the velocity to distance scale parameter $v_{scale}$.
 The same chains are used in all sections: we split parameters into two sections merely for readability.
@@ -18,10 +18,10 @@ Table~\ref{table:parameters} shows marginalised posterior parameter constraints,
     \includegraphics[width=0.75\textwidth]{figures/cosmo_corner.pdf}
     \caption{\label{fig:cosmo_corner}
     Posteriors for the optical depth and power spectrum parameters, $\tau_0$, $d\tau_0$, $n_P$, $A_p$, and $\Omega_M h^2$.
-    Results are from three MCMC chains: those labelled `FPS' use the flux power spectrum only.
-    These include a chain using the full eBOSS dataset, `FPS $z=2.2-4.6$' (black) and a chain using a limited range eBOSS dataset, found to remove the internal tension (Section~\ref{sec:tension}), `FPS $z=2.6-4.6$' (red).
-    The third chain, `FPS $z=2.6-4.6$' (gold), uses the limited range eBOSS dataset but adds the mean IGM temperature constraints.
-    Our preferred \maf{what does robust mean here? lowest chi-squared?} \spb{robust is not right, I think I just mean 'preferred', for caption readers who don't read the paper} cosmological constraints are the red chain, `FPS $z=2.6-4.6$'.
+    Results are from three MCMC chains.
+    \textbf{`FPS $z=2.2-4.6$' (gold) uses the full redshift range eBOSS flux power spectrum dataset, `FPS $z=2.6-4.6$' (blue) uses a reduced redshift range eBOSS dataset flux power spectrum dataset, which removes the internal tension (Section~\protect\ref{sec:tension}).
+    The third chain, `FPS $z=2.6-4.6$' (red), uses the limited range eBOSS dataset but adds the mean IGM temperature constraints.}
+    Our preferred cosmological constraints are from `FPS $z=2.6-4.6$'.
     }
 \end{figure}
 
@@ -124,26 +124,25 @@ Table~\ref{table:parameters} shows marginalised posterior parameter constraints,
 Parameter & 68\% (95\%) & 68\%, (95\%) & 68\%, (95\%)
 \\
 \hline
-$d\tau_0        $ & $-0.006\pm 0.037$  $\left(^{+0.071}_{-0.076}\right)$                   & $0.028\pm 0.036$            $\left(^{+0.070}_{-0.071}\right)$                   & $-0.240\pm 0.030$     $\left(^{+0.058}_{-0.059}  \right)$   \\
-$\tau_0         $ & $1.098^{+0.016}_{-0.020}$  $\left( ^{+0.036}_{-0.033}\right)$            & $1.093\pm 0.017$       $\left(^{+0.034}_{-0.033}\right)$                   & $1.214^{+0.013}_{-0.010}$   $\left(^{+0.022}_{-0.024}\right)$   \\
-$n_\mathrm{P}   $ & $> 0.969                   $  ($> 0.949                   $)  & $0.972^{+0.018}_{-0.0095}$  ($> 0.948   $)    & $0.891\pm 0.011$            $\left(^{+0.021}_{-0.020}\right)$   \\
-$A_\mathrm{P}/10^{-9}$ & $1.56\pm 0.12$        $\left(^{+0.25}_{-0.23}\right)$        & $1.38^{+0.08}_{-0.11}$   ($< 1.56 $)                   &           $< 1.28 $  ($< 1.36$)   \\
-$\Omega_M h^2   $ & $0.1425^{+0.0011}_{-0.0015}$ $(^{+0.0024}_{-0.0024})$       & $0.1427^{+0.0013}_{-0.0018}$  (---)                              & $0.1414^{+0.0006}_{-0.0010}$ ($< 0.143$)   \\
-$z^{HeII}_i     $ & $> 4.04                    $ $(> 3.95)                    $  & $4.04^{+0.05}_{-0.02}   $ $(> 3.97 ) $    & $> 4.07                    $  $(> 4.02)$   \\
-$z^{HeII}_f     $ & $< 2.76                    $  $(< 2.98)$                   & $2.72\pm 0.04            $  $\left(^{+0.09}_{-0.09}\right)$    & $< 2.68                    $    $(< 2.80 )$   \\
-$\alpha_{q}     $ & $> 2.32                    $  $(> 2.03)$                   & $1.40^{+0.04}_{-0.09}   $  $(< 1.52 )$              & $> 2.41                    $    $(> 2.28 )                   $   \\
-$z^{HI}         $ & $> 7.61                    $ ($> 7.24 $) & $7.58^{+0.37}_{-0.16}      $ ($> 7.09 $)     & $> 7.79                    $    $(> 7.54 )$   \\
-$v_\mathrm{scale}$ & $0.691^{+0.011}_{-0.009}  $  $\left(^{+0.021}_{-0.022}\right)$    & $0.684^{+0.016}_{-0.010} $  $\left(^{+0.021}_{-0.026}\right)$    & $0.694^{+0.007}_{-0.009}$  $\left(^{+0.018}_{-0.016} \right)$     \\
-$\alpha_{lls}   $ & $0.162\pm 0.029   $ $\left(^{+0.056}_{-0.057}\right)$          & $0.191\pm 0.028            $  $\left(^{+0.054}_{-0.056}\right)   $     & $0.039^{+0.017}_{-0.019}   $  $\left(^{+0.037}_{-0.034}\right)$   \\
-$\alpha_{dla}/10^{-2}   $ & $-0.4\pm 0.6         $ $\left(^{+1.2}_{-1.2}\right)$ & $-1.3\pm 0.5         $ $\left(^{+1.0}_{-1.1}\right)  $    & $-0.7\pm 0.3         $   $\left(^{+0.6}_{-0.6}\right)$  \\
-$f_{SiIII}/10^{-3} $ & $9.66\pm 0.51              $ $\left(^{+1.0}_{-1.0}\right)$              & $9.62\pm 0.51        $       $\left(^{+1.0}_{-0.99}\right) $          & $8.81\pm 0.40        $  $\left(^{+0.76}_{-0.77}\right)$\\
+$d\tau_0        $ & $-0.006\pm 0.037$  $\left(^{+0.071}_{-0.076}\right)$                   & $0.017\pm 0.039$            $\left(^{+0.077}_{-0.076}\right)$                   & $-0.240\pm 0.030$     $\left(^{+0.058}_{-0.059}  \right)$   \\
+$\tau_0         $ & $1.098^{+0.016}_{-0.020}$  $\left( ^{+0.036}_{-0.033}\right)$            & $1.095\pm 0.018$       $\left(^{+0.035}_{-0.033}\right)$                   & $1.214^{+0.013}_{-0.010}$   $\left(^{+0.022}_{-0.024}\right)$   \\
+$n_\mathrm{P}   $ & $> 0.969                   $  ($> 0.949                   $)  & $0.973^{+0.019}_{-0.0092}$  ($> 0.948   $)    & $0.891\pm 0.011$            $\left(^{+0.021}_{-0.020}\right)$   \\
+$A_\mathrm{P}/10^{-9}$ & $1.56\pm 0.12$        $\left(^{+0.25}_{-0.23}\right)$        & $1.423^{+0.097}_{-0.13}$   ($^{+0.20}_{-0.21}$)                   &           $< 1.28 $  ($< 1.36$)   \\
+$\Omega_M h^2   $ & $0.1425^{+0.0011}_{-0.0015}$ $(^{+0.0024}_{-0.0024})$       & $0.1426^{+0.0012}_{-0.0017}$  ($^{+0.0025}_{-0.0026}$)                  & $0.1414^{+0.0006}_{-0.0010}$ ($< 0.143$)   \\
+$z^{HeII}_i     $ & $> 4.04                    $ $(> 3.95)                    $  & $> 4.04$   $(> 3.97 ) $    & $> 4.07                    $  $(> 4.02)$   \\
+$z^{HeII}_f     $ & $< 2.76                    $  $(< 2.98)$                   & $< 2.77$  $< 2.90$           & $< 2.68                    $    $(< 2.80 )$   \\
+$\alpha_{q}     $ & $> 2.32                    $  $(> 2.03)$                   & $1.60^{+0.13}_{-0.20}$  $(< 1.90 )$              & $> 2.41                    $    $(> 2.28 )                   $   \\
+$z^{HI}         $ & $> 7.61                    $ ($> 7.24 $)                    & $> 7.53$ ($> 7.16 $)                            & $> 7.79                    $    $(> 7.54 )$   \\
+$v_\mathrm{scale}$ & $0.691^{+0.011}_{-0.009}  $  $\left(^{+0.021}_{-0.022}\right)$    & $0.686^{+0.014}_{-0.0089}$  $\left(^{+0.020}_{-0.026}\right)$    & $0.694^{+0.007}_{-0.009}$  $\left(^{+0.018}_{-0.016} \right)$     \\
+$\alpha_{lls}   $ & $0.162\pm 0.029   $ $\left(^{+0.056}_{-0.057}\right)$          & $0.185\pm 0.029$  $\left(^{+0.055}_{-0.058}\right)   $     & $0.039^{+0.017}_{-0.019}   $  $\left(^{+0.037}_{-0.034}\right)$   \\
+$\alpha_{dla}/10^{-2}   $ & $-0.4\pm 0.6         $ $\left(^{+1.2}_{-1.2}\right)$ & $-1.14\pm 0.58$ $\left(\pm 1.1\right)  $    & $-0.7\pm 0.3         $   $\left(^{+0.6}_{-0.6}\right)$  \\
+$f_{SiIII}/10^{-3} $ & $9.66\pm 0.51              $ $\left(^{+1.0}_{-1.0}\right)$              & $9.64\pm 0.52        $       $\left(\pm 1\right) $          & $8.81\pm 0.40        $  $\left(^{+0.76}_{-0.77}\right)$\\
 \hline
-$A_\mathrm{s}/10^{-9}      $ & $1.67^{+0.12}_{-0.13}$ $\left(^{+0.27}_{-0.24}\right)$ & $1.49^{+0.09}_{-0.12}$ $\left(^{+0.21}_{-0.20}\right)$  & $1.71^{+0.06}_{-0.09}$ $\left(^{+0.16}_{-0.15}\right)$   \\
-$\sigma_8$ & $0.733\pm 0.026            $ $\left(^{+0.052}_{-0.049}\right)$ &  $0.696^{+0.021}_{-0.025}   $ $\left(^{+0.045}_{-0.043}\right)$ & $0.713^{+0.012}_{-0.018}$  $\left(^{+0.032}_{-0.028}\right)$  \\
+$A_\mathrm{s}/10^{-9}      $ & $1.67^{+0.12}_{-0.13}$ $\left(^{+0.27}_{-0.24}\right)$ & $1.54^{+0.10}_{-0.13}$ $\left(^{+0.23}_{-0.22}\right)$  & $1.71^{+0.06}_{-0.09}$ $\left(^{+0.16}_{-0.15}\right)$   \\
+$\sigma_8$ & $0.733\pm 0.026            $ $\left(^{+0.052}_{-0.049}\right)$ &  $0.704^{+0.023}_{-0.028}   $ $\left(^{+0.049}_{-0.047}\right)$ & $0.713^{+0.012}_{-0.018}$  $\left(^{+0.032}_{-0.028}\right)$  \\
 \hline
 \end{tabular}
 \caption{\label{table:parameters}
-\maf{I did some rounding on these values -- original is commented out above} \spb{Thanks!}
 Posterior parameter constraints, including the derived parameters $A_s$ and $\sigma_8$.
 Maximum posterior values, and $68\%$ confidence limits are shown, with $95\%$ confidence intervals in brackets.
 Each column shows a separate chain, from left to right: fits to the flux power spectrum alone from the reduced redshift range $z=2.6 - 4.6$, fits to the flux power spectrum from the reduced redshift range $z=2.6 - 4.6$ and the mean IGM temperature, and fits to the flux power spectrum alone from the full redshift range $z=2.2 - 4.6$.
@@ -156,7 +155,6 @@ Single sided limits are shown when one bound is larger than the prior volume of 
     \centering
     \includegraphics[width=\textwidth]{figures/fps_data_fit.pdf}
     \caption{\label{fig:fps_data}
-    \maf{I updated this figure to fix a few visual things, otherwise it is unchanged}\spb{You made it look much nicer!}
     Observed \lya forest flux power spectrum \cite{2019JCAP...07..017C}, from $z=4.6$ to $z=2.2$ (black lines and circles, with shading corresponding to one sigma uncertainty).
     Also shown are three predictions for the \lya forest flux power spectrum from our multi-fidelity emulator corresponding to the maximum posterior input parameters compiled in Table~\ref{table:parameters}.
     The negative of the log-likelihood for these fits is compiled in Table~\ref{table:chi2}.
@@ -166,7 +164,7 @@ Single sided limits are shown when one bound is larger than the prior volume of 
 Figure~\ref{fig:cosmo_corner} shows the results of our chains for the cosmological parameters.
 We show three MCMC chains.
 Two chains are fit to the eBOSS flux power spectrum data only.
-The first fits to the full redshift range measured by eBOSS, $z=2.2 - 4.6$ (black), while the second fits a limited redshift range $z=2.6 - 4.6$ (red).
+The first fits to the full redshift range measured by eBOSS, $z=2.2 - 4.6$, while the second fits a limited redshift range $z=2.6 - 4.6$.
 The third chain uses the limited redshift range eBOSS dataset but adds the mean IGM temperature likelihood.
 The chain including the $z < 2.6$ data prefers lower $n_P$, lower $A_P$ and higher $\tau_0$ than the reduced redshift range.
 Figure~\ref{fig:fps_data} shows that the shift in posterior parameters is driven by the fit.
@@ -196,22 +194,22 @@ The $z=2.6$ has a slightly elevated $\chi^2$/dof in the reduced redshift range c
 		\hline
 		Redshift & $4.6$ & $4.4$ & $4.2$ & $4.0$ & $3.8$ & $3.6$ & $3.4$\\
 		\hline
-        FPS $z: 2.2-4.6$ & $1.08$ & $1.03$ & $1.46$ & $1.79$ & $0.87$ & $0.51$ & $0.63$ \\
-        FPS $z: 2.6-4.6$ & $1.22$ & $0.85$ & $1.20$ & $1.40$ & $0.74$ & $0.36$ & $0.69$\\
-        FPS $+ T_0$ $z: 2.6-4.6$ & $1.19$ & $0.85$ & $1.28$ & $1.46$ & $0.80$ & $0.31$ & $0.73$ \\
+        FPS $z= 2.2-4.6$ & $1.08$ & $1.03$ & $1.46$ & $1.79$ & $0.87$ & $0.51$ & $0.63$ \\
+        FPS $z= 2.6-4.6$ & $1.22$ & $0.85$ & $1.20$ & $1.40$ & $0.74$ & $0.36$ & $0.69$\\
+        FPS $+ T_0$ $z= 2.6-4.6$ & $1.20$ & $0.86$ & $1.26$ & $1.43$ & $0.74$ & $0.32$ & $0.69$ \\
         \hline
         Redshift & $3.2$ & $3.0$ & $2.8$ & $2.6$ & $2.4$ & $2.2$ & Total \\
 		\hline
-        FPS $z: 2.2-4.6$ & $0.83$ & $1.82$ & $1.64$ & $0.98$ & $0.99$ & $1.36$ & $1.15$ \\
-        FPS $z: 2.6-4.6$ & $0.76$ & $1.35$ & $1.29$ & $1.45$ & $2.97$ & $4.17$ & $1.03$ \\
-        FPS $+ T_0$ $z: 2.6-4.6$ & $0.82$ & $1.27$ & $1.22$ & $1.67$ & $3.38$ & $4.51$ & $1.06$\\
+        FPS $z= 2.2-4.6$ & $0.83$ & $1.82$ & $1.64$ & $0.98$ & $0.99$ & $1.36$ & $1.15$ \\
+        FPS $z= 2.6-4.6$ & $0.76$ & $1.35$ & $1.29$ & $1.45$ & $2.97$ & $4.17$ & $1.03$ \\
+        FPS$ + T_0$ $z= 2.6-4.6$ & $0.82$ & $1.30$ & $1.19$ & $1.59$ & $3.28$ & $4.48$ & $1.04$\\
   \hline
 	\end{tabular}
     \caption{\label{table:chi2}
-    $\chi^2$ per degree of freedom for the flux power spectrum for each redshift bin.
+    $\chi^2$ per degree of freedom for the flux power spectrum for each redshift bin. \textbf{There are $35$ k-bins per redshift bin and $14$ parameters, and so $21$ degrees of freedom.}
     Shown is the likelihood at the best fit parameters in each chain.
     We show chains fitting to the flux power spectrum only at $z=2.2-4.6$, fitting to the flux power spectrum only at $z=2.6-4.6$, and fitting to the flux power spectrum and mean IGM temperature at $z=2.6-4.6$.
-    The column labelled 'total' is the total $\chi^2$ per degree of freedom for the redshift bins in the fit (i.e., excluding $z=2.2$ and $z=2.4$ for the last two chains).}
+    The column labelled `Total' is the total $\chi^2$ per degree of freedom for the redshift bins in the fit (i.e., excluding $z=2.2$ and $z=2.4$ for the last two chains).}
 \end{table}
 
 Posterior constraints from the reduced redshift range flux power spectrum data show a mean optical depth in good agreement with other measurements.
@@ -219,11 +217,11 @@ As a reminder, these parameters measure deviations from the mean flux relation o
 The best fit mean flux at $z=3$, $\tau_0 = 1.1$, and the redshift variation $d\tau_0$ is consistent with $0$.
 This implies a mean optical depth at $z=3$ of $\tau^{\text{eff}}_{\text{H~{\sc i}}}(z=3) = 0.398$, which is extremely close to the best-fit value of $\tau^{\text{eff}}_{\text{H~{\sc i}}}(z=3) = 0.4$ from Ref.~\cite{2013MNRAS.430.2067B}, and consistent within the error bars with $\tau^{\text{eff}}_{\text{H~{\sc i}}}(z=3) = 0.36 \pm 0.1$ from \cite{2007MNRAS.382.1657K}. 
 
-The slope of the spectral index, $n_P$, is $n_P = 0.972^{+0.018}_{-0.009}$ when using $T_0$ and $n_P > 0.969$ when using only the flux power spectrum, where the upper limit of the prior is consistent at $2\sigma$.
+\textbf{The spectral index, $n_P$, is $n_P = 0.963 - 0.99$ when using $T_0$ and $n_P > 0.969$ when using only the flux power spectrum, when the $1\sigma$ boundaries hit the upper limit of the prior volume.}
 This is consistent with the Planck value of $n_s=0.965 \pm 0.004$ \cite{2020A&A...641A...6P}.
 The growth factor, $\Omega_M h^2$, is weakly constrained and not strongly affected by including mean temperature data.
 Planck found $\Omega_M h^2 = 0.1424\pm0.001$, which is close to the posterior of our chains.
-The primordial power spectrum amplitude is $A_p/10^{-9} = 1.56 \pm 0.12$ for the flux power spectrum reduced redshift result.
+The power spectrum amplitude is $A_p/10^{-9} = 1.56 \pm 0.12$ for the flux power spectrum reduced redshift result.
 The inclusion of the mean temperature shrinks the constraints moderately and shifts the posterior value down by about $1.5 \sigma$.
 Table~\ref{table:parameters} shows $A_s$, the power spectrum amplitude measured by Planck on large scales, which is related to $A_P$ via:
 \begin{equation}
@@ -233,10 +231,12 @@ Table~\ref{table:parameters} shows $A_s$, the power spectrum amplitude measured 
 We find $A_s = (1.67 \pm 0.12) \times10^{-9}$ for the flux power spectrum alone and $A_s = (1.5 \pm 0.012 )\times10^{-9}$ when including the mean IGM temperature.
 Planck \cite{2020A&A...641A...6P} found a value of $A_s = \left(2.101^{+0.031}_{-0.034}\right)\times10^{-9}$. 
 We also derived the value of $\sigma_8$ implied by our parameters by using CLASS in post-processing \cite{2011arXiv1104.2932L}. 
-For the flux power spectrum alone, we find $\sigma_8 = 0.733 \pm 0.026$, and when the mean IGM temperature is included, $\sigma_8 = 0.696 \pm 0.025$ (see Table\ref{table:parameters}).
+For the flux power spectrum alone, we find $\sigma_8 = 0.733 \pm 0.026$, and when the mean IGM temperature is included, $\sigma_8 = 0.696 \pm 0.025$ (see Table~\ref{table:parameters}).
 The Planck result is $\sigma_8 = 0.811 \pm 0.006$ \cite{2020A&A...641A...6P}.
-We thus measure a power spectrum amplitude around $3-\sigma$ lower than Planck.
-Interestingly, the dark energy survey year 3 results measure $\sigma_8 = 0.733^{+0.039}_{-0.049}$ \cite{2022PhRvD.105b3520A}, in strikingly good agreement with our results.
+We thus measure a power spectrum amplitude around $3-\sigma$ lower than Planck or ACT CMB lensing \cite{2023arXiv230405202Q}.
+Interestingly, the dark energy survey year 3 results measure $\sigma_8 = 0.733^{+0.039}_{-0.049}$ \cite{2022PhRvD.105b3520A}, in good agreement with our results. Other small-scale structure probes vary \cite[e.g.~][]{2020JCAP...05..042I, 2022JHEAp..34...49A, 2023JCAP...04..057Y}. 
+
+\textbf{The upper limit for $n_P$, as well as the $95\%$ lower limit on $A_P$ when including the temperature data, are truncated by the prior volume. The prior volume is an arbitrary choice for our simulation suite, and so our analysis does not rule out $n_P > 1$. In future work we will expand our simulation volume. Constraints on the timing of helium reionization are also affected by our priors, but the redshift limits of our datasets mean that extending the simulation volume may not provide much extra information. For example, the lower limit of $z^{HeII}_f < 2.76$ (with the flux power spectrum at $z < 2.6$ alone) suggests only that helium reionization may have finished after $z=2.6$, the lowest redshift data at which this chain contains constraints.}
 
 Figure~\ref{fig:fps_data} shows the \lya forest flux power spectrum from \cite{2019JCAP...07..017C}, along with their estimated one sigma uncertainty (black).
 Also shown are predictions from our multi-fidelity emulator based on the maximum posterior input parameters from MCMC analysis with only the \lya forest flux power emulator in the full and reduced redshift ranges, and MCMC analysis using both the mean temperature and flux power emulators.
@@ -253,9 +253,7 @@ The best-fit flux power spectrum is not significantly affected by the inclusion 
     \includegraphics[width=0.85\textwidth]{figures/astro_corner.pdf}
     \caption{\label{fig:astro_corner}
     Posterior constraints for the parameters of the helium reionization model ($z_i^{HeII}$, $z_f^{HeII}$, $\alpha_q$), the hydrogen reionization model ($z^{HI}$), the strong absorber models ($\alpha_{LLS}$, $\alpha_{DLA}$), the Silicon III correction ($f_\mathrm{SiIII}$), and the velocity to distance scale parameter $v_{scale}$.
-    Results are from three MCMC chains: those labelled 'FPS' use the flux power spectrum only.
-    These are a chain with the full eBOSS dataset, 'FPS $z=2.2 - 4.6$' (black) and a chain with the limited range eBOSS dataset found to remove the internal tension 'FPS $z=2.6 - 4.6$' (red).
-    The third chain uses the limited range eBOSS dataset but adds the mean IGM temperature constraints. 'FPS $z=2.6 - 4.6$' (gold).
+    \textbf{Results are from the same three MCMC chains as Figure~\ref{fig:cosmo_corner}. `FPS $z=2.2-4.6$' (gold) uses the full redshift range eBOSS flux power spectrum dataset, `FPS $z=2.6-4.6$' (blue) uses a reduced redshift range eBOSS dataset flux power spectrum dataset, which removes the internal tension (Section~\ref{sec:tension}). The third chain, `FPS $z=2.6-4.6$' (red), uses the limited range eBOSS dataset but adds the mean IGM temperature constraints.}
     }
 \end{figure}
 
@@ -263,7 +261,6 @@ The best-fit flux power spectrum is not significantly affected by the inclusion 
     \centering
     \includegraphics[width=0.75\textwidth]{figures/t0_best_fit.pdf}
     \caption{\label{fig:temp_data}
-    \maf{I swapped the colors here for better visibility}
     IGM mean temperatures from \protect\cite{2021MNRAS.506.4389G} (black lines and circles, with shading corresponding to one sigma uncertainty).
     Specifically their temperatures derived from the flux power spectrum calculated using high resolution \lya forest spectra.
     Also shown are predictions for the mean temperature from our multi-fidelity emulator corresponding to the same three maximum posterior input parameters used in Figure~\protect\ref{fig:fps_data}.
@@ -300,8 +297,8 @@ As discussed in Ref.~\cite{2023simsuite}, our simulation suite includes strong a
 The strong absorber parameters measure the difference between the strong absorber model in the simulation and the model in the observed spectra, so that $\alpha_{LLS} = 0$ means that our galaxy formation model is a good match to the circumgalactic gas in the observed Universe.
 DLAs are subtracted from both the observed and simulated spectra, and so $\alpha_{DLA}$ measures primarily the efficiency of the observational DLA finder. 
 All our chains produce a posterior $\alpha_{DLA}$ tightly peaked and close to $0$.
-The chains using the flux power alone are centered on $\alpha_{DLA} = 0$, while the chain including the mean temperature prefers a slightly negative value, perhaps indicating that the eBOSS DLA finder includes some false positives.
-Note that DESI includes improved DLA finding algorithms based on machine learning \cite{Ho:2020,Parks:2018}.
+The chains using the flux power alone are centered on $\alpha_{DLA} = 0$, while the chain including the mean temperature prefers a slightly negative value, perhaps indicating that the eBOSS DLA finder includes some false positives\footnote{\textbf{As DLAs finders are sensitive to reduced flux transmission, regions with more \Lya~forest absorption are more likely than average to be flagged as a DLA. The efficiency of the DLA finder may thus affect the flux power spectrum}.}.
+Note that DESI includes improved DLA finding algorithms based on machine learning \cite{Ho:2020,Parks:2018, 2022arXiv220100827W}.
 
 For the restricted redshift chains, we measure $\alpha_{LLS} \sim 0.16$, while for the full redshift range $\alpha_{LLS} \sim 0.04$.
 The preference for a non-zero $\alpha_{LLS}$ in the reduced redshift chains suggest that our simulations have fewer LLS than the real Universe.
@@ -363,7 +360,7 @@ The thermal history preferred by the full redshift range of the flux power spect
 
 Figure~\ref{fig:correlations} shows the correlations between our parameters, for the chain using the flux power spectrum from $z=2.6 - 4.6$, as well as the mean IGM temperature.
 Most correlations are weak.
-We have deliberately chosen our pivot scale of $0.78$ h/Mpc to minimise the correlation between $A_P$ and $n_P$, and the correlation matrix confirms it is weak, with a correlation coefficient $r=0.2$. 
+We have deliberately chosen our pivot scale of $0.78$ Mpc$^{-1}$ to minimise the correlation between $A_P$ and $n_P$, and the correlation matrix confirms it is weak, with a correlation coefficient $r=0.2$. 
 %Several of the stronger correlations arise from intrinsic degeneracies in the definition of the parameters and could in principle be reduced by modest redefinitions of pivot scales or pivot redshifts. 
 There is a correlation between $\tau_0$ and $d\tau_0$ ($r=-0.54$), as the redshift bin which provides the strongest constraints on the optical depth is not exactly $z=3$.
 The optical depth $\tau_0$ is anti-correlated with both $A_P$ ($r=-0.7$) and $n_P$ ($r=-0.62$) as its main effect is to change the amplitude of the flux power spectrum. 
@@ -371,11 +368,11 @@ The optical depth $\tau_0$ is anti-correlated with both $A_P$ ($r=-0.7$) and $n_
 There is a three-dimensional degeneracy between $\alpha_q$, $z_i^{HeII}$ and $z_i^{HeII}$ (see Figure~\ref{fig:correlations}), which allows a wide range of $\alpha_q$ to fit the flux power spectrum data, and is only broken by information from the thermal history.
 Lower $\alpha_q$ corresponds to more heating from quasars during He~{\sc{ii}} reionization.
 If He~{\sc{ii}} reionization starts earlier or ends later, the IGM requires more heating from quasars to match the observations, while the opposite is true for late starting, or early ending He~{\sc{ii}} reionization.
-Appendix~\ref{sec:t0-only} shows the results of chains which include only the mean temperature data, which clearly shows this three-dimensional degeneracy: a slightly later start to Helium reionization would require less total heating and thus a higher value of $\alpha_q$. 
+Appendix~\ref{sec:t0-only} shows the results of chains which include only the mean temperature data, which clearly shows this three-dimensional degeneracy: a slightly later start to helium reionization would require less total heating and thus a higher value of $\alpha_q$. 
 Several of these correlations could be broken by the inclusion of higher redshift thermal history data, or lower redshift flux power spectrum data. 
 
 Finally, the abundance of Lyman Limit Systems, $\alpha_{LLS}$, exhibits several interesting correlations.
-$\alpha_{LLS}$ is anti-correlated with $\alpha_{DLA}$ ($r=0.59$), as the flux power spectrum templates for strong absorbers have similar shapes in neighbouring column density bins.
+$\alpha_{LLS}$ is anti-correlated with $\alpha_{DLA}$ ($r= - 0.59$), as the flux power spectrum templates for strong absorbers have similar shapes in neighbouring column density bins.
 $\alpha_{LLS}$ is also correlated with $n_P$ ($r=0.61$) and $d\tau_0$ ($r=0.42$), due to similarities in the shapes of their flux power spectrum templates.
 The combination of the three-way correlation between $n_P$, $\alpha_{LLS}$ and $\tau_0$ is exploited by the chains to explain the inconsistent $z=2.2, 2.4$ flux power spectrum bins and drives the discrepant constraints these chains show.
 This correlation may be reduced by the inclusion of extra small-scale data available in the DESI early data release.
@@ -416,7 +413,7 @@ SDSS DR14 and DR9 are in good agreement, and in Appendix \ref{sec:dr9_results} w
 The KODIAQ flux power spectrum is lower by around $1-\sigma$ on the smallest scales measured by eBOSS, which could be due to the effect of continuum modelling in the KODIAQ data \cite{2022MNRAS.509.2842K}.
 The DESI EDR data agrees well with eBOSS for $k > 0.01$ s/km, but is discrepant by $> 2 \sigma$ for $k < 0.01$ s/km.
 This discrepancy is also present at $z=2.4$, and is discussed in the DESI EDR papers, see Ref.~\cite{2023arXiv230606311R}, Appendix D.
-They ascribed $30\%$ of the difference to continuum fitting, but the origin of the rest is currently unclear.
+They ascribed $30\%$ of the difference between eBOSS and DESI to continuum fitting, but the origin of the rest is currently unclear.
 Given the fairly large disagreements between different measurements at $z=2.2$, systematic error is a highly plausible explanation for the internal tension we find.
 In future work we will combine our likelihood function with the DESI flux power spectra and investigate their cosmological implications.
 
@@ -430,21 +427,23 @@ However, Ref.~\cite{2023arXiv230706360T} examined a wide range of AGN feedback m
 None of these models can affect the $z=2.2$ flux power spectrum at the level required to explain these results (Tillman, private communication).
 
 DLAs are important at low redshift, and do affect the slope of the flux power spectrum.
-However, our simulations include a population of DLAs in good agreement with observations \cite{2023simsuite}, which are masked using the same procedure as the observational pipeline.
-In addition, we include a free parameter to model the residual power from any DLAs not detected by eBOSS, and the posterior value for this free parameter is consistent with zero even when the $z=2.2$ data is included.
+Our simulations include a population of DLAs in good agreement with observations \cite{2023simsuite}, which are masked using the same procedure as the observational pipeline.
+We include a free parameter to model the residual power from any DLAs not detected by eBOSS, and the posterior value for this free parameter is consistent with zero.
+\textbf{We considered separate constraints on the DLA efficiency at low and high redshift: $\alpha_{DLA}(z < 2.6)$ and $\alpha_{DLA}(z \geq 2.6)$. The high redshift DLA efficiency $\alpha_{DLA}(z \geq 2.6)$ remained consistent with zero. However, the low redshift parameter was negative; $\alpha_{DLA}(z < 2.6) = -0.0134 \pm 0.0074$, indicating false positives in the eBOSS DLA finder at $z < 2.6$. While most cosmological parameters were unchanged, $n_P$ increased (by about $2-\sigma$) to $n_P = 0.916 \pm 0.014$, reducing the internal tension by $1/3$.}
+
 At low redshift, the \Lya~forest is increasingly contaminated by metal lines.
 We include a simple prescription for \ion{Si}{III} and the inclusion of low redshift data does not drive the best-fit parameter for this model, preferring slightly less metal contamination.
 However, it is possible that a more sophisticated model could help reduce the tension.
 
 One interesting but entirely speculative possibility is suggested by the LLS abundance, $\alpha_{LLS}$, which is lower in the full redshift chains.
-\cite{Prochaska:2009a} identified a systematic in the SDSS colour selection which causes quasar sightlines containing Lyman Limit Systems (LLS) to be preferentially selected for spectroscopic followup.
-\cite{Worseck:2011} and \cite{Fumagalli:2013} showed that, due to the width of the $u$-band filter in SDSS, LLS are over-sampled for $z=2.5-3.6$ for all quasars in the redshift range $z=3.0-3.6$.
+Ref.~\cite{Prochaska:2009a} identified a systematic in the SDSS colour selection which causes quasar sightlines containing Lyman Limit Systems (LLS) to be preferentially selected for spectroscopic followup.
+Refs.~\cite{Worseck:2011, Fumagalli:2013} showed that, due to the width of the $u$-band filter in SDSS, LLS are over-sampled for $z=2.5-3.6$ for all quasars in the redshift range $z=3.0-3.6$.
 It is thus possible that $\alpha_{LLS}$ depends on the quasar (not absorber) redshift.
 Note that the flux power spectrum we measure depends on the absorber redshift and so a simple redshift split would not detect this effect\footnote{We ran a chain with two $\alpha_{LLS}$ parameters for $z < 2.6$ and $z \geq 2.6$. The maximum likelihood for $\alpha_{LLS}$ at $z > 2.6$ was $\sim 2-\sigma$ larger than in the full redshift chain, and $n_P$ increased by $\sim 0.5\sigma$, but all other parameters were unchanged.}.
 A check for colour selection systematics would involve the flux power spectrum being computed from two different quasar redshift bins.
 %The \Lya forest probes marginally higher over-densities at low redshifts, so it is possible that a novel self-interacting dark matter model could be constructed which explains these observations, but it would have trouble matching cluster data (commented because I think the model would be a bit contrived).
 
-\subsection{Comparison of the Posterior Constraints to Other Analyses}
+\subsection[Comparison of the Posterior Constraints to Other Lyman-alpha Analyses]{Comparison of the Posterior Constraints to Other \Lya Analyses}
 \label{sec:comparison}
 
 %Shift between DR9 and DR14 found in PD2020 but we don't (perhaps because the DLA model absorbs it).
@@ -476,7 +475,7 @@ Their optical depth measurements are thus in good agreement with our measurement
 
 Ref.~\cite{2020JCAP...04..038P} found $n_s = 0.954 \pm 0.006$ for DR14 and $n_s = 0.938 \pm 0.010$ for DR9.
 Meanwhile the power spectrum amplitude as measured by $\sigma_8$ is $0.826 \pm 0.02$ in DR14 and similar in DR9.
-We find $n_P \sim 0.97$ and $\sigma_8 \sim 0.73$. Some of the differences between our constraints on $A_P$ and $\sigma_8$ are due to a lever arm effect: for $n_s < 1$ the power spectrum amplitude will be increased on larger scales and measuring $n_s$ will induce a correlation between $n_s$ and $\sigma_8$.
+We find $n_P \sim 0.97$ and $\sigma_8 \sim 0.73$, \textbf{a several $\sigma$ tension}. Some of the differences between our constraints on $A_P$ and $\sigma_8$ are due to a lever arm effect: for $n_s < 1$ the power spectrum amplitude will be increased on larger scales and measuring $n_s$ will induce a correlation between $n_s$ and $\sigma_8$.
 
 Ref.~\cite{2023arXiv230300746G} constrain the slope and amplitude of the linear matter power spectrum at $z=3$ using the reduced likelihood from Ref.~\cite{2023ApJ...944..223P}.
 They use the full redshift range of the data, but without adding nuisance parameters.

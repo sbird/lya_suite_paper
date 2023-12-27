@@ -14,7 +14,7 @@ The Dark Energy Spectroscopic Instrument (DESI) has improved the spectrograph re
 Thus, early data from DESI has measured the flux power spectrum at smaller scales ($k \gtrsim 0.035$ km$^{-1}$ s) than SDSS \cite{2023arXiv230606316G, 2023arXiv230606311R}.
 Future releases will measure higher redshifts ($z>4.6$) and increase the number of \lya forest quasar spectra by a factor of four over SDSS \cite{2016arXiv161100036D}.
 
-There are other high resolution, small sample datasets of quasar spectra, from which \lya forest flux power measurements have been made \cite{2017MNRAS.466.4332I, 2022MNRAS.509.2842K, 2019MNRAS.489.2536D}. Ref.~\cite{2022MNRAS.509.2842K} used spectra from multiple surveys (XQ-100, KODIAQ, and SQUAD) to measure the \lya forest flux power at redshifts $z=2-4.6$ and scales $k\approx0.005-0.1$ km$^{-1}$ s (albeit with larger uncertainty than eBOSS).
+There are other high resolution, small sample datasets of quasar spectra, from which \lya forest flux power measurements have been made \cite{2017MNRAS.466.4332I, 2019MNRAS.489.2536D, 2022MNRAS.509.2842K, 2022MNRAS.515..857E}. Ref.~\cite{2022MNRAS.509.2842K} used spectra from multiple surveys (XQ-100, KODIAQ, and SQUAD) to measure the \lya forest flux power at redshifts $z=2-4.6$ and scales $k\approx0.005-0.1$ km$^{-1}$ s (albeit with larger uncertainty than eBOSS), \textbf{and Ref.~\cite{2022MNRAS.515..857E} presents recent cosmological constraints from these datasets}.
 %Combining these higher resolution observations with the larger sample size observations will allow inference based on a broader range of scales than either data set allows separately.
 
 Modeling the \lya forest requires numerical simulations that are able to follow the distribution of gas on small scales.
@@ -23,7 +23,7 @@ The PRIYA simulations are in $120$ Mpc/h boxes, and are comprised of $48$ simula
 The higher of these two resolutions exceeds the resolution of state-of-the-art galaxy formation simulations such as Illustris-TNG \cite{2018MNRAS.475..676S}.
 PRIYA is run with the same highly scalable MP-Gadget code as the ASTRID simulation \cite{2022MNRAS.512.3703B,2022MNRAS.513..670N}.
 PRIYA contains full hydrodynamic simulations with models of galaxy formation and black hole feedback to $z=2.2$.
-PRIYA is thus the first cosmological simulation suite which achieves, in a single box, the required box size of $120$ Mpc/h, capable of minimising sample variance in the \lya forest \cite{2014JCAP...07..005B}, and a resolution high enough to include the gas Jeans' scale.
+PRIYA is thus the first cosmological simulation suite which achieves, in a single box, the required box size of $120$ Mpc/h, capable of minimising sample variance in the \lya forest \cite{2014JCAP...07..005B}, and a resolution high enough that it includes \textbf{the pressure smoothing scale.}\footnote{\textbf{Our model has boosts temperatures during reionization, increasing the smoothing scale \cite{2023simsuite}.}}.
 Importantly, this removes the need for the `splicing' correction used in earlier work to combine different boxsizes into a single whole \cite{2014JCAP...07..005B,2020JCAP...04..038P}.
 
 Here, the PRIYA simulations are used to build multi-fidelity emulators \cite{2019JCAP...02..050B, 2022MNRAS.509.2551H, 2022MNRAS.517.3200F} for the flux power spectrum and the mean temperature of the IGM.
@@ -31,11 +31,11 @@ Each emulator is a surrogate model, able to reproduce the 1D flux power spectrum
 A multi-fidelity emulator combines two different resolution training samples.
 Many low fidelity samples are used to explore parameter space, and their output is corrected with a few high fidelity samples.
 A multi-fidelity emulator makes predictions for the highest resolution simulation at a fraction of the computational cost of a single fidelity emulator \cite{10.1093/biomet/87.1.1, 2022MNRAS.509.2551H}.
-Emulators have been used to study various cosmological probes: the matter power spectrum \citep{Heitmann:2009, Heitmann:2014, Lawrence:2017, Giblin:2019, Euclid:2021, Arico:2021, Giri:2021}, weak lensing shear \citep{Harnois:2019, Davies:2021}, the halo mass function \citep{McClintock:2019, Nishimichi:2019, Bocquet:2022}, the 21-cm signal \citep{Kern:2017, Cohen:2020, Bevins:2021, Bye:2022} and the \lya forest \citep{2019JCAP...02..050B, Rogers:2019, 2021JCAP...05..033P, 2021JCAP...04..059W, Rogers:2021a,2021PhRvL.126g1302R}.
+Emulators have been used to study various cosmological probes: the matter power spectrum \citep{Heitmann:2009, Heitmann:2014, Lawrence:2017, Giblin:2019, Euclid:2021, Arico:2021, Giri:2021}, weak lensing shear \citep{Harnois:2019, Davies:2021}, the halo mass function \citep{McClintock:2019, Nishimichi:2019, Bocquet:2022}, the 21-cm signal \citep{Kern:2017, Cohen:2020, Bevins:2021, Bye:2022} and the \lya forest \citep{2019JCAP...02..050B, Rogers:2019, 2021JCAP...05..033P, 2021JCAP...04..059W, Rogers:2021a,2021PhRvL.126g1302R, 2023MNRAS.tmp.2406C}.
 
 Here, we present the first fully resolved multi-fidelity emulator based likelihood framework for the eBOSS \lya forest and the first cosmological constraints derived from it.
 Our multi-fidelity emulator is similar to that described in Ref.~\cite{2022MNRAS.517.3200F}, but the simulation volume has been increased by a factor of $64$, and the spatial resolution has been improved by a factor of $1.5$.
-We also use mean IGM temperature data \cite{2021MNRAS.506.4389G} to constrain the parameters of Helium reionization, data which is ultimately derived from higher resolution quasar surveys \citep{2017MNRAS.466.4332I, 2022MNRAS.509.2842K, 2019MNRAS.489.2536D}.
+We also use mean IGM temperature data \cite{2021MNRAS.506.4389G} to constrain the parameters of helium reionization, data which is ultimately derived from higher resolution quasar surveys \citep{2017MNRAS.466.4332I, 2022MNRAS.509.2842K, 2019MNRAS.489.2536D}.
 
 In summary, our method is: (1) Construct an emulator for the 1D \lya flux power spectrum and mean IGM temperature using the PRIYA simulations \cite{2023simsuite}, Section~\ref{sec:emulator}.
 (2) Augment observational errors with estimates of the residual theoretical uncertainty to build a covariance matrix, and correct the flux power spectra for metal contamination as described in Section~\ref{sec:inference}.

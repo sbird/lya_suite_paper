@@ -22,9 +22,11 @@ The emulator allows predictions for the output of a simulation at an arbitrary s
 Our multi-fidelity emulator combines simulations at different resolutions, following the scheme outlined in Ref.~\cite{2022MNRAS.517.3200F}.
 The emulator combines low fidelity (LF) and high fidelity (HF) simulations.
 Box volume, number of gas particles, and gas particle mass resolution are reported in Table~\ref{table:simulations}.
-We performed a total of $48$ low fidelity (LF) and $3$ high fidelity (HF) simulations.
+We ran $48$ low fidelity (LF) and $3$ high fidelity (HF) simulations.
 Low fidelity simulations have $1536^3$ particles, while high fidelity simulations have $3072^3$ particles.
-Sampled parameters are chosen to maximise spread in parameter space, as described fully in Ref.~\cite{2023simsuite}.
+Sampled parameters are chosen to maximise spread in parameter space, as described in Ref.~\cite{2023simsuite}. 
+
+\textbf{Our simulations still have limited resolution and a finite box. Ref.~\cite{2023simsuite} showed that on these scales resolution is important at the $1\%$ level. Compared to the literature, our resolution convergence is slightly better, due to the temperature boost we impart during HI reionization \cite{2019ApJ...874..154D}. The finite box scatters the modes of the 1D flux power spectrum at the $2\%$ level on large scales, due mostly to the limited number of helium reionization bubbles ($30$ Mpc/h across) that can fit into our volume. Section~\ref{sec:theoryerror} describes how we marginalise out this effect.}
 
 \begin{figure}
     \centering
@@ -47,10 +49,11 @@ Simulations are initialised at $z=99$ and finish at $z=2.2$. The galaxy formatio
 \subsection{Cosmological \& Astrophysical Parameters}\label{sec:parameters}
 
 Table~\ref{tab:emulatorparams} summarises the parameters that are varied across our suite of simulations, as well as their limits.
-We model the primordial power spectrum $P(k)$ using two parameters: a slope, $n_P$, and an amplitude, $A_P$:
+We model the \textbf{primeval \textbf{(that is, the pre-transfer function)}} power spectrum $P(k)$  using two parameters: a slope, $n_P$, and an amplitude, $A_P$:
 \begin{equation}
-    P(k) = A_P \left(\frac{k}{0.78 \mathrm{h/Mpc}}\right)^{n_P - 1}\,.
+    P(k) = A_P \left(\frac{k}{0.78\, \mathrm{Mpc}^{-1}}\right)^{n_P - 1}\,.
 \end{equation}
+\textbf{The simulation initial conditions are then generated using a set of transfer functions from CLASS. This parametrisation is the same as that used by Planck, but with a different pivot scale, $0.78\, \mathrm{Mpc}^{-1}$, rather than $0.05 \,\mathrm{Mpc}^{-1}$, reflecting the smaller scales probed by the forest.}
 
 We also vary the Hubble parameter $h$, and the total matter density through $\Omega_M h^2$, although we will see these are not strongly constrained by the \Lya~forest.
 We add three parameters for the He~{\sc ii} reionization model \cite{2020MNRAS.496.4372U}: $z_{Hei}$ and $z_{Hef}$ are the redshifts for the start and end of He~{\sc ii} reionization, and $\alpha_q$ is the quasar spectral index (which scales the peak temperature during He~{\sc ii} reionization).
@@ -64,7 +67,7 @@ Finally, $\epsilon_{AGN}$ is the black hole feedback factor, to which the \lya~f
   Parameter & Minimum & Maximum & Description \\
     \hline
     $n_P$  &  $0.8$  & $0.995$ & Scalar spectral index \\
-    $A_P$  &  $1.2 \times 10^{-9}$  & $2.6 \times 10^{-9}$ & Power amplitude at $k = 0.78$ h/Mpc \\
+    $A_P$  &  $1.2 \times 10^{-9}$  & $2.6 \times 10^{-9}$ & Power amplitude at $k = 0.78 \,\mathrm{Mpc}^{-1}$ \\
     $h$    & $0.65$  & $0.75$ & Hubble parameter \\
     $\Omega_0 h^2$ & $0.14$ & $0.146$ & Total matter density \\
     $z_{Hei}$      & $3.5$  & $4.1$  & Start redshift of HeII reionization \\
@@ -89,7 +92,7 @@ We parameterize the mean flux $\mathcal{F} = \exp(-\tau)$ around the power law r
 \end{equation}
 
 The parameters varied are $\tau_0$ and $d\tau_0$, with $(1, 0)$ corresponding to the redshift evolution of Ref.~\cite{2007MNRAS.382.1657K}.
-As the mean flux is chosen in post-processing, we can dramatically over-sample these parameters.
+As the mean flux is chosen in post-processing, we can dramatically over-sample these parameters. \textbf{We sample $10$ linear spaced values of the mean flux. Sampling values are independent of redshift and are chosen to cover the range of $\tau_0$ and $d\tau_0$ at extreme ($z=2.2$ and $z=4.6$) redshifts allowed by the prior.}
 The final set of flux power spectra is thus ten times the number of simulations, or $480$ LF, and $30$ HF simulated flux power spectra.
 We have freedom to vary the \Lya~mean flux as it is degenerate with the amplitude of the ultraviolet background (UVB). 
 
@@ -112,7 +115,7 @@ Our simulations contain a realistic population of DLAs, which we mask as in the 
 We extract the IGM mean temperatures directly from the simulation snapshots.
 First, the temperature and density for all the gas particles in the simulation are retrieved, then all particles that are within $5\%$ of the critical density are retained.
 The median temperature of these retained particles is used as the IGM mean temperature.
-All of the \lya forest flux power spectra, IGM mean temperatures, trained emulators, as well as select MCMC chains are available at: \url{https://github.com/mafern/InferenceLyaData}.
+\textbf{All of the \lya forest flux power spectra, IGM mean temperatures, trained emulators, as well as select MCMC chains are available} \footnote{\url{https://github.com/mafern/InferenceLyaData}}.
 
 %--------------------------------------------------------------------------------------------------
 % --------------------------------------------------------------------------------------------------
@@ -125,14 +128,13 @@ All of the \lya forest flux power spectra, IGM mean temperatures, trained emulat
 We use the Gaussian Process (GP) emulators described in Refs.~\cite{2022MNRAS.517.3200F, 2023simsuite} for the 1D flux power spectra and mean IGM temperature extracted from our simulations.
 The emulators interpolate over simulation outputs and make predictions for arbitrary parameter sets within the parameter limits shown in Table~\ref{tab:emulatorparams}.
 We use a multi-fidelity model, which allows simulations with different particle loads, and thus costs, to be combined together.
-Specifically, we combine simulations run at two different resolutions, high fidelity (HF) and low fidelity (LF) specified in Table~\ref{table:simulations}.
-The multi-fidelity prediction for the HF outputs (shown here for the \lya forest flux power spectrum, but equally valid for the mean temperature) is given by a linear multi-fidelity model:
+Specifically, we combine simulations run at two different resolutions, high fidelity (HF) and low fidelity (LF) specified in Table~\ref{table:simulations}. 
+The multi-fidelity prediction for the HF outputs (shown here for the \lya forest flux power spectrum, but equally valid for the mean temperature) is given by a linear multi-fidelity model, \textbf{at each redshift}:
 \begin{equation}
-    P_F^{^\mathrm{HF}}(k, \boldsymbol{\theta}) = \rho(k) \cdot P_F^{^\mathrm{LF}}(k, \boldsymbol{\theta}) + \delta(k, \boldsymbol{\theta}),
+    P_F^{^\mathrm{HF}}(k, \boldsymbol{\theta} | z) = \rho_z \cdot P_F^{^\mathrm{LF}}(k, \boldsymbol{\theta} | z) + \delta(k, \boldsymbol{\theta} | z),
     \label{eq:ko_model}
 \end{equation}
-where $\rho$ is a cosmology-independent but scale-dependent parameter, and $\delta(k, \boldsymbol{\theta})$ is a GP (independent of the LF output), both of which are optimized using the training samples.
-We implement our multi-fidelity models using Emukit \cite{2021arXiv211013293P}.
+where $\rho_z$ is a constant parameter, and $\delta(k, \boldsymbol{\theta} | z)$ is a GP. \textbf{We have simplified the model from Ref.~\cite{2022MNRAS.517.3200F} by dropping the $k$ dependence in $\rho_z$. All cosmology and scale dependence is thus in the additive GP $\delta(k, \boldsymbol{\theta} | z)$. We train the GP emulators separately for each redshift.} We implement our multi-fidelity models using Emukit \cite{2021arXiv211013293P}.
 
 Ref.~\cite{2023simsuite} quantifies the accuracy of our emulator using a leave-one-out technique, in which one simulation is chosen as a `left out' sample.
 A smaller emulator built excluding all samples from this simulation is used to predict the summary statistic for the left out sample.

@@ -33,22 +33,20 @@ The sample of \lya forests from the set of remaining quasar spectra is then furt
 %Along with a windowing function to correct for the spectral resolution of the instrument, estimates for the noise and metal power (estimated using longer wavelength segments of the quasar spectra) are then subtracted to obtain the final \lya forest flux power spectrum.
 The redshifts and scales covered by these observations set the redshift range and scales we use in our flux power spectrum emulator, namely $z=2.2-4.6$ (redshift bin size of $\Delta z = 0.2$), and $k\approx0.001-0.02$ s/km (over $35$ linearly spaced bins, $\Delta k = 5.42\times10^{-4}$ s/km).
 Note, our emulator can easily be re-trained for the smaller scales probed by DESI.
-The average uncertainty in the \lya forest flux power from Ref.~\cite{2019JCAP...07..017C} ranges from $\approx6\%$ at low redshifts or large scales, to $\approx16\%$ for high redshifts or small scales, and is often dominated by systematic uncertainty.
+\textbf{The uncertainty in the eBOSS 1D flux power varies with $k$ and $z$, ranging from $> 10 \%$ at $z > 4$ to $\sim 2 - 3\%$ at $z \sim 3$, and is often dominated by systematic uncertainty \cite{2019JCAP...07..017C}.}
 
 We apply correction terms to the \lya forest flux power spectrum predicted by our emulator to model DLAs and metal contamination.
-We correct for DLAs using the template from Ref.~\cite{2018MNRAS.474.3032R}.
-This allows us to account for differences in the DLA masking between our simulated pipeline and the observed pipeline.
+We correct for DLAs using the template from Ref.~\cite{2018MNRAS.474.3032R}. This allows us to account for differences in the DLA masking between our simulated pipeline and the observed pipeline.
 An example would be DLAs, or Lyman limit systems (LLS), which are not detected in the observational pipeline due to low spectral signal-to-noise.
 Note that our simulation includes a model that produces realistic populations of LLSs and DLAs, so the marginalised template allows for aspects in which the simulated model differs from the real Universe.
 In \cite{2018MNRAS.474.3032R}, there are four parameters, with sub-DLAs separate from LLSs, and DLAs divided into two categories.
 For each of the parameters, a redshift and scale dependent correction is applied, where a positive (negative) value for the parameter implies that our simulation has underestimated (overestimated) the number of absorbers in that category. 
 We found that in practice our dataset was unable to measure separately all four of the column density bins.
 We thus simplify our likelihood by using only two additional free parameters, one parameter covering sub-DLAs and LLS, $\alpha_{\mathrm{lls}}$, and one parameter covering DLAs, $\alpha_{\mathrm{dla}}$.
-$\alpha_{\mathrm{lls}}$ covers column densities between $1.6\times10^{17} - 10^{20}$ cm$^{-2}$), and $\alpha_{\mathrm{dla}}$ covers $10^{21}-10^{22.5}$  cm$^{-2}$. 
+$\alpha_{\mathrm{lls}}$ covers column densities between $1.6\times10^{17} - 10^{20}$ cm$^{-2}$, and $\alpha_{\mathrm{dla}}$ covers $10^{21}-10^{22.5}$  cm$^{-2}$. 
 
 We account for correlated Si~{\sc{iii}} absorption within the \lya~forest following Ref.~\cite{2006ApJS..163...80M}.
-Our likelihood includes an additional nuisance parameter, $f_\mathrm{SiIII}$, which measures the amplitude of the metal contamination. 
-
+Our likelihood includes an additional nuisance parameter, $f_\mathrm{SiIII}$, which measures the amplitude of the metal contamination. \textbf{A potential future improvement would be to model H~{\sc{i}} - Si~{\sc{iii}} absorption correlation using the metal line distribution in a cosmological simulation}.
 % -------------------------------------------------------------------------------------------------
 
 \subsection{IGM Mean Temperature Data}\label{sec:t0data}
@@ -66,7 +64,9 @@ We use the \lya forest flux power spectrum derived temperatures in the main body
 %Metal lines are removed by fitting Voigt profiles to the spectra and removing features with Doppler widths $b \leq 8$ km s$^{-1}$, which are assumed to be metal lines.
 To derive temperatures from the observed quasar spectra, Ref.~\cite{2021MNRAS.506.4389G} calculated several summary statistics and compared them to those derived from spectra drawn from simulations.
 The simulations they used were similar in resolution to our HF suite (gas mass resolution of $\sim10^5$ M$_{\odot}$), though much smaller in volume ($10$ Mpc/h box side length).
-Because these observed mean temperatures are themselves derived using a suite of simulations, it would be optimal to remove the middle step in future work, i.e. calculate mean temperatures using the observed small-scale 1D flux power spectrum and our own set of simulations.
+These observed mean temperatures are themselves derived using a suite of simulations \textbf{assuming fixed $\sigma_8$ and $n_P$ taken from a Planck prior \cite{2021MNRAS.506.4389G}. If the best-fit results of the flux power spectrum differ significantly from those of Planck, there is the possibility that the final posteriors would be biased. The mean IGM temperature constrains helium reionization parameters which are not strongly constrained by eBOSS data, so we expect this to not significantly affect our current constraints. However, our most conservative constraints are those from eBOSS alone. An improved analysis would remove the middle step and directly model the observed small-scale 1D flux power spectrum from the PRIYA simulations. We will attempt this in future work.}
+
+\textbf{We do not include data on the IGM temperature-density relation, $\gamma$. The constraints from Ref.~\cite{2021MNRAS.506.4389G} are $\gamma(z=3) = 1.22 \pm 0.12$ at $68\%$ confidence. A reasonable theoretical prior would be $1.1 \lesssim \gamma \lesssim 1.6$, so this measurement does not represent a strong constraint on our model. In addition, $\gamma$ varies within our simulations, depending on the redshift at which a particular region of the box undergoes helium reionization \cite{2020MNRAS.496.4372U}.}
 
 % ---------------------------------------------------------------------------
 
@@ -75,10 +75,12 @@ Because these observed mean temperatures are themselves derived using a suite of
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/errors_loo.pdf}
+    %\includegraphics[width=\textwidth]{figures/errors_loo.pdf}
+    \includegraphics[width=0.45\textwidth]{figures/err-2.8.pdf}
+    \includegraphics[width=0.45\textwidth]{figures/err-3.4.pdf}
     \caption{\label{fig:covariance_loo}
-    Diagonal elements of the covariance matrix as a function of scale and for selected redshift bins.
-    Shown are the square root of the diagonal elements of the eBOSS covariance matrix and the diagonal cosmic variance error estimated from leave-one-out errors, $\boldsymbol{\sigma}_{CV}$.}
+     \textbf{Elements of the covariance matrix, as a function of scale and for selected redshift bins $z=2.8$ (left) and $z=3.4$ (right). We have selected these redshifts as they are those with the largest relative $\sigma_{CV}$. 
+    Shown are the square root of the diagonal elements of the eBOSS covariance matrix $K_{BOSS}$ (black solid) and the diagonal cosmic variance error estimated from leave-one-out errors, $\boldsymbol{\sigma}_{CV}$ (blue, dot-dashed). Both are normalised by the observed eBOSS 1D flux power spectrum $P_F(k, z)$. For comparison, we also show the ratio of the 1D flux power spectra between the two LF simulations with different seeds discussed in Ref.~\protect\cite{2023simsuite} (brown, dashed).}}
 \end{figure}
 
 In this Section, we derive the covariance matrix, $\boldsymbol{K}$, that is used for our inference.
@@ -98,29 +100,31 @@ The second theoretical error in our simulation suite (which dominates) is $\bold
 Our emulator is much less affected by sample variance as our simulated volume is $8$ times larger.}.
 We include an estimate of sample variance using the leave-one-out errors discussed in Ref.~\cite{2023simsuite}, a technique made possible by the inclusion of $h$ in our simulation suite.
 The Hubble parameter does not directly affect the gravitational evolution in our simulations due to Gadget's use of Mpc/h units, and Ref.~\cite{2023simsuite} showed that the effect on the thermal history is small on the scales probed by eBOSS.
-However, in our parameterization, $h$ also changes $\Omega_M$ \footnote{$\Omega_M h^2$ is a separate parameter and so kept fixed when varying $h$.} \maf{should this be $\Omega_M h^2$?} \spb{No, the point is that varying h for fixed OmegaMh2 also changes OmegaM} and so the conversion of wavenumbers from h/Mpc to s/km.
+However, in our parameterization, $h$ also changes $\Omega_M$ \footnote{$\Omega_M h^2$ is a separate parameter and so kept fixed when varying $h$.} and so the conversion of wavenumbers from h/Mpc to s/km.
 Individual Fourier modes thus move between bins depending on the value of $h$, mimicking the sample variance from different initial phases.
-We thus approximate $\boldsymbol{\sigma}_{CV}$ with the averaged variance of the leave-one-out errors using the low fidelity simulations.
+We thus approximate $\boldsymbol{\sigma^2}_{CV}$ with the averaged variance of the leave-one-out errors using the low fidelity simulations.
 Leave-one-out errors are found by building a reduced emulator, which is trained on all but a single sample, then evaluating the prediction accuracy for that left-out sample using the reduced emulator.
 This is then repeated, such that every sample takes a turn being left out (see Figure~2 of \cite{2023simsuite}):
 \begin{equation}
     \boldsymbol{\sigma}^2_{CV}  = \frac{1}{N_{LF}}\Sigma_i \left(P_F^\mathrm{Predict}(k, z, p_i) - P_F^\mathrm{True}(k, z, p_i)\right)^2\,.
 \end{equation}
-Here the sum runs over all simulated low-fidelity parameter sets $p_i$ and $N_{LF}$ is the number of low-fidelity simulations. 
+Here the sum runs over all simulated low-fidelity parameter sets $p_i$ and $N_{LF}$ is the number of low-fidelity simulations.
 
 Figure~\ref{fig:covariance_loo} shows the magnitude of the $\boldsymbol{\sigma}_{CV}$ term compared to the eBOSS errors.
 $\boldsymbol{\sigma}_{CV}$ is significant only on the largest scales, $k < 2.5 \times 10^{-3}$ s/km, as expected from an effect due to finite box size.
-In addition, there is a significant redshift dependence: $\boldsymbol{\sigma}_{CV}$ is large compared to the eBOSS errors only for $2.8 < z < 3.4$.
-For clarity, Figure~\ref{fig:covariance_loo} shows only $z=2.8$ and $z=3.4$. However, we have verified that $\boldsymbol{\sigma}_{CV}$ reduces for lower redshifts. For the redshift range $4.2 > z>3.4$, $\boldsymbol{\sigma}_{CV}$ remains approximately constant, but becomes less significant as the eBOSS statistical errors increase. \maf{not sure I totally follow this sentense in the context of the figure} \spb{Is that better?}.
+In addition, there is a significant redshift dependence: $\boldsymbol{\sigma}_{CV}$ is \textbf{non-negligible relative} to the eBOSS errors only for $2.8 < z < 3.4$.
+\textbf{For clarity, Figure~\ref{fig:covariance_loo} shows only $z=2.8$ and $z=3.4$, which bracket the largest effect.} For the redshift range $4.2 > z>3.4$, $\boldsymbol{\sigma}_{CV}$ remains approximately constant, but becomes less significant as the eBOSS statistical errors increase.
 These details reveal the physical source of this large-scale variance.
-The relevant scale is close to the $20$ Mpc/h size of the Helium reionization bubbles, and the relevant redshift range is when our model performs helium reionization.
-Helium reionization bubbles are placed randomly around rare large halos, which creates sample variance in a finite box.
+The relevant scale is close to the $20$ Mpc/h size of the helium reionization bubbles, and the relevant redshift range is when our model performs helium reionization.
+Helium reionization bubbles are placed randomly around rare large halos, which creates sample variance in a finite box. 
+
+\textbf{Figure~\ref{fig:covariance_loo} also shows the absolute value of the ratio of the flux power spectrum between two LF simulations with different initial structure seeds. If this ratio is consistently larger than $\boldsymbol{\sigma}_{CV}$, it would indicate an extra source of cosmic variance not included by varying $h$. The average flux power spectrum ratio is remarkably similar to $\boldsymbol{\sigma}_{CV}$, although there are some  k-bins where it is larger. We have deliberately chosen to show the redshift bins near the ends of helium reionization where the effects of cosmic variance are most important. To evaluate the effect of a potential under-estimation of cosmic variance from these k-bins, we performed an extra chain where the last term in Eq.~\ref{eq:covariance} was $2\times \boldsymbol{\sigma}_{CV}$. Our posterior constraints were almost unchanged, as $\boldsymbol{\sigma}_{CV}$ is still smaller than $\sqrt{K_\mathrm{BOSS}}$.}
 
 \subsection{Likelihood}\label{sec:likelihood}
 
 We use a log normal likelihood summed over all redshifts and, for the flux power, all scale bins:
 \begin{equation}
-    \mathrm{log}\mathcal{L} = -\frac{1}{2} \sum_{z=2.2}^{z=4.6} \left(\boldsymbol{P}_F^{\mathrm{diff}} \cdot \boldsymbol{K}^{-1} \cdot \boldsymbol{P}_F^{\mathrm{diff}} + \mathrm{det}(\boldsymbol{K})\right)
+    \mathrm{log}\mathcal{L} = -\frac{1}{2} \sum_{z=2.2}^{z=4.6} \left(\left(\boldsymbol{P}_F^{\mathrm{diff}}\right)^\top \cdot \boldsymbol{K}^{-1} \cdot \boldsymbol{P}_F^{\mathrm{diff}} + \log\left( \mathrm{det}(\boldsymbol{K})\right)\right)
     \label{eq:likelihood}
 \end{equation}
 where $\boldsymbol{P}_F^{\mathrm{diff}} = \boldsymbol{P}_F^{\mathrm{sim}} - \boldsymbol{P}_F^{\mathrm{obs}}$ is the vector difference between the simulation prediction and the observation.
@@ -129,6 +133,7 @@ The covariance matrix, $\boldsymbol{K}$, is described in Equation~\ref{eq:covari
 The likelihood for the IGM mean temperature is similar, but single valued per redshift.
 We compute the \lya forest flux power and IGM mean temperature likelihoods separately.
 Because the flux power spectrum has larger magnitude likelihoods (due to the extra dimension of information, $k$, and additional redshift bins), the mean temperature likelihood is scaled by a factor of $\sim 10$, to ensure both information sources contribute roughly equally to the posterior.
+The factor of $\sim 10$ was determined by calculating the mean likelihood from MCMC chains for the IGM mean temperature and the flux power separately.
 
 We make use of the Cobaya package \cite{2021JCAP...05..057T, 2019ascl.soft10019T, 2013PhRvD..87j3529L, 2002PhRvD..66j3511L} to run MCMC chains using this likelihood.
 The MCMC sampler uses the Metropolis method discussed in \cite{2013PhRvD..87j3529L}, and uses a Gaussian + exponential proposal distribution that dynamically learns the proposal covariance.
@@ -154,9 +159,8 @@ All input parameters were recovered to better than one sigma.
     \centering
     \includegraphics[width=\textwidth]{figures/simdat-seed.pdf}
     \caption{\label{fig:simdat_posteriors}
-    \maf{if not too much trouble, maybe change the dashed line color -- blue might work} \spb{How's that? I went with black so that there weren't too many colours floating around.}
     Posteriors using mock data, a simulation output with a different initial seed to the main PRIYA suite.
-    The true parameter values for the input are indicated by the red dashed lines.
+    The true parameter values for the input are indicated by the black dashed lines.
     Three chains are used: `Seed FPS' uses the default error model, with the eBOSS covariance and leave-one-out errors.
     `Seed FPS + GPERR' adds the covariance from the Gaussian Process.
     `Seed FPS + $T_0$' uses the default error model but supplements the flux power spectrum data with information from the mean temperature.
@@ -166,11 +170,11 @@ All input parameters were recovered to better than one sigma.
 We next ran chains using data from a low-fidelity simulation with a different random seed from the main PRIYA suite.
 For these runs only, we used an emulator built using the low fidelity suite.
 This test was designed to quantify whether the finite box size of our simulations can affect our parameter constraints.
-Figure~\ref{fig:simdat_posteriors} shows the results, with dashed red lines indicating the correct parameters.
+Figure~\ref{fig:simdat_posteriors} shows the results, with dashed black lines indicating the correct parameters. \textbf{Note that Figure~\ref{fig:simdat_posteriors} shows an estimate of the potential bias from cosmic variance on our results.}
 
 We have performed three runs.
-The first (Seed LOO) is our preferred error model, using the eBOSS covariance and a leave-one-out (LOO) error term.
-The second adds an error term for the expected interpolation error from the Gaussian Process (Seed LOO + GP).
+The first (Seed FPS) is our preferred error model, using the eBOSS covariance and a leave-one-out error term.
+The second adds an error term for the expected interpolation error from the Gaussian Process (Seed FPS + GPERR).
 Both of these runs use only information from the eBOSS flux power spectrum and thus do not provide strong constraints on the parameters of helium reionization.
 We therefore run another chain including constraints from the mean temperature.
 
@@ -184,11 +188,11 @@ All parts of the prior range are within the $1-\sigma$ posteriors.
 The redshift of hydrogen reionization, $z_{HI}$, is estimated from the mean IGM temperature at $z > 3.6$ or from a large-scale increase in the flux power spectrum at $z > 4$ (see Ref.~\cite{2023simsuite}).
 The second effect is due to a scale-dependent bias arising from placement of the reionization bubbles \cite{Montero:2019}.
 Figure~\ref{fig:simdat_posteriors} indicates that this bias is sensitive to sample variance from the finite box, and so the hydrogen reionization redshift is not well measured by the flux power spectrum data alone.
-The three parameters which govern Helium reionization, $z_i^{HeII}$, $z_f^{HeII}$ and $\alpha_q$, are well constrained by the mean temperature data.
-The runs which do not include mean temperature data have a preference for a larger $\alpha_q$ than the input value.
-As discussed above, the main effect of a different structure seed is through the placement of Helium reionization bubbles.
+The three parameters which govern helium reionization, $z_i^{HeII}$, $z_f^{HeII}$ and $\alpha_q$, are well constrained by the mean temperature data.
+The runs which do not include mean temperature data have a \textbf{slight} preference for a larger $\alpha_q$ than the input value.
+As discussed above, the main effect of a different structure seed is through the placement of helium reionization bubbles.
 $\alpha_q$ is thus measured using a similar scale-dependent bias as $z_{HI}$, and so is slightly sensitive to the finite box size in the same way.
-However, the mean IGM temperature is sensitive to $\alpha_q$ through the peak temperature during Helium reionization, and thus the chains including it correctly infer $\alpha_q$.
+However, the mean IGM temperature is sensitive to $\alpha_q$ through the peak temperature during helium reionization, and thus the chains including it correctly infer $\alpha_q$.
 
 The chain including Gaussian Process errors sometimes produced incorrect parameter inferences, notably in $\alpha_q$.
 It seems that GP errors create an implicit prior which sometimes shifts the results towards regions of higher interpolation accuracy.
@@ -202,4 +206,6 @@ We confirmed that gradients of the likelihood with respect to $h$ are largest fo
 We computed the $\chi^2$ per degree of freedom, which was $\sim 0.9$ for $h = 0.65$ and $\chi^2 \sim 1$ for the true input value, indicating over-fitting to the noise created by different structure seeds.
 We confirmed that fixing $h$ to the known true value results in very small changes to the other parameters and their confidence intervals.
 There is thus zero cosmological information in our $h$ constraints.
-In order to avoid unwarranted conclusions, we will henceforth relabel $h$ as $v_\mathrm{scale}$, emphasising that it merely controls the mapping between the native Fourier-space binning of the simulations and the observed velocity space of the spectra, and its inference is dominated by modelling error from sample variance.
+In order to avoid unwarranted conclusions, we will henceforth relabel $h$ as $v_\mathrm{scale}$, emphasising that it merely controls the mapping between the native Fourier-space binning of the simulations and the observed velocity space of the spectra, and its inference is dominated by modelling error from sample variance. 
+
+\textbf{The reader should not be concerned that the posterior $v_\mathrm{scale}$ from the simulation with a different seed does not match the input value. Our argument above is that $v_\mathrm{scale}$ is completely degenerate with the initial structure seed. The measured quantity is schematically a linear combination of $h$ and a 'cosmic variance parameter' from the structure seed. When the value of the cosmic variance parameter expected by the emulator differs from the true input, the emulator will measure a different posterior value for $h$, as shown in Figure~\ref{fig:simdat_posteriors}.}

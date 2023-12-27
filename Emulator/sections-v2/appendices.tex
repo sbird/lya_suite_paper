@@ -42,8 +42,8 @@
     \includegraphics[width=\textwidth]{figures/loo_vs_emu_error_wlegend.pdf}
     \caption{\label{fig:loo_v_emu}
     Emulator error and leave-one-out errors across parameter space.
-    For eight of the input parameters, the training samples (grey crosses for LF, red circles for HF), GP emulator errors (yellow dots), and scale-averaged leave-one-out errors (red dashed) are shown.
-    Shown are 1D marginalised posteriors for the default flux power only chains (red) compared to chains run adding the GP emulator error to the likelihood (yellow).
+    For eight of the input parameters, the training samples (grey crosses for LF, red circles for HF), GP emulator errors (yellow dots), and scale-averaged leave-one-out errors (red dashed) are shown. \textbf{All chains contain the mean temperature data, and the eBOSS flux power spectrum from $z=2.6 - 4.6$.}
+    Shown are 1D marginalised posteriors for the chains with the default likelihood (red) compared to chains run adding the GP emulator error to the likelihood (yellow).
     }
 \end{figure}
 
@@ -98,10 +98,6 @@ The parameters of the helium reionization model also shift slightly.
 % In combination, this may indicate that the single-fidelity is underfitting the largest scales and lowest redshifts.
 
 % --------------------------------------------------------------------------------------------------
-% --------------------------------------------------------------------------------------------------
-% --------------------------------------------------------------------------------------------------
-% --------------------------------------------------------------------------------------------------
-% --------------------------------------------------------------------------------------------------
 \section{BOSS DR9 Data}\label{sec:dr9_results}
 \begin{figure}
     \centering
@@ -118,6 +114,8 @@ We show chains using only the flux power spectrum likelihood, to emphasise any d
 Differences between DR9 and DR14 are small, although, as expected, the posterior parameter ranges for DR9 are moderately larger than for DR14.
 The largest parameter shift is $d\tau_0$, which shifts by $< 0.5 \sigma$. The shift from the omission of the lowest redshift bins is consistent between the two observational data sets.
 Both exhibit the same internal tension.
+
+\textbf{Although DR14 includes many more quasars, the covariance matrix is often dominated by systematic error. At $z=2.6$ DR14 and DR9 have very similar errors. DR14 has smaller measurement uncertainty at $z \geq 3$, but the lower redshifts have smaller errors and thus contain more information.}
 
 \section{Mean Temperature Only Posteriors}\label{sec:t0-only}
 
@@ -150,7 +148,8 @@ Incorporating measurements of the mean IGM temperature at $z > 3.8$  \cite[e.g.~
     \includegraphics[width=\textwidth]{figures/allp_corner.pdf}
     \caption{\label{fig:full_posterior}
     Posteriors for the full set of simulation parameters, both cosmological and astrophysical.
-    Shown are the same chains from the figures in Section~\ref{sec:results}, thus the correlations between the the parameters in Figure~\ref{fig:cosmo_corner} and those in Figure~\ref{fig:astro_corner} are the only new information here.
+    Shown are the same chains from the figures in Section~\ref{sec:results}, thus the correlations between the the parameters in Figure~\ref{fig:cosmo_corner} and those in Figure~\ref{fig:astro_corner} are the only new information here. \textbf{`FPS $z=2.2-4.6$' (gold) uses the full redshift range eBOSS flux power spectrum dataset, `FPS $z=2.6-4.6$' (blue) uses a reduced redshift range eBOSS dataset flux power spectrum dataset, which removes the internal tension (Section~\ref{sec:tension}).
+    The third chain, `FPS $z=2.6-4.6$' (red), uses the limited range eBOSS dataset but adds the mean IGM temperature constraints.}
     }
 \end{figure}
 
