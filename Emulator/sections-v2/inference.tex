@@ -32,8 +32,8 @@ Our simulations include a realistic population of DLAs, which are masked in the 
 The sample of \lya forests from the set of remaining quasar spectra is then further refined based on cuts to the spectral resolution, signal-to-noise ratio, number of masked pixels, and forest length, with a final sample of about $43,000$ spectra.
 %Along with a windowing function to correct for the spectral resolution of the instrument, estimates for the noise and metal power (estimated using longer wavelength segments of the quasar spectra) are then subtracted to obtain the final \lya forest flux power spectrum.
 The redshifts and scales covered by these observations set the redshift range and scales we use in our flux power spectrum emulator, namely $z=2.2-4.6$ (redshift bin size of $\Delta z = 0.2$), and $k\approx0.001-0.02$ s/km (over $35$ linearly spaced bins, $\Delta k = 5.42\times10^{-4}$ s/km).
-Note, our emulator can easily be re-trained for the smaller scales probed by DESI.
-\textbf{The uncertainty in the eBOSS 1D flux power varies with $k$ and $z$, ranging from $> 10 \%$ at $z > 4$ to $\sim 2 - 3\%$ at $z \sim 3$, and is often dominated by systematic uncertainty \cite{2019JCAP...07..017C}.}
+Our emulator can easily be re-trained for the smaller scales probed by DESI.
+\textbf{The uncertainty in the eBOSS 1D flux power varies with $k$ and $z$, ranging from $> 10 \%$ at $z > 4$ to $\sim 2\%$ at $z \leq 3$, and is often dominated by systematic uncertainty \cite{2019JCAP...07..017C}.}
 
 We apply correction terms to the \lya forest flux power spectrum predicted by our emulator to model DLAs and metal contamination.
 We correct for DLAs using the template from Ref.~\cite{2018MNRAS.474.3032R}. This allows us to account for differences in the DLA masking between our simulated pipeline and the observed pipeline.
@@ -46,7 +46,7 @@ We thus simplify our likelihood by using only two additional free parameters, on
 $\alpha_{\mathrm{lls}}$ covers column densities between $1.6\times10^{17} - 10^{20}$ cm$^{-2}$, and $\alpha_{\mathrm{dla}}$ covers $10^{21}-10^{22.5}$  cm$^{-2}$. 
 
 We account for correlated Si~{\sc{iii}} absorption within the \lya~forest following Ref.~\cite{2006ApJS..163...80M}.
-Our likelihood includes an additional nuisance parameter, $f_\mathrm{SiIII}$, which measures the amplitude of the metal contamination. \textbf{A potential future improvement would be to model H~{\sc{i}} - Si~{\sc{iii}} absorption correlation using the metal line distribution in a cosmological simulation}.
+Our likelihood includes an additional nuisance parameter, $f_\mathrm{SiIII}$, which measures the amplitude of the metal contamination. \textbf{An improved model could use the metal line distribution in a cosmological simulation}.
 % -------------------------------------------------------------------------------------------------
 
 \subsection{IGM Mean Temperature Data}\label{sec:t0data}
@@ -64,7 +64,7 @@ We use the \lya forest flux power spectrum derived temperatures in the main body
 %Metal lines are removed by fitting Voigt profiles to the spectra and removing features with Doppler widths $b \leq 8$ km s$^{-1}$, which are assumed to be metal lines.
 To derive temperatures from the observed quasar spectra, Ref.~\cite{2021MNRAS.506.4389G} calculated several summary statistics and compared them to those derived from spectra drawn from simulations.
 The simulations they used were similar in resolution to our HF suite (gas mass resolution of $\sim10^5$ M$_{\odot}$), though much smaller in volume ($10$ Mpc/h box side length).
-These observed mean temperatures are themselves derived using a suite of simulations \textbf{assuming fixed $\sigma_8$ and $n_P$ taken from a Planck prior \cite{2021MNRAS.506.4389G}. If the best-fit results of the flux power spectrum differ significantly from those of Planck, there is the possibility that the final posteriors would be biased. The mean IGM temperature constrains helium reionization parameters which are not strongly constrained by eBOSS data, so we expect this to not significantly affect our current constraints. However, our most conservative constraints are those from eBOSS alone. An improved analysis would remove the middle step and directly model the observed small-scale 1D flux power spectrum from the PRIYA simulations. We will attempt this in future work.}
+These observed mean temperatures are themselves derived using a suite of simulations \textbf{assuming fixed $\sigma_8$ and $n_P$ taken from a Planck prior \cite{2021MNRAS.506.4389G}. If the structure on \Lya~forest scales differs significantly from the predictions of the Planck model, the derived mean temperatures may be biased or inaccurate. In this case, combining the mean temperatures with the flux power spectrum data could lead to inconsistent constraints. An improved analysis would directly model the observed small-scale 1D flux power spectrum in combination with the flux power spectrum from eBOSS. We will attempt this in future work.}
 
 \textbf{We do not include data on the IGM temperature-density relation, $\gamma$. The constraints from Ref.~\cite{2021MNRAS.506.4389G} are $\gamma(z=3) = 1.22 \pm 0.12$ at $68\%$ confidence. A reasonable theoretical prior would be $1.1 \lesssim \gamma \lesssim 1.6$, so this measurement does not represent a strong constraint on our model. In addition, $\gamma$ varies within our simulations, depending on the redshift at which a particular region of the box undergoes helium reionization \cite{2020MNRAS.496.4372U}.}
 
@@ -79,7 +79,7 @@ These observed mean temperatures are themselves derived using a suite of simulat
     \includegraphics[width=0.45\textwidth]{figures/err-2.8.pdf}
     \includegraphics[width=0.45\textwidth]{figures/err-3.4.pdf}
     \caption{\label{fig:covariance_loo}
-     \textbf{Elements of the covariance matrix, as a function of scale and for selected redshift bins $z=2.8$ (left) and $z=3.4$ (right). We have selected these redshifts as they are those with the largest relative $\sigma_{CV}$. 
+     \textbf{Elements of the covariance matrix, as a function of scale and for selected redshift bins $z=2.8$ (left) and $z=3.4$ (right). We have selected these redshifts as they are those where $\sigma_{CV}$ is most important relative to $K_{BOSS}$. 
     Shown are the square root of the diagonal elements of the eBOSS covariance matrix $K_{BOSS}$ (black solid) and the diagonal cosmic variance error estimated from leave-one-out errors, $\boldsymbol{\sigma}_{CV}$ (blue, dot-dashed). Both are normalised by the observed eBOSS 1D flux power spectrum $P_F(k, z)$. For comparison, we also show the ratio of the 1D flux power spectra between the two LF simulations with different seeds discussed in Ref.~\protect\cite{2023simsuite} (brown, dashed).}}
 \end{figure}
 
@@ -112,7 +112,7 @@ Here the sum runs over all simulated low-fidelity parameter sets $p_i$ and $N_{L
 
 Figure~\ref{fig:covariance_loo} shows the magnitude of the $\boldsymbol{\sigma}_{CV}$ term compared to the eBOSS errors.
 $\boldsymbol{\sigma}_{CV}$ is significant only on the largest scales, $k < 2.5 \times 10^{-3}$ s/km, as expected from an effect due to finite box size.
-In addition, there is a significant redshift dependence: $\boldsymbol{\sigma}_{CV}$ is \textbf{non-negligible relative} to the eBOSS errors only for $2.8 < z < 3.4$.
+In addition, there is a significant redshift dependence: $\boldsymbol{\sigma}_{CV}$ is \textbf{important relative} to the eBOSS errors only for $2.8 < z < 3.4$.
 \textbf{For clarity, Figure~\ref{fig:covariance_loo} shows only $z=2.8$ and $z=3.4$, which bracket the largest effect.} For the redshift range $4.2 > z>3.4$, $\boldsymbol{\sigma}_{CV}$ remains approximately constant, but becomes less significant as the eBOSS statistical errors increase.
 These details reveal the physical source of this large-scale variance.
 The relevant scale is close to the $20$ Mpc/h size of the helium reionization bubbles, and the relevant redshift range is when our model performs helium reionization.
@@ -208,4 +208,4 @@ We confirmed that fixing $h$ to the known true value results in very small chang
 There is thus zero cosmological information in our $h$ constraints.
 In order to avoid unwarranted conclusions, we will henceforth relabel $h$ as $v_\mathrm{scale}$, emphasising that it merely controls the mapping between the native Fourier-space binning of the simulations and the observed velocity space of the spectra, and its inference is dominated by modelling error from sample variance. 
 
-\textbf{The reader should not be concerned that the posterior $v_\mathrm{scale}$ from the simulation with a different seed does not match the input value. Our argument above is that $v_\mathrm{scale}$ is completely degenerate with the initial structure seed. The measured quantity is schematically a linear combination of $h$ and a 'cosmic variance parameter' from the structure seed. When the value of the cosmic variance parameter expected by the emulator differs from the true input, the emulator will measure a different posterior value for $h$, as shown in Figure~\ref{fig:simdat_posteriors}.}
+\textbf{The posterior $v_\mathrm{scale}$ from the simulation with a different seed does not match the input value. However, this is to be expected: $v_\mathrm{scale}$ is completely degenerate with the initial structure seed. The measured quantity is thus schematically a linear combination of $h$ and a 'cosmic variance parameter' set by the initial distribution of structures. When the value of the cosmic variance parameter expected by the emulator differs from the true input, the emulator will measure a different posterior value for $h$, as shown in Figure~\ref{fig:simdat_posteriors}.}

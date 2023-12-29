@@ -50,9 +50,7 @@
 In this Appendix we evaluate the impact of including the Gaussian Process interpolation error, $\boldsymbol{\sigma}_{GP}$, on the posterior parameters, as discussed in Equation~\ref{eq:covariance}.
 Figure~\ref{fig:loo_v_emu} compares the effect of including emulator errors, showing the training samples, GP emulator errors and scale-averaged leave-one-out errors.
 The leave-one-out error is independent of position in parameter space, whereas the GP error is larger towards the edge of parameter space.
-The effect of the GP error is less than $2\sigma$ for all parameters.
-The largest effect is on the growth function $\Omega_M h^2$ and the redshift of hydrogen reionization, which are both poorly constrained by the flux power spectrum data.
-The parameters of the helium reionization model also shift slightly. 
+\textbf{The largest effect is on the matter density $\Omega_M h^2$. With the GP error, helium reionization starts later and finishes earlier, as well as producing more heating. On the other hand, hydrogen reionization happens earlier. However, these shifts are all less than $1.5-\sigma$. The cosmological parameters are unchanged.}
 %\begin{figure}
 %    \centering
 %    \includegraphics[width=\textwidth]{figures/2xboss.pdf}
@@ -149,7 +147,7 @@ Incorporating measurements of the mean IGM temperature at $z > 3.8$  \cite[e.g.~
     \caption{\label{fig:full_posterior}
     Posteriors for the full set of simulation parameters, both cosmological and astrophysical.
     Shown are the same chains from the figures in Section~\ref{sec:results}, thus the correlations between the the parameters in Figure~\ref{fig:cosmo_corner} and those in Figure~\ref{fig:astro_corner} are the only new information here. \textbf{`FPS $z=2.2-4.6$' (gold) uses the full redshift range eBOSS flux power spectrum dataset, `FPS $z=2.6-4.6$' (blue) uses a reduced redshift range eBOSS dataset flux power spectrum dataset, which removes the internal tension (Section~\ref{sec:tension}).
-    The third chain, `FPS $z=2.6-4.6$' (red), uses the limited range eBOSS dataset but adds the mean IGM temperature constraints.}
+    The third chain, `FPS $+T_0, z=2.6-4.6$' (red), uses the limited range eBOSS dataset but adds the mean IGM temperature constraints.}
     }
 \end{figure}
 

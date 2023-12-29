@@ -26,7 +26,7 @@ We ran $48$ low fidelity (LF) and $3$ high fidelity (HF) simulations.
 Low fidelity simulations have $1536^3$ particles, while high fidelity simulations have $3072^3$ particles.
 Sampled parameters are chosen to maximise spread in parameter space, as described in Ref.~\cite{2023simsuite}. 
 
-\textbf{Our simulations still have limited resolution and a finite box. Ref.~\cite{2023simsuite} showed that on these scales resolution is important at the $1\%$ level. Compared to the literature, our resolution convergence is slightly better, due to the temperature boost we impart during HI reionization \cite{2019ApJ...874..154D}. The finite box scatters the modes of the 1D flux power spectrum at the $2\%$ level on large scales, due mostly to the limited number of helium reionization bubbles ($30$ Mpc/h across) that can fit into our volume. Section~\ref{sec:theoryerror} describes how we marginalise out this effect.}
+\textbf{Our simulations still have limited resolution and a finite box. Ref.~\cite{2023simsuite} showed that on these scales resolution is important at the $1\%$ level. Compared to the literature, our resolution convergence is slightly better, due to the temperature boost we impart during HI reionization \cite{2019ApJ...874..154D}. The finite box scatters the modes of the 1D flux power spectrum at the $2\%$ level on large scales, due mostly to the limited number of helium reionization bubbles ($30$ Mpc/h across) that can fit into our volume. Section~\ref{sec:theoryerror} describes how we attempt to marginalise out residual cosmic variance.}
 
 \begin{figure}
     \centering
@@ -92,7 +92,7 @@ We parameterize the mean flux $\mathcal{F} = \exp(-\tau)$ around the power law r
 \end{equation}
 
 The parameters varied are $\tau_0$ and $d\tau_0$, with $(1, 0)$ corresponding to the redshift evolution of Ref.~\cite{2007MNRAS.382.1657K}.
-As the mean flux is chosen in post-processing, we can dramatically over-sample these parameters. \textbf{We sample $10$ linear spaced values of the mean flux. Sampling values are independent of redshift and are chosen to cover the range of $\tau_0$ and $d\tau_0$ at extreme ($z=2.2$ and $z=4.6$) redshifts allowed by the prior.}
+As the mean flux is chosen in post-processing, we can dramatically over-sample these parameters. \textbf{We sample $10$ linearly spaced values of the mean flux. Sampling values are independent of redshift and are chosen to cover the range of $\tau_0$ and $d\tau_0$ at the extreme ($z=2.2$ and $z=4.6$) redshifts included in eBOSS.}
 The final set of flux power spectra is thus ten times the number of simulations, or $480$ LF, and $30$ HF simulated flux power spectra.
 We have freedom to vary the \Lya~mean flux as it is degenerate with the amplitude of the ultraviolet background (UVB). 
 

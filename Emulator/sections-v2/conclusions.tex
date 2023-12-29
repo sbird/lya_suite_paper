@@ -12,17 +12,18 @@ Our likelihood includes corrections to the \lya forest flux power spectrum from 
 
 We found that the lowest redshift bins in the eBOSS flux power spectrum, at $z=2.2$ and $z=2.4$, produced results which were discrepant with those from higher redshifts.
 The flux power spectrum from the DESI early data release is also discrepant with eBOSS at these redshifts.
-It thus seems likely that this discrepancy is due to an as-yet unidentified systematic in the eBOSS pipeline at $z < 2.6$, although an unmodelled astrophysical effect, perhaps connected with AGN feedback, is still possible.  
+It thus seems likely that this discrepancy is due to an as-yet unidentified systematic in the eBOSS pipeline at $z < 2.6$. We found that the discrepancy was reduced if the DLA finder efficiency was allowed to be redshift dependent. However, an unmodelled astrophysical effect, perhaps connected with AGN feedback, is still possible.  
 
 When removing the lowest redshift bins from the analysis, we find, \textbf{for a primeval power spectrum with a pivot scale of $0.78$ h/Mpc}:
 \begin{itemize}
     \item A power spectrum slope of $1.0 > n_P > 0.975$, in good agreement with Planck.
     The upper limit is set by the prior volume of our emulator.
     \item A power spectrum amplitude $A_p=\left(1.56\times10^{-9}\right) \pm 0.12$, which translates to $A_s=\left(1.67\pm0.13\times10^{-9}\right)$ or $\sigma_8 = 0.733 \pm 0.026$, approximately $2-3\sigma$ lower than measurements from Planck, but in agreement with some other measurements from weak lensing or galaxy surveys.
-    \item When the IGM mean temperature data is included, we find an early start to helium reionization, beginning at $z = 3.9-4.0$ and ending around $z=2.6-2.8$.
-    The heating rate during reionization is at the higher end of our prior, with a spectral index of $\alpha_q \sim 1.4$. \textbf{The mean IGM temperature data was derived using a fixed (Planck) $\sigma_8$, and so the joint constraints may not be fully consistent for the cosmological parameters}.
+    \item \textbf{An early start and late finish to helium reionization, beginning at $z > 4.04$ and ending at $z < 2.7$. Our data is consistent with helium reionization still being underway at the lowest redshift  eBOSS data we use, $z=2.6$, and with it being already underway by $z=4.1$, above which the eBOSS constraining power is weak. Our chains suggest a low peak IGM temperature of $\sim 10^4$ K at $z\sim 2.8$.}
     \item Weak constraints on hydrogen reionization and the matter density $\Omega_M h^2$.
 \end{itemize}
+
+\textbf{We added mean IGM temperature data to our chains, improving constraints on the thermal history. Our best-fit parameters from the flux power spectrum alone prefer a peak IGM temperature data much lower than the constraints of Ref.~\cite{2021MNRAS.506.4389G}. It is possible that these constraints are affected by assuming the Planck value of $\sigma_8$, which is inconsistent with our results. Our most robust constraints are thus those from eBOSS alone.}
 
 %Future work
 In future work, we will combine our \Lya likelihood with other cosmological information, in particular the Planck CMB and Baryon Acoustic Oscillation measurements, with which we can constrain several extensions to the $\Lambda$CDM model.
@@ -31,7 +32,7 @@ We will be able to constrain the running of the spectral index, $\alpha_s = \fra
 Constraints on $\alpha_s$ come from the difference between the spectral index measured by the CMB on large scales and the spectral index measured by the \Lya forest on small scales.
 % As our $n_P$ constraints are completely consistent with Planck, the combined constraints are likely to be consistent with zero running.
 % It is also likely that the strong constraints on early dark energy found by Ref.~\cite{2023arXiv230300746G} from the low $n_s$ in earlier analyses will be weakened.
-The sum of neutrino masses can be constrained via a comparison between the power spectrum amplitude on CMB and \Lya scales \cite{2020JCAP...04..025P}.
+The sum of neutrino masses can be constrained via a comparison between the power spectrum amplitude on CMB and \Lya scales \cite{2020JCAP...04..025P}. \textbf{Our constraints are in strong tension with those of Ref.~\cite{2020JCAP...04..038P}, which will certainly affect neutrino mass constraints from the \Lya~forest.}
 Since our preferred power spectrum amplitude is lower than that of Planck, we will likely have a preference for a non-zero neutrino mass, although the strength of the preference and the value preferred is yet to be determined. 
 
 We will also incorporate new data sets into our likelihood.
