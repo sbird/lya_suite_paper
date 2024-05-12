@@ -1,0 +1,206 @@
+\documentclass[12pt]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{url}
+
+\begin{document}
+\onehalfspacing
+
+I would like to thank the authors for addressing some of the comments in my first report.
+However, there are a few important points that I would still like to see addressed before I can recommend the paper for publication.
+I list them below, differentiating the original comment in my first report with “OC”, the author response with “AR”, and my follow up comment with “FC”.
+I do not mention below the comments that I consider that have been resolved.\\
+
+\textbf{We have included responses to the referee's further comments in bold below.}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+\underline{Major comments:}\\
+
+OC: The main results of this publication (like Figure 4) show that the MCMC chains are hitting the priors. This means that the final constraints are strongly affected by the (fairly arbitrary) choice of priors. This is a very significant caveat that should be made clear in the abstract, and repeated every time that the cosmological constraints are discussed.\\
+
+AR: We have clarified in the abstract and text that the 68 \% contours hit the edges of the prior volume. The constraints on $n_P$ are thus indeed really $n_P > 0.97$, while $n_P < 0.995$ is the prior.\\
+
+FC: Thanks for adding this clarification. However, it is not only the constraints on $n_p$ that are affected by the prior, it is the entire multi-dimensional posterior that is affected, and consequently the constraints on all parameters. This is clearly seen in Fig 4. If it was not for the prior on $n_p$, the posterior would cover larger values of $n_p$, and because of the strong correlations with other parameters the posterior would also cover lower values of $tau_0$; larger values of $dtau_0$; larger values of $A_p$. Therefore, the constraints on derived parameters like $sigma_8$ and $A_s$ would also be affected, so it is important to acknowledge this when discussing these results and comparing them with other results from the literature.\\
+
+\textbf{We have added an additional simulation with a larger value of $n_p$ and run chains incorporating this larger prior range and found . . . We have also run chains with larger cosmic variance and found . . .}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+\underline{Minor comments:}\\
+
+OC: In the introduction, the authors claim that the high-fidelity (HF) PRIYA simulations have “a resolution high enough to include the gas Jeans’ scale.” I would tone down this claim, since other authors have claimed that an extra factor of 2 might be needed. See for instance tests with the Sherwood sims (Bolton et al. 2016, Givans et al. 2022) and the comparison of Eulerian (Nyx) vs SPH (HACC) presented in Chabanier et al. (2022), that only reached convergence (on small scales) with an SPH box of L=40 Mpc/h and N=2048 particles.\\
+
+AR: We have clarified this in the text. Our model includes a temperature boost during reionization, and so the resolution requirements are less stringent than in Chabanier 2022, which does not include this (as the temperature boost smooths out small scales).\\
+
+FC: is this extra smoothing consistent with measurements from data, like Rorai et al. (2017)?\\
+
+\textbf{The paper in question (\url{https://arxiv.org/pdf/1611.03805.pdf}) reports on a single QSO sightline, so we are consistent with their findings (near mean density IGM temperature), broad though they are.}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: Could you clarify how the ten values of mean flux are chosen in the post-processing? Did you choose ten pairs of values for (tau0 , dtau0) and map these into ten values of mean flux at each redshift? If so, this would cause a large scatter at the extreme redshifts (z=2.2, z=4.6) and a significantly narrower scatter at z=3, right?\\
+
+AR: We completely agree that such a scheme would cause a large scatter at the extreme redshifts! Instead, we chose ten linearly spaced and redshift independent values for the mean flux. The range of these values covers the largest scatter in tau0, dtau0 at the extreme redshifts. This means the $z=3$ emulator is training on a somewhat larger range of mean flux than necessary, but it avoids redshift dependent sampling.\\
+
+FC: If I understand this well, the ten values then are [0.0926, 0.1853, 0.2780, . . . ]. These look like very large gaps, but I guess there is nothing one can do at this point.\\
+
+\textbf{the values for the mean optical depth are: [0.65555638, 0.72668166, 0.79780694, 0.86893221, 0.94005749, 1.01118277, 1.08230805, 1.15343333, 1.2245586, 1.29568388]}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: The authors discuss the role of the mean IGM temperature and use external information about this, but there is also very valuable information captured in the density-dependent temperature (often parameterized with the slope of the temperature-density relation gamma). Given that there are also external measurements of “gamma”, and that it played an important role in most past P1D analyses (including in previous emulators by some of the co-authors here, as in Bird et al. 2019), I think it would be important to add a discussion on this. Can you build an emulator for “gamma”? What is the range of values covered by the PRIYA suite?\\
+
+AR: We could build an emulator for gamma, but the constraints from Gaikwad are not strong: $\gamma = 1.2\pm 0.1$, and the analysis would be complicated because in our inhomogeneous helium reionization model gamma depends on the reionization time for this specific part of the box. So it is possible, but it is a lot of work for little gain. We have not computed gamma for the PRIYA simulations (and it would be time consuming to do it as the snapshots are now on tape). However, the model with central parameters can produce gamma between 1.1 and 1.4 at different parts of the box, see 2002.05733 figure 4.\\
+
+FC: Aren’t the mean flux (or optical depth) and the mean temperature also affected by the inhomogeneous helium reionization? Why is it that you can use a value for $T_0$ that describes the entire box but not for $\gamma$?\\
+
+\textbf{our response}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: The scale-dependent parameter “rho(k)” is considered cosmology-independent. It is not obvious to me that there would be no cosmology dependence on this parameter, but I am pretty sure that there should be an IGM-dependency on this parameter. For instance, as an extreme case, one could imagine a very hot simulation where the Jeans’ length is larger than the cell size of the LF simulation. In that (extreme) case you would find rho=1. It would be useful to add a discussion on the model dependence (cosmo and IGM) of rho(k).\\
+
+AR: There is a typo in eq. 2.4: we are actually using a simplified model where rho is independent of k but trained separately for each redshift bin. We have clarified the expression.
+
+The cosmology dependent multi-fidelity rho(k, theta) is the NARGP model, discussed in detail in Appendix A of https://arxiv.org/abs/2207.06445 . We found that it gives similar, but not better, accuracy, and requires more training data. Note that there is cosmology dependence in the multi-fidelity correction, through the additive term delta (k, theta). Since delta is a GP it is possible to describe arbitrary cosmology dependencies, although it may require more than three simulations to train such an extreme case as the referee describes. The simpler model is effective with only three HF simulations because, as explained in our earlier PRIYA paper, the LF simulations are almost resolved on their own.\\
+
+FC: Why have you dropped the $k$ dependence of $rho$? Fig 4 of your earlier paper (2207.06445) shows a clear trend with $k$. Have you validated the accuracy of this simplified version of the multi-fidelity emulator? Could you add a sentence on this?\\
+
+\textbf{We have dropped the $k$ dependence in $\rho$ primarily for computational reasons -- our current model employs a Gaussian Process for each redshift bin, while including $k$ dependence would multiply the number of GPs by 35. We have validated the performance of this simplification using leave-one-out errors: we train a model with $k$ dependence and one without, using all but one of the HF simulations, predict that HF simulation and compare errors. The difference in errors between these two experiments was negligible. We have added a sentence summarizing this experiment to the text in section 2.3.}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: The authors discuss the different components of the covariance in eq (3.1), and include a “cosmic-variance” term that they explain is “estimated from leave-one-out errors”. It is not clear to me the connection between the leave-one-out errors and the cosmic variance. It is true that a (probably small) part of the leave-one-out-errors could be caused by the variations in the mapping between Mpc and km/s that the authors mention, but that does mean that this captures all of the possible effects of cosmic variance. I imagine that it is not easy to run another HF simulation with a different random seed, but given that the largest scales are the ones that are mostly affected by cosmic variance, one could consider testing the inference on a LF simulation that was run with a different random seed. This extra simulation is already used in Fig 5 of Bird et al. (2023), so it should be an easy test to do?\\
+
+AR: Figure 3 is exactly what the referee suggests (the LF simulation with a different random seed). The main thing which increases cosmic variance is the finite number of helium reionization bubbles. As an extra check on the potential impact of underestimating cosmic variance, we performed a chain with $\sigma_{CV}$ doubled and found the almost same posterior constraints.\\
+
+FC: I’m still not convinced about this way of estimating cosmic variance with the leave-one-out test. This might capture a fraction of it, but it is not clear that it should capture most of it. On the other hand, comparing results from simulations with the same model but different random seeds is the definition of cosmic variance. In Bird et al. (2023) this is estimated to be of order $2\%$ (as quoted now in section 2), so I would suggest the authors to use this standard estimate for $\sigma_{CV}$. Given that it is also significantly larger, it looks like the conservative thing to do.
+
+I don’t think the test mentioned of doubling $\sigma_{CV}$ is convincing. You had a very low value to start with, so doubling a small value could still leave it very small. Looking at the effect when using $\sigma_{CV} = 0.02$ vs $0.01$ seems more relevant.\\
+
+\textbf{We have run chains where $\sigma_{CV}$ has been increased to $2\%$ without significant changes to the posteriors -- see figure below.}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{cv02_allp_corner.pdf}
+\end{figure}
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: Another test that would give you a lower bound to the impact of cosmic variance is to look at the scatter between the P1D measured along the three axes of a given HF simulation. These would be partially correlated (hence it would be a lower bound to CV) but it would be an interesting test to do.\\
+
+AR: We have done this test. The results are similar to those for the ratio between two simulations with different initial structure seeds, now shown in our new Figure 2. To create the P1D we make spectra along all three axes of the simulation and average them, so the intra-axes scatter has been averaged over and so this is not a lower bound on CV, but an upper bound. We think the line shown in Figure 2 is more convincing.\\
+
+FC: I meant a lower bound after scaling the scatter by sqrt(3), I should have wrote this explicitly. However, I agree that showing the differences from different random seeds is probably better.\\
+
+OC: Fig 2 compares the contribution from cosmic variance to the measurement covariance. I am a bit surprised by this, since as I mentioned above, my impression was that both at z=2.8 and at z=3.4 the measurement has a relative uncertainty of 2, and Fig 5 of Bird et al. (2023) shows that the impact of cosmic variance (estimated from a LF simulation with a different seed) could also be larger than $2\%$ at $k < 0.005$ s/km or so.\\
+
+AR: We have significantly clarified Figure 2 of this work so that it shows the impact of cosmic variance estimated from an LF simulation with a different seed, rebinned onto the same k-bins as eBOSS compared to the relative error in the eBOSS covariance. We have also clarified the explanation around Figure 2.\\
+
+FC: The new text around Figure 2 says that “The average flux power spectrum ratio is remarkably similar to $\sigma_{CV}$ , although there are some k-bins where it is larger.” However, Bird et al. (2023) shows a $2\%$ cosmic variance, and the new (red) lines in Fig 2 also show spikes of a few percent, while the estimate of $\sigma_{CV}$ (blue lines) are around $0.3\%$ at $z=2.8$ and $0.5\%$ at $z=3.4$. It looks to me that the estimate of $\sigma_{CV}$ is much smaller than the actual cosmic variance.\\
+
+\textbf{See the previous comments and response for a chain run with a cosmic variance of two percent.}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: In the first paragraph of Section 4 you mention the “growth function" $\Omega$m h2. This parameter is usually referred to as the matter density, or the physical matter density.\\
+
+AR: Fixed.\\
+
+FC: I still find this confusing. The text now says that Omh2 “is also the growth function during matter domination)”. What does this mean? The logarithmic growth rate f(z) (is that what you mean by “growth function”?) depends on Om(z) (without h2), and in matter domination Om(z)=1 so f(z)=1.\\
+
+\textbf{References to the growth function have been removed. We now refer to this quantity as matter density throughout.}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: Table 4 shows the value of reduced chi2, but in order to translate these to chi2 probabilities one needs to give also the number of degrees of freedom. Please include this information.\\
+
+AR: We have added this: there are 35 bins and 14 fit parameters, hence 21 degrees of freedom.\\
+
+FC: See comment below.\\
+
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+
+OC: Related to this, some of the values of chi2 reported in the table are worryingly low (for instance 0.31 and 0.36 for the z=3.6 data). What is the p-value for these?\\
+
+AR: The p-values are $0.9967$ for $\chi^2 = 0.36$ and $0.9986$ for $\chi^2 = 0.32$ (the new value). These values are a little high, but not unduly so in this context. For the FPS + T0 chain, the next largest p-values are $0.8425$ and $0.77$, and the p-values for each bin are fairly uniformly distributed between 0 and 1 and the total chi2 is reasonable. We are conducting a joint fit to all redshift bins, so it is not strictly correct to perform a p-value test as if the redshift bins were uncorrelated (the chain may very reasonably fit to one redshift bin at the expense of another, if the global fit improves).\\
+
+FC: The authors are correct that one should not pick a particular value of chi2 and over-interpret it, and that the distribution of chi2 values is probably decent. However, the caption now is a bit confusing. The “21 degrees of freedom” is correct for the fits of individual redshift bins, but the “Total” fit should have a lot degrees of freedom, right? I guess 13*35 – 14?\\
+
+\textbf{The value listed in the ``Total'' column is calculated as $\bar{\chi}^2_{\text{total}} = \sum_i \bar{\chi}^2 / nz = \sum_i \chi^2 /(nz \times (nk - np))$ where $nz = 13$ is the number redshift bins, $nk=35$ is the number of k-bins, $np=14$ is the number of fit parameters, and the bar indicates reduced. This is not the total chi2, but rather the average chi2 over the individual redshift bins. We have clarified this in the table and the caption.}\\
+% total is somewhat bigger than the average, but not too worry -- k bins are significantly correlated
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: I find eq (4.1) surprising. The pivot point of As is always defined in units of [1/Mpc] (usually 0.05 1/Mpc), while the pivot point of Ap in this paper is in units of [h/Mpc]. Therefore, I would expect equation (4.1) to have several factors of “h”. Could you elaborate a bit more about this equation?\\
+
+AR: There is a typo in eq. 2.1. $A_P$ should be defined at 0.78 1/Mpc. $A_P$ is correctly shown in 1/Mpc in the text around eq. 2.2 of 1812.04654, and we have confirmed looking at our code that this is the case. We have corrected eq. 2.1, as well as the various references in the text.\\
+
+FC: It looks like you have missed at least one instance of the pivot scale, in page 26, just before the list of bullet points.\\
+
+\textbf{Fixed.}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: The discussion on the sigma8 values and comparisons with other datasets is interesting, but the authors should remind the reader that their results are strongly affected by the priors assumed (the chains are hitting the priors).\\
+
+AR: We have added a discussion of the prior limits to section 4.1\\
+
+FC: As discussed in the main comment above, this is not enough. Other cosmological parameters (including $\sigma_8$) could also be strongly affected by the prior.\\
+
+\textbf{our response}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: As mentioned in the first major comment above, however, the results presented in this paper are strongly affected by the prior choices. This should be mentioned again here in this relevant discussion, since it might play a role in explaining the very discrepant results.\\
+
+AR: We do not agree that the finite volume could explain the discrepancy with PD20, as the prior volume is centered on the PD20 results. An expanded prior volume could, at most, show that our results and those of PD20 are more discrepant than shown by our chains. We have discussed the effect of prior volume in the conclusions.\\
+
+FC: It might not move the peak of your posterior towards that of PD20, but it could inflate the uncertainties and therefore reduce the tension. Also, I couldn’t see the discussion on priors in the conclusions.\\
+
+\textbf{Apologies, the discussion on the priors in the conclusion was omitted from the previous version and has now been added. \textit{How does this sound for adding to the conclusions: The maximum posteriors from our MCMC analysis are within the prior volume, and several tests (increasing covariance, cosmic variance, expanding prior volume for np) have not significantly altered the location of the max posterior. Increasing the prior volume for other parameters is computationally costly, and is therefore left to future work, though these tests indicate that the posteriors are stable and unlikely to change with an increased prior volume.}}\\
+
+% ------------------------------------------------------------------------
+\hrulefill \newline
+% ------------------------------------------------------------------------
+
+OC: Fig 11 in appendix B the authors compare the constraints obtained when using data from BOSS DR9 (Palanque-Delabrouille et al. 2013) and from eBOSS DR14 (Chabanier et al. 2019). One would expect significant differences between both datasets, since the DR14 dataset uses x4 more quasars. It is true that it also reports a larger systematic uncertainty, but at least one would expect statistical differences between the results. This is confirmed by a direct comparison of the P1D measurements reported by both publications. However, the DR9 and DR14 contours in Fig 11 are strikingly similar, almost identical for some parameters. Is it possible that there has been a labelling issue or similar?\\
+
+AR: We have checked carefully and confirmed that the correct chains are used in Figure 11. While there are indeed 4x more quasars in eBOSS DR14, the errors are dominated by systematics and are quite similar. In particular the $z=2.6$ covariance matrix is almost identical. At $z > 3$ DR14 has indeed smaller statistical error, but the lower redshift errors are smaller and so lower redshifts contain the most information. We have added discussion of this point to Appendix B.
+
+As we discuss in Section 5.2, PD2020 indeed gets significantly different results from DR14 than from DR9, which they ascribe to different DLA models, but this is likely due to problems with the PD20 analysis. In particular, if they were marginalising over DLA uncertainty correctly, then a change in the number of DLAs should not affect their posteriors. Note also that the model is different between PD2013 and PD2020.  We would argue that it is a strength in our analysis pipeline that it gives similar results for two datasets, especially as DR14 contains DR9 within it, so they are not fully independent.\\
+
+FC: I agree that the covariances for both measurements are comparable (due to different characterization of systematic uncertainties. However, it is still true that the datasets are fairly independent ($75\%$ of the quasars in DR14 are not in DR9!), so one would expect large statistical fluctuations between the two measurements. Indeed, you see these fluctuations clearly if you compare the two P1D measurements. These fluctuations must translate into fluctuations in the posteriors, but Fig 11 show *identical* posteriors for some of the key parameters in the analysis. Probably most striking is the comparison of the posteriors for ($n_p$, $A_p$, $\tau_0$).\\
+
+\textbf{We discovered a bug in the code used to run the chain using the DR9 data set and have corrected that. An updated figure 11 now appears in Appendix B, along with updated text.}
+
+
+\end{document}
