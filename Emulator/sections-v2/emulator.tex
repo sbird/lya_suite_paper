@@ -26,7 +26,7 @@ We ran $48$ low fidelity (LF) and $3$ high fidelity (HF) simulations.
 Low fidelity simulations have $1536^3$ particles, while high fidelity simulations have $3072^3$ particles.
 Sampled parameters are chosen to maximise spread in parameter space, as described in Ref.~\cite{2023simsuite}. 
 
-\textbf{Our simulations still have limited resolution and a finite box. Ref.~\cite{2023simsuite} showed that on these scales resolution is important at the $1\%$ level. Compared to the literature, our resolution convergence is slightly better, due to the temperature boost we impart during H~{\sc i} reionization \cite{2019ApJ...874..154D}. The finite box scatters the modes of the 1D flux power spectrum at the $2\%$ level on large scales, due mostly to the limited number of helium reionization bubbles ($30$ Mpc/h across) that can fit into our volume. Section~\ref{sec:theoryerror} describes how we attempt to marginalise out residual cosmic variance.}
+Our simulations still have limited resolution and a finite box. Ref.~\cite{2023simsuite} showed that on these scales resolution is important at the $1\%$ level. Compared to the literature, our resolution convergence is slightly better, due to the temperature boost we impart during H~{\sc i} reionization \cite{2019ApJ...874..154D}. The finite box scatters the modes of the 1D flux power spectrum at the $2\%$ level on large scales, due mostly to the limited number of helium reionization bubbles ($30$ Mpc/h across) that can fit into our volume. Section~\ref{sec:theoryerror} describes how we attempt to marginalise out residual cosmic variance.
 
 \begin{figure}
     \centering
@@ -49,11 +49,11 @@ Simulations are initialised at $z=99$ and finish at $z=2.2$. The galaxy formatio
 \subsection{Cosmological \& Astrophysical Parameters}\label{sec:parameters}
 
 Table~\ref{tab:emulatorparams} summarises the parameters that are varied across our suite of simulations, as well as their limits.
-We model the \textbf{primeval \textbf{(that is, the pre-transfer function)}} power spectrum $P(k)$  using two parameters: a slope, $n_P$, and an amplitude, $A_P$:
+We model the primeval (that is, the pre-transfer function) power spectrum $P(k)$  using two parameters: a slope, $n_P$, and an amplitude, $A_P$:
 \begin{equation}
     P(k) = A_P \left(\frac{k}{0.78\, \mathrm{Mpc}^{-1}}\right)^{n_P - 1}\,.
 \end{equation}
-\textbf{The simulation initial conditions are then generated using a set of transfer functions from CLASS. This parametrisation is the same as that used by Planck, but with a different pivot scale, $0.78\, \mathrm{Mpc}^{-1}$, rather than $0.05 \,\mathrm{Mpc}^{-1}$, reflecting the smaller scales probed by the forest.}
+The simulation initial conditions are then generated using a set of transfer functions from CLASS. This parameterization is the same as that used by Planck, but with a different pivot scale, $0.78\, \mathrm{Mpc}^{-1}$, rather than $0.05 \,\mathrm{Mpc}^{-1}$, reflecting the smaller scales probed by the forest.
 
 We also vary the Hubble parameter $h$, and the total matter density through $\Omega_M h^2$, although we will see these are not strongly constrained by the \Lya~forest.
 We add three parameters for the He~{\sc ii} reionization model \cite{2020MNRAS.496.4372U}: $z_{Hei}$ and $z_{Hef}$ are the redshifts for the start and end of He~{\sc ii} reionization, and $\alpha_q$ is the quasar spectral index (which scales the peak temperature during He~{\sc ii} reionization).
@@ -85,14 +85,14 @@ Finally, $\epsilon_{AGN}$ is the black hole feedback factor, to which the \lya~f
 \end{table*}
 
 There are two further parameters for the \Lya~effective optical depth, varied by post-processing the artificial spectra.
-We parameterize the mean flux $\mathcal{F} = \exp(-\tau)$ around the power law redshift evolution from Ref.~\cite{2007MNRAS.382.1657K}, as
-\begin{equation}
-\tau^{\text{eff}}_{\text{H~{\sc i}}} = 0.0023 \times \tau_0 \times (1+z)^{3.65 + d\tau_0}\,.
+We parameterize the mean flux $\mathcal{F} = \exp(-\tau)$ by modifying the power law redshift evolution from Ref.~\cite{2007MNRAS.382.1657K}, as
+\begin{align}
+\tau^{\text{Kim}}_{\text{H~{\sc i}}}(z) &= 0.0023 \times (\tau_{z=3})\times (1+z)^{3.65}\,, \\
+\tau^{\text{eff}}_{\text{H~{\sc i}}}(z) &= \tau_0 \left(\frac{\tau^{\text{Kim}}_{\text{H~{\sc i}}}(z)}{\tau^{\text{Kim}}_{\text{H~{\sc i}}}(3)}\right)^{d\tau_0} \tau^{\text{Kim}}_{\text{H~{\sc i}}}(z)\,.
  \label{eq:meanflux}
-\end{equation}
-
-The parameters varied are $\tau_0$ and $d\tau_0$, with $(1, 0)$ corresponding to the redshift evolution of Ref.~\cite{2007MNRAS.382.1657K}.
-As the mean flux is chosen in post-processing, we can dramatically over-sample these parameters. \textbf{We sample $10$ linearly spaced values of the mean flux. Sampling values are independent of redshift and are chosen to cover the range of $\tau_0$ and $d\tau_0$ at the extreme ($z=2.2$ and $z=4.6$) redshifts included in eBOSS.}
+\end{align}
+The parameters varied are $\tau_0$ and $d\tau_0$, with $(1, 0)$ corresponding to the redshift evolution of Ref.~\cite{2007MNRAS.382.1657K}. $\tau_0$ is normalised at $z=3$ so that $d\tau_0 > 0$ corresponds to a higher optical depth at $z > 3$ and a lower optical depth at $z < 3$. $\tau_0$ changes the normalisation of the optical depth at $z=3$. We choose prior ranges for $\tau_0$ and $d\tau_0$ that comfortably cover the measurement error: $0.75 < \tau_0 < 1.25$ and $-0.4 < d\tau_0 < 0.25$.
+As the mean flux is chosen in post-processing, we can dramatically over-sample these parameters. We sample $10$ linearly spaced values of the mean flux. Sampling values are independent of redshift and are chosen to cover the range of $\tau_0$ and $d\tau_0$ at the extreme ($z=2.2$ and $z=4.6$) redshifts included in eBOSS.
 The final set of flux power spectra is thus ten times the number of simulations, or $480$ LF, and $30$ HF simulated flux power spectra.
 We have freedom to vary the \Lya~mean flux as it is degenerate with the amplitude of the ultraviolet background (UVB). 
 
@@ -112,10 +112,10 @@ The flux power is defined as
 $\tilde{\delta}^2_F(k)$ is the Fourier transform of the flux excess, $\delta_F(k) = F(k)/\langle F(k) \rangle - 1$, and $L$ is the length of the sightline. 
 
 Our simulations contain a realistic population of DLAs, which we mask as in the observational pipeline.
-We extract the IGM mean temperatures directly from the simulation snapshots.
+We extract the IGM temperatures at mean density directly from the simulation snapshots.
 First, the temperature and density for all the gas particles in the simulation are retrieved, then all particles that are within $5\%$ of the critical density are retained.
-The median temperature of these retained particles is used as the IGM mean temperature.
-\textbf{All of the \lya forest flux power spectra, IGM mean temperatures, trained emulators, as well as select MCMC chains are available} \footnote{\url{https://github.com/mafern/InferenceLyaData}}.
+The median temperature of these retained particles is the IGM temperature at mean density.
+All of the \lya forest flux power spectra, IGM temperatures, trained emulators, as well as select MCMC chains are available \footnote{\url{https://github.com/mafern/InferenceLyaData}}.
 
 %--------------------------------------------------------------------------------------------------
 % --------------------------------------------------------------------------------------------------
@@ -129,12 +129,16 @@ We use the Gaussian Process (GP) emulators described in Refs.~\cite{2022MNRAS.51
 The emulators interpolate over simulation outputs and make predictions for arbitrary parameter sets within the parameter limits shown in Table~\ref{tab:emulatorparams}.
 We use a multi-fidelity model, which allows simulations with different particle loads, and thus costs, to be combined together.
 Specifically, we combine simulations run at two different resolutions, high fidelity (HF) and low fidelity (LF) specified in Table~\ref{table:simulations}. 
-The multi-fidelity prediction for the HF outputs (shown here for the \lya forest flux power spectrum, but equally valid for the mean temperature) is given by a linear multi-fidelity model, \textbf{at each redshift}:
+The multi-fidelity prediction for the HF outputs (shown here for the \lya forest flux power spectrum, but equally valid for the IGM temperature) is given by a linear multi-fidelity model, at each redshift:
 \begin{equation}
     P_F^{^\mathrm{HF}}(k, \boldsymbol{\theta} | z) = \rho_z \cdot P_F^{^\mathrm{LF}}(k, \boldsymbol{\theta} | z) + \delta(k, \boldsymbol{\theta} | z),
     \label{eq:ko_model}
 \end{equation}
-where $\rho_z$ is a constant parameter, and $\delta(k, \boldsymbol{\theta} | z)$ is a GP. \textbf{We have simplified the model from Ref.~\cite{2022MNRAS.517.3200F} by dropping the $k$ dependence in $\rho_z$. All cosmology and scale dependence is thus in the additive GP $\delta(k, \boldsymbol{\theta} | z)$. We train the GP emulators separately for each redshift.} We implement our multi-fidelity models using Emukit \cite{2021arXiv211013293P}.
+where $\rho_z$ is a constant parameter, and $\delta(k, \boldsymbol{\theta} | z)$ is a GP.
+We have simplified the model from Ref.~\cite{2022MNRAS.517.3200F} by dropping the $k$ dependence in $\rho_z$.
+All cosmology and scale dependence is thus in the additive GP $\delta(k, \boldsymbol{\theta} | z)$.
+\maf{We tested a GP emulator that included scale dependence in the $\rho$ term, but found that this did not significantly improve the accuracy of the predictions.}
+We train the GP emulators separately for each redshift. We implement our multi-fidelity models using Emukit \cite{2021arXiv211013293P}.
 
 Ref.~\cite{2023simsuite} quantifies the accuracy of our emulator using a leave-one-out technique, in which one simulation is chosen as a `left out' sample.
 A smaller emulator built excluding all samples from this simulation is used to predict the summary statistic for the left out sample.

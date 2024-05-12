@@ -42,7 +42,7 @@
     \includegraphics[width=\textwidth]{figures/loo_vs_emu_error_wlegend.pdf}
     \caption{\label{fig:loo_v_emu}
     Emulator error and leave-one-out errors across parameter space.
-    For eight of the input parameters, the training samples (grey crosses for LF, red circles for HF), GP emulator errors (yellow dots), and scale-averaged leave-one-out errors (red dashed) are shown. \textbf{All chains contain the mean temperature data, and the eBOSS flux power spectrum from $z=2.6 - 4.6$.}
+    For eight of the input parameters, the training samples (grey crosses for LF, red circles for HF), GP emulator errors (yellow dots), and scale-averaged leave-one-out errors (red dashed) are shown. All chains contain the IGM temperature data, and the eBOSS flux power spectrum from $z=2.6 - 4.6$.
     Shown are 1D marginalised posteriors for the chains with the default likelihood (red) compared to chains run adding the GP emulator error to the likelihood (yellow).
     }
 \end{figure}
@@ -50,7 +50,7 @@
 In this Appendix we evaluate the impact of including the Gaussian Process interpolation error, $\boldsymbol{\sigma}_{GP}$, on the posterior parameters, as discussed in Equation~\ref{eq:covariance}.
 Figure~\ref{fig:loo_v_emu} compares the effect of including emulator errors, showing the training samples, GP emulator errors and scale-averaged leave-one-out errors.
 The leave-one-out error is independent of position in parameter space, whereas the GP error is larger towards the edge of parameter space.
-\textbf{The largest effect is on the matter density $\Omega_M h^2$. With the GP error, helium reionization starts later and finishes earlier, as well as producing more heating. On the other hand, hydrogen reionization happens earlier. However, these shifts are all less than $1.5-\sigma$. The cosmological parameters are unchanged.}
+The largest effect is on the matter density $\Omega_M h^2$. With the GP error, helium reionization starts later and finishes earlier, as well as producing more heating. On the other hand, hydrogen reionization happens earlier. However, these shifts are all less than $1.5-\sigma$. The cosmological parameters are unchanged.
 %\begin{figure}
 %    \centering
 %    \includegraphics[width=\textwidth]{figures/2xboss.pdf}
@@ -105,39 +105,39 @@ The leave-one-out error is independent of position in parameter space, whereas t
     }
 \end{figure}
 
-In this section we compare posteriors obtained using a previous observational data set, specifically the flux power spectrum from \cite{2013A&A...559A..85P}, which is based on BOSS DR9 quasar spectra.
-Figure~\ref{fig:dr9_corner} shows the posteriors for chains run with DR14, with both reduced and full redshift ranges, and chains with DR9, again with the reduced and full redshift ranges.
+In this section we compare posteriors obtained using the flux power spectrum from Ref.~\cite{2013A&A...559A..85P}, which is based on BOSS DR9 quasar spectra.
+Figure~\ref{fig:dr9_corner} shows the posteriors for chains run with DR14, with both reduced and full redshift ranges, and chains with DR9, again with the reduced and full redshift ranges. We show chains using only the flux power spectrum likelihood, to emphasise any differences between the datasets.
 
-We show chains using only the flux power spectrum likelihood, to emphasise any differences between the datasets.
-Differences between DR9 and DR14 are small, although, as expected, the posterior parameter ranges for DR9 are moderately larger than for DR14.
-The largest parameter shift is $d\tau_0$, which shifts by $< 0.5 \sigma$. The shift from the omission of the lowest redshift bins is consistent between the two observational data sets.
-Both exhibit the same internal tension.
+\textbf{The tension between $z <2.6$ and $z \geq 2.6$ remains in DR9, and the parameter shifts by dropping the lowest redshift bins are similar. DR9 measures an $A_P$ very similar to DR14, which would continue to imply a low $\sigma_8$. 
+The $\tau_0$ posteriors are also similar. The best-fit helium reionization model is similar in both datasets.}
 
-\textbf{Although DR14 includes many more quasars, the covariance matrix is often dominated by systematic error. At $z=2.6$ DR14 and DR9 have very similar errors. DR14 has smaller measurement uncertainty at $z \geq 3$, but the lower redshifts have smaller errors and thus contain more information.}
+\textbf{The largest parameter changes are $\approx 2\sigma$ shift in the posterior values of $n_P$ and $d\tau_0$. DR9 prefers a lower $n_P$, around $n_P = 0.95$. DR9 is still consistent with the Planck value of $n_P = 0.97$, and marginally consistent with the upper limit of our emulator, $n_P = 0.995$. DR9 also prefers a higher $d\tau_0$, again at about $2\sigma$. This shift is plausibly because of the inclusion of high redshift data in DR14, which would provide a longer redshift lever to measure $d\tau_0$. Interestingly, the shift in $n_P$ between DR9 and DR14 in our analysis is similar to the shift in $n_s$ between Refs.~\cite{2020JCAP...04..038P} and \cite{2015JCAP...11..011P}. However, the measured posterior for $d\tau_0$ in Ref.~\cite{2015JCAP...11..011P} from DR9 is similar to our result from \textit{DR14}. Ref.~\cite{2020JCAP...04..038P} do not report a posterior value for $d\tau_0$, but our results suggest it may be larger.}
 
-\section{Mean Temperature Only Posteriors}\label{sec:t0-only}
+\textbf{Although DR14 includes many more quasars, the covariance matrix is often dominated by systematic error. At $z=2.6$ DR14 and DR9 have very similar errors, while DR14 has smaller measurement uncertainty at $z \geq 3$. The posterior uncertainties for DR9 are for most parameters similar to those for DR14. There are some exceptions: $z_{HI}$ and $z_i^{HeII}$, which measure specifically high redshift effects, are marginally constrained in DR14 yet unconstrained in DR9.}
+
+\section{IGM Temperature at Mean Density Posteriors}\label{sec:t0-only}
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/datasets_t0_corner.pdf}
     \caption{\label{fig:t0_datasets}
-    Posteriors for chains run with only the mean temperature likelihood.
-    Shown are chains using each of the four observational measurements of the mean temperature: using the flux power spectrum (blue), using the Doppler width distribution (BPDF, yellow), using the curvature statistic (red), and using a wavelet decomposition (black).
-    The main results of this work use the flux power derived mean temperatures.
+    Posteriors for chains run with only the IGM temperature likelihood.
+    Shown are chains using each of the four observational measurements of the IGM temperature: using the flux power spectrum (blue), using the Doppler width distribution (BPDF, yellow), using the curvature statistic (red), and using a wavelet decomposition (black).
+    The main results of this work use the flux power derived IGM temperatures.
     }
 \end{figure}
 
-In this section, we present results from chains run using only the mean temperature likelihood.
-Shown in Figure~\ref{fig:t0_datasets} are four chains, each using one of the observational mean temperatures, derived from different \lya forest summary statistics: the flux power spectrum, the Doppler width distribution, the curvature statistic, and a wavelet decomposition.
-Most of the cosmology parameters are entirely unconstrained by the mean temperature and are omitted from the Figure.
+In this section, we present results from chains run using only the IGM temperature likelihood.
+Shown in Figure~\ref{fig:t0_datasets} are four chains, each using one of the observational measurements of the IGM temperature at mean density, derived from different \lya forest summary statistics: the flux power spectrum, the Doppler width distribution, the curvature statistic, and a wavelet decomposition.
+Most of the cosmology parameters are entirely unconstrained by the IGM temperature and are omitted from the Figure.
 We show $A_p$ for reference.
-The three He~{\sc ii} reionization parameters are well constrained by the mean temperature history.
-There is very little difference between the different mean temperature observations, with the BPDF derived temperature differing the most, specifically preferring a later start to He~{\sc ii} reionization, and less heating, corresponding to a lower mean IGM temperature.
+The three He~{\sc ii} reionization parameters are well constrained by the IGM temperature history.
+There is very little difference between the different IGM temperature observations, with the BPDF derived temperature differing the most, specifically preferring a later start to He~{\sc ii} reionization, and less heating, corresponding to a lower IGM temperature.
 However, differences are well within $1\sigma$.
 
 The midpoint of H~{\sc i} reionization has a marginal preference for a late midpoint, but is very weakly constrained.
-The mean temperature provides information on $z_{HI}$ as the IGM cools from the completion of H~{\sc i} reionization, setting the temperature before the onset of helium reionization.
-Incorporating measurements of the mean IGM temperature at $z > 3.8$  \cite[e.g.~][]{2023arXiv230402038G} could substantially improve these constraints and we may do so in future work.
+The IGM temperature provides information on $z_{HI}$ as the IGM cools from the completion of H~{\sc i} reionization, setting the temperature before the onset of helium reionization.
+Incorporating measurements of the IGM temperature at $z > 3.8$  \cite[e.g.~][]{2023arXiv230402038G} could substantially improve these constraints and we may do so in future work.
 
 \section{Full Posteriors}
 \label{sec:full_posteriors}
@@ -146,8 +146,8 @@ Incorporating measurements of the mean IGM temperature at $z > 3.8$  \cite[e.g.~
     \includegraphics[width=\textwidth]{figures/allp_corner.pdf}
     \caption{\label{fig:full_posterior}
     Posteriors for the full set of simulation parameters, both cosmological and astrophysical.
-    Shown are the same chains from the figures in Section~\ref{sec:results}, thus the correlations between the the parameters in Figure~\ref{fig:cosmo_corner} and those in Figure~\ref{fig:astro_corner} are the only new information here. \textbf{`FPS $z=2.2-4.6$' (gold) uses the full redshift range eBOSS flux power spectrum dataset, `FPS $z=2.6-4.6$' (blue) uses a reduced redshift range eBOSS dataset flux power spectrum dataset, which removes the internal tension (Section~\ref{sec:tension}).
-    The third chain, `FPS $+T_0, z=2.6-4.6$' (red), uses the limited range eBOSS dataset but adds the mean IGM temperature constraints.}
+    Shown are the same chains from the figures in Section~\ref{sec:results}, thus the correlations between the the parameters in Figure~\ref{fig:cosmo_corner} and those in Figure~\ref{fig:astro_corner} are the only new information here. `FPS $z=2.2-4.6$' (gold) uses the full redshift range eBOSS flux power spectrum dataset, `FPS $z=2.6-4.6$' (blue) uses a reduced redshift range eBOSS dataset flux power spectrum dataset, which removes the internal tension (Section~\ref{sec:tension}).
+    The third chain, `FPS $+T_0, z=2.6-4.6$' (red), uses the limited range eBOSS dataset but adds the IGM temperature constraints.
     }
 \end{figure}
 
