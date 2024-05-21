@@ -53,7 +53,7 @@ AR: We completely agree that such a scheme would cause a large scatter at the ex
 
 FC: If I understand this well, the ten values then are [0.0926, 0.1853, 0.2780, . . . ]. These look like very large gaps, but I guess there is nothing one can do at this point.\\
 
-\textbf{the values for the mean optical depth are: [0.65555638, 0.72668166, 0.79780694, 0.86893221, 0.94005749, 1.01118277, 1.08230805, 1.15343333, 1.2245586, 1.29568388]}\\
+\textbf{The values used for the mean optical depth scaling factor are: [0.65555638, 0.72668166, 0.79780694, 0.86893221, 0.94005749, 1.01118277, 1.08230805, 1.15343333, 1.2245586, 1.29568388]. We have clarified this subsection substantially. We confirmed explicitly at an early stage of this work that emulator predictions are insensitive to the number of $\tau_0$ samples. Note that the flux power spectrum is effectively linear in $\tau_0$, and so is easy for the emulator to predict. }\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
@@ -65,7 +65,7 @@ AR: We could build an emulator for gamma, but the constraints from Gaikwad are n
 
 FC: Aren’t the mean flux (or optical depth) and the mean temperature also affected by the inhomogeneous helium reionization? Why is it that you can use a value for $T_0$ that describes the entire box but not for $\gamma$?\\
 
-\textbf{our response}\\
+\textbf{Certainly the mean temperature is affected by the inhomogeneous helium reionization. However it is well-defined to take a mean over a sample, even if the sample exhibits significant internal variation. This is in addition what is done to observationally measure $T_0$: the mean is found over spectra probing a wide range of spatial regions. To estimate an average slope requires more care.}\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
@@ -79,7 +79,7 @@ The cosmology dependent multi-fidelity rho(k, theta) is the NARGP model, discuss
 
 FC: Why have you dropped the $k$ dependence of $rho$? Fig 4 of your earlier paper (2207.06445) shows a clear trend with $k$. Have you validated the accuracy of this simplified version of the multi-fidelity emulator? Could you add a sentence on this?\\
 
-\textbf{We have dropped the $k$ dependence in $\rho$ primarily for computational reasons -- our current model employs a Gaussian Process for each redshift bin, while including $k$ dependence would multiply the number of GPs by 35. We have validated the performance of this simplification using leave-one-out errors: we train a model with $k$ dependence and one without, using all but one of the HF simulations, predict that HF simulation and compare errors. The difference in errors between these two experiments was negligible. We have added a sentence summarizing this experiment to the text in section 2.3.}\\
+\textbf{We have dropped the $k$ dependence in $\rho$ primarily for computational reasons -- our current model employs a Gaussian Process for each redshift bin, while including $k$ dependence would multiply the number of GPs by 35. We have validated the performance of this simplification using leave-one-out errors: we train a model with $k$ dependence and one without, using all but one of the HF simulations, predict that HF simulation and compare errors. The difference in errors between these two experiments was negligible. We have added a sentence summarizing this experiment to the text in section 2.3. Note that our LF simulations are higher resolution than in our earlier paper so the correction is smaller and easier to estimate.}\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
@@ -93,7 +93,7 @@ FC: I’m still not convinced about this way of estimating cosmic variance with 
 
 I don’t think the test mentioned of doubling $\sigma_{CV}$ is convincing. You had a very low value to start with, so doubling a small value could still leave it very small. Looking at the effect when using $\sigma_{CV} = 0.02$ vs $0.01$ seems more relevant.\\
 
-\textbf{We have run chains where $\sigma_{CV}$ has been increased to $2\%$ without significant changes to the posteriors -- see figure below.}
+\textbf{We have run chains where $\sigma_{CV}$ has been increased to $2\%$ without significant changes to the posteriors -- see figure below. Empirically we found that the only part which is important to the inference is the value in the largest k-bin, for which the LOO error is already similar to $2$\%.}
 
 \begin{figure}[h!]
     \centering
@@ -104,19 +104,13 @@ I don’t think the test mentioned of doubling $\sigma_{CV}$ is convincing. You 
 \hrulefill \newline
 % ------------------------------------------------------------------------
 
-OC: Another test that would give you a lower bound to the impact of cosmic variance is to look at the scatter between the P1D measured along the three axes of a given HF simulation. These would be partially correlated (hence it would be a lower bound to CV) but it would be an interesting test to do.\\
-
-AR: We have done this test. The results are similar to those for the ratio between two simulations with different initial structure seeds, now shown in our new Figure 2. To create the P1D we make spectra along all three axes of the simulation and average them, so the intra-axes scatter has been averaged over and so this is not a lower bound on CV, but an upper bound. We think the line shown in Figure 2 is more convincing.\\
-
-FC: I meant a lower bound after scaling the scatter by sqrt(3), I should have wrote this explicitly. However, I agree that showing the differences from different random seeds is probably better.\\
-
 OC: Fig 2 compares the contribution from cosmic variance to the measurement covariance. I am a bit surprised by this, since as I mentioned above, my impression was that both at z=2.8 and at z=3.4 the measurement has a relative uncertainty of 2, and Fig 5 of Bird et al. (2023) shows that the impact of cosmic variance (estimated from a LF simulation with a different seed) could also be larger than $2\%$ at $k < 0.005$ s/km or so.\\
 
 AR: We have significantly clarified Figure 2 of this work so that it shows the impact of cosmic variance estimated from an LF simulation with a different seed, rebinned onto the same k-bins as eBOSS compared to the relative error in the eBOSS covariance. We have also clarified the explanation around Figure 2.\\
 
 FC: The new text around Figure 2 says that “The average flux power spectrum ratio is remarkably similar to $\sigma_{CV}$ , although there are some k-bins where it is larger.” However, Bird et al. (2023) shows a $2\%$ cosmic variance, and the new (red) lines in Fig 2 also show spikes of a few percent, while the estimate of $\sigma_{CV}$ (blue lines) are around $0.3\%$ at $z=2.8$ and $0.5\%$ at $z=3.4$. It looks to me that the estimate of $\sigma_{CV}$ is much smaller than the actual cosmic variance.\\
 
-\textbf{See the previous comments and response for a chain run with a cosmic variance of two percent.}\\
+\textbf{See the previous comments and response for a chain run with a cosmic variance of two percent. We altered the text to `The average flux power spectrum ratio is similar to $\boldsymbol{\sigma}_{CV}$ on the largest scales measured, where it is most important.'}\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
@@ -174,7 +168,7 @@ AR: We have added a discussion of the prior limits to section 4.1\\
 
 FC: As discussed in the main comment above, this is not enough. Other cosmological parameters (including $\sigma_8$) could also be strongly affected by the prior.\\
 
-\textbf{our response}\\
+\textbf{See our response above: we have extended the prior ranges.}\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
