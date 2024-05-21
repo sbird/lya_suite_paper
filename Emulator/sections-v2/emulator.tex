@@ -22,7 +22,7 @@ The emulator allows predictions for the output of a simulation at an arbitrary s
 Our multi-fidelity emulator combines simulations at different resolutions, following the scheme outlined in Ref.~\cite{2022MNRAS.517.3200F}.
 The emulator combines low fidelity (LF) and high fidelity (HF) simulations.
 Box volume, number of gas particles, and gas particle mass resolution are reported in Table~\ref{table:simulations}.
-We ran $48$ low fidelity (LF) and $3$ high fidelity (HF) simulations.
+We ran \textbf{a total of $60$} low fidelity (LF) and $3$ high fidelity (HF) simulations. \textbf{For this work we have added $12$ new LF simulations to those of Ref.~\cite{2023simsuite}, which extend the simulated parameter range to better cover the posterior range allowed by SDSS DR14.}
 Low fidelity simulations have $1536^3$ particles, while high fidelity simulations have $3072^3$ particles.
 Sampled parameters are chosen to maximise spread in parameter space, as described in Ref.~\cite{2023simsuite}. 
 
@@ -48,7 +48,7 @@ Simulations are initialised at $z=99$ and finish at $z=2.2$. The galaxy formatio
 
 \subsection{Cosmological \& Astrophysical Parameters}\label{sec:parameters}
 
-Table~\ref{tab:emulatorparams} summarises the parameters that are varied across our suite of simulations, as well as their limits.
+Table~\ref{tab:emulatorparams} summarises the parameters that are varied across our suite of simulations, as well as their limits. \textbf{We have expanded the limits from Ref.~\cite{2023simsuite} with $12$ additional LF simulations covering the parameter ranges $\alpha_q = 2.5 - 3.0$ and $n_P = 1.0 - 1.05$. These extra ranges were chosen so that the emulator covers the $2\sigma$ posterior ranges. The parameter choices were made via latin hypercube.}
 We model the primeval (that is, the pre-transfer function) power spectrum $P(k)$  using two parameters: a slope, $n_P$, and an amplitude, $A_P$:
 \begin{equation}
     P(k) = A_P \left(\frac{k}{0.78\, \mathrm{Mpc}^{-1}}\right)^{n_P - 1}\,.
@@ -66,20 +66,20 @@ Finally, $\epsilon_{AGN}$ is the black hole feedback factor, to which the \lya~f
   \hline
   Parameter & Minimum & Maximum & Description \\
     \hline
-    $n_P$  &  $0.8$  & $0.995$ & Scalar spectral index \\
+    $n_P$  &  $0.8$  & $1.05$ & Scalar spectral index \\
     $A_P$  &  $1.2 \times 10^{-9}$  & $2.6 \times 10^{-9}$ & Power amplitude at $k = 0.78 \,\mathrm{Mpc}^{-1}$ \\
     $h$    & $0.65$  & $0.75$ & Hubble parameter \\
     $\Omega_0 h^2$ & $0.14$ & $0.146$ & Total matter density \\
     $z_{Hei}$      & $3.5$  & $4.1$  & Start redshift of HeII reionization \\
     $z_{Hef}$      & $2.6$  & $3.2$  & End redshift of HeII reionization \\
-    $\alpha_q$     & $1.3$  & $2.5$ & Quasar spectral index during HeII reionization  \\
+    $\alpha_q$     & $1.3$  & $3.0$ & Quasar spectral index during HeII reionization  \\
     $z_{Hi}$        & $6.5$ & $8$   & Median redshift of HI reionization \\
     $\epsilon_{AGN}$ & $0.03$ & $0.07$ & Thermal efficiency of black hole feedback \\
     $\tau_0$ & $0.75$ & $1.25$ & Mean optical depth at $z=3$ in Eq.~\ref{eq:meanflux}.\\
     $d \tau_0$ & $-0.4$ & $0.25$ & Mean optical depth redshift evolution in Eq.~\ref{eq:meanflux}. \\
     \hline
   \end{tabular}
-  \caption{Summary of likelihood function parameters, together with the ranges covered by the emulator. We vary a total of $11$ parameters: $4$ for cosmology, $3$ for the helium reionization model, $1$ for the hydrogen reionization model, $1$ for the strength of AGN feedback and $2$ for the mean optical depth.}
+  \caption{Summary of likelihood function parameters, together with the ranges covered by the emulator. We vary a total of $11$ parameters: $4$ for cosmology, $3$ for helium reionization, $1$ for hydrogen reionization, $1$ for the strength of AGN feedback and $2$ for the mean optical depth.}
   \label{tab:emulatorparams}
   \end{centering}
 \end{table*}
@@ -87,13 +87,13 @@ Finally, $\epsilon_{AGN}$ is the black hole feedback factor, to which the \lya~f
 There are two further parameters for the \Lya~effective optical depth, varied by post-processing the artificial spectra.
 We parameterize the mean flux $\mathcal{F} = \exp(-\tau)$ by modifying the power law redshift evolution from Ref.~\cite{2007MNRAS.382.1657K}, as
 \begin{align}
-\tau^{\text{Kim}}_{\text{H~{\sc i}}}(z) &= 0.0023 \times (\tau_{z=3})\times (1+z)^{3.65}\,, \\
+\tau^{\text{Kim}}_{\text{H~{\sc i}}}(z) &= 0.0023 \times (1+z)^{3.65}\,, \\
 \tau^{\text{eff}}_{\text{H~{\sc i}}}(z) &= \tau_0 \left(\frac{\tau^{\text{Kim}}_{\text{H~{\sc i}}}(z)}{\tau^{\text{Kim}}_{\text{H~{\sc i}}}(3)}\right)^{d\tau_0} \tau^{\text{Kim}}_{\text{H~{\sc i}}}(z)\,.
  \label{eq:meanflux}
 \end{align}
-The parameters varied are $\tau_0$ and $d\tau_0$, with $(1, 0)$ corresponding to the redshift evolution of Ref.~\cite{2007MNRAS.382.1657K}. $\tau_0$ is normalised at $z=3$ so that $d\tau_0 > 0$ corresponds to a higher optical depth at $z > 3$ and a lower optical depth at $z < 3$. $\tau_0$ changes the normalisation of the optical depth at $z=3$. We choose prior ranges for $\tau_0$ and $d\tau_0$ that comfortably cover the measurement error: $0.75 < \tau_0 < 1.25$ and $-0.4 < d\tau_0 < 0.25$.
-As the mean flux is chosen in post-processing, we can dramatically over-sample these parameters. We sample $10$ linearly spaced values of the mean flux. Sampling values are independent of redshift and are chosen to cover the range of $\tau_0$ and $d\tau_0$ at the extreme ($z=2.2$ and $z=4.6$) redshifts included in eBOSS.
-The final set of flux power spectra is thus ten times the number of simulations, or $480$ LF, and $30$ HF simulated flux power spectra.
+\textbf{The parameters varied are $\tau_0$ and $d\tau_0$, with $(1, 0)$ corresponding to the redshift evolution of Ref.~\cite{2007MNRAS.382.1657K}. $\tau_0$ is normalised at $z=3$ so that $d\tau_0 > 0$ corresponds to a higher optical depth at $z > 3$ and a lower optical depth at $z < 3$. $\tau_0$ changes the normalisation of the optical depth at $z=3$. We choose prior ranges for $\tau_0$ and $d\tau_0$ that comfortably cover the measurement error: $0.75 < \tau_0 < 1.25$ and $-0.4 < d\tau_0 < 0.25$.}
+As the mean flux is chosen in post-processing, we can dramatically over-sample these parameters. We sample $10$ linearly spaced values of the mean flux. Sampling values are independent of redshift and are chosen \textbf{so that they include the value of $\tau_0(z)$ implied by our priors at the extreme ($z=2.2$ and $z=4.6$) redshifts included in eBOSS. For concreteness, each redshift bin scales the mean optical depth in that bin by a factor between $0.66$ and $1.3$. This implies that $\tau^{\text{eff}}_{\text{H~{\sc i}}}(z=3)$ varies between $ 0.238$ and $0.47$ and $\tau^{\text{eff}}_{\text{H~{\sc i}}}(z=4)$ varies between $0.54$ and $1.06$.}
+The final set of flux power spectra is thus ten times the number of simulations, or $600$ LF, and $30$ HF simulated flux power spectra.
 We have freedom to vary the \Lya~mean flux as it is degenerate with the amplitude of the ultraviolet background (UVB). 
 
 % --------------------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ The multi-fidelity prediction for the HF outputs (shown here for the \lya forest
 where $\rho_z$ is a constant parameter, and $\delta(k, \boldsymbol{\theta} | z)$ is a GP.
 We have simplified the model from Ref.~\cite{2022MNRAS.517.3200F} by dropping the $k$ dependence in $\rho_z$.
 All cosmology and scale dependence is thus in the additive GP $\delta(k, \boldsymbol{\theta} | z)$.
-\maf{We tested a GP emulator that included scale dependence in the $\rho$ term, but found that this did not significantly improve the accuracy of the predictions.}
+\textbf{We tested a GP emulator that included scale dependence in the $\rho$ term, but found that it was harder to train and did not significantly improve the accuracy of the predictions.}
 We train the GP emulators separately for each redshift. We implement our multi-fidelity models using Emukit \cite{2021arXiv211013293P}.
 
 Ref.~\cite{2023simsuite} quantifies the accuracy of our emulator using a leave-one-out technique, in which one simulation is chosen as a `left out' sample.
