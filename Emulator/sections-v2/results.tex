@@ -2,7 +2,7 @@
 
 In this Section, we report posterior constraints on the parameters listed in Table~\ref{tab:emulatorparams}.
 Section~\ref{sec:cosmo} discusses the results for those parameters which are most strongly constrained by the flux power spectrum data.
-These are: the optical depth parameters, $\tau_0$ and $d\tau_0$, the power spectrum parameters, $n_P$ and $A_p$, and the matter density $\Omega_M h^2$.
+These are: the optical depth parameters, $\tau_0$ and $d\tau_0$, the power spectrum parameters, $n_P$ and $A_P$, and the matter density $\Omega_M h^2$.
 Section~\ref{sec:astro} then discusses the constraints on the other parameters, and shows the best fit to the IGM temperature at mean density data.
 These are the three parameters defining the He~{\sc{ii}} reionization model, z$^{\text{He~{\sc ii}}}_i$, z$^{\text{He~{\sc ii}}}_f$, and $\alpha_q$; the parameter for the midpoint of H~{\sc{i}} reionization, z$^{\text{H~{\sc i}}}$, the strong absorber models, ($\alpha_{LLS}$ and $\alpha_{DLA}$), the Silicon III correction (fSiIII) and the velocity to distance scale parameter $v_{scale}$.
 The same chains are used in all sections: we split parameters into two sections merely for readability.
@@ -145,10 +145,10 @@ $n_\mathrm{eff}$ & $-2.180^{+0.026}_{-0.018}$  $\left(^{+0.039}_{-0.043}\right)$
 \hline
 \end{tabular}
 \caption{\label{table:parameters}
-Posterior parameter constraints, including the derived parameters $A_s$ and $\sigma_8$, \textbf{as well as the predicted linear theory amplitude at slope at $k_P = 0.009$ s/km, $z_P=3$, $\Delta_L^2$ and $n_\mathrm{eff}$}.
+Posterior parameter constraints, including the derived parameters $A_s$ and $\sigma_8$, \textbf{as well as the predicted linear theory power, $\Delta_L^2$, and slope, $n_\mathrm{eff}$, evaluated at at $k_P = 0.009$ s/km, $z_P=3$.}.
 Maximum posterior values, and $68\%$ confidence limits are shown, with $95\%$ confidence intervals in brackets.
 Each column shows a separate chain, from left to right: fits to the flux power spectrum alone from the reduced redshift range $z=2.6 - 4.6$, fits to the flux power spectrum from the reduced redshift range $z=2.6 - 4.6$ and the IGM temperature, and fits to the flux power spectrum alone from the full redshift range $z=2.2 - 4.6$.
-Single sided limits are shown when one bound is larger than the prior volume of the emulator. \textbf{Both bounds exceeding the prior volume of the emulator is denoted by $--$.}
+Single sided limits are shown when one bound is larger than the prior volume of the emulator. \textbf{`$--$' denotes that both $68\%$ and $95\%$ constraints are wider than the prior volume of the emulator.}
 }
 \end{table}
 
@@ -218,16 +218,16 @@ It is possible that some element of the covariance matrix, theoretical or system
 \end{table}
 
 Posterior constraints from the reduced redshift range flux power spectrum data show a mean optical depth in good agreement with other measurements.
-As a reminder, these parameters measure deviations from the mean flux relation of Ref.~\cite{2007MNRAS.382.1657K}, so a value of $\tau_0=1$ and $d\tau_0=0$ corresponds to agreement with that model.
-The best fit mean flux at $z=3$, $\tau_0 = 1.1$, and the redshift variation $d\tau_0$ is consistent with $0$.
+As a reminder, our $\tau_0$ and $d\tau_0$ parameters measure deviations from the mean flux relation of Ref.~\cite{2007MNRAS.382.1657K}, so a value of $\tau_0=1$ and $d\tau_0=0$ corresponds to agreement with that model.
+The maximum posterior values are $\tau_0 = 1.1$, with a redshift variation $d\tau_0$ consistent with $0$.
 This implies a mean optical depth at $z=3$ of $\tau^{\text{eff}}_{\text{H~{\sc i}}}(z=3) = 0.398$, which is extremely close to the best-fit value of $\tau^{\text{eff}}_{\text{H~{\sc i}}}(z=3) = 0.4$ from Ref.~\cite{2013MNRAS.430.2067B}, and consistent within the error bars with $\tau^{\text{eff}}_{\text{H~{\sc i}}}(z=3) = 0.36 \pm 0.1$ from Ref.~\cite{2007MNRAS.382.1657K}. 
 
-\textbf{The spectral index, $n_P$, is $n_P = 1.009^{+0.027}_{-0.018}$ (68\% confidence) when using only the flux power spectrum. On inclusion of the IGM temperature data, we find slightly tighter constraints of $n_P = 0.983 \pm 0.02$ at 68\% confidence, lower by about $1-\sigma$.
+\textbf{The spectral index, $n_P$, is $n_P = 1.009^{+0.027}_{-0.018}$ (68\% confidence) using only the flux power spectrum. On inclusion of the IGM temperature data, we find slightly tighter constraints of $n_P = 0.983 \pm 0.02$ at 68\% confidence, lower by about $1-\sigma$.
 Planck measures $n_s=0.965 \pm 0.004$, consistent with the IGM temperature chain at $1-\sigma$ and the flux power spectrum chain at $2.5-\sigma$ \cite{2020A&A...641A...6P}.
 The matter density, $\Omega_M h^2$, is weakly constrained and not strongly affected by including IGM temperature data.}
 % The growth factor, $\Omega_M h^2$, is weakly constrained and not strongly affected by including IGM temperature data.
 Planck found $\Omega_M h^2 = 0.1424\pm0.001$, which is close to the posterior of our chains.
-The power spectrum amplitude is $A_p/10^{-9} = 1.69 \pm 0.14$ for the flux power spectrum reduced redshift result.
+The power spectrum amplitude is $A_P/10^{-9} = 1.69 \pm 0.14$ for the flux power spectrum reduced redshift result.
 The inclusion of the IGM temperature shrinks the constraints moderately and shifts the posterior value down by about $1.5-\sigma$, driven by a correlation with $\alpha_q$.
 Table~\ref{table:parameters} shows $A_s$, the power spectrum amplitude measured on large scales, which is related to $A_P$ via:
 \begin{equation}
@@ -247,7 +247,7 @@ Also shown are predictions from our multi-fidelity emulator based on the maximum
 The correlation between \lya and Si~{\sc iii} absorption is visible in the form of regular oscillations in the power spectrum (in Section~\ref{sec:likelihood} we describe the correction we make for Si~{\sc iii}).
 The best-fit flux power spectrum is not significantly affected by the inclusion of the $T_0$ data in the likelihood, \textbf{although the fit is slightly worse at $z=2.6$}. %, as is expected if the $T_0$ data mainly breaks degeneracies.
 
-\textbf{Table~\ref{table:chi2} shows the constraints our chains imply for the linear theory power at $z=3$, $\Delta_L^2(k,z)$ and its slope, $n_\mathrm{eff}$ \cite{2005ApJ...635..761M, 2019JCAP...07..017C, 2023ApJ...944..223P}.}
+\textbf{Table~\ref{table:chi2} shows the constraints our chains imply for the linear theory power at $z=3$, $\Delta_L^2(k,z)$ and its slope, $n_\mathrm{eff}$ \cite{2005ApJ...635..761M, 2019JCAP...07..017C, 2023ApJ...944..223P}. These are defined by:}
 \begin{align}
  \Delta_L^2(k_*, z_*) = k_*^3 P_L(k_*,z_*) / (2\pi^2) \\
  n_\mathrm{eff}(k_*, z_*) = \frac{d \ln P_L}{d \ln k} (k_*, z_*)\,.
@@ -281,11 +281,11 @@ The best-fit flux power spectrum is not significantly affected by the inclusion 
 Figure~\ref{fig:astro_corner} shows the other parameters of our model from the same chains as Figure~\ref{fig:cosmo_corner}.
 These are: three parameters of the helium reionization model (z$^{\text{He~{\sc ii}}}_i$, z$^{\text{He~{\sc ii}}}_f$, and $\alpha_q$), the midpoint of H~{\sc{i}} reionization z$^{\text{H~{\sc i}}}$, the parameters of the strong absorber model ($\alpha_{LLS}$, $\alpha_{DLA}$), the strength of the metal contamination $f_{SiIII}$ and the box velocity scale $v_{scale}$.
 
-The data prefer an early start to helium reionization, $z_i^{HeII} > 3.87$ at $95\%$ confidence. \textbf{The flux power only chain admits a solution where both helium and hydrogen reionization are late, but this is ruled out by the inclusion of lower redshift IGM temperature data.}
+The combined data prefer an early start to helium reionization, $z_i^{HeII} > 3.87$ at $95\%$ confidence \footnote{\textbf{The flux power only chain admits a solution where both helium and hydrogen reionization are late, but this is ruled out by the inclusion of IGM temperature data.}}.
 Interestingly, this is in agreement with constraints from the helium \lya forest, where regions of high transmission suggest that HeII reionization has already started at $z = 3.5$ \cite{2016ApJ...825..144W, 2021ApJ...912...38M}.
-The end of helium reionization, $z_f^{HeII}$, is similarly constrained by the flux power spectrum data alone to be $z_f^{HeII} < 2.8$. \textbf{Adding the IGM temperature data reinforces this and constrains it to finish by $z=2.6$, so that the IGM temperature can drop at lower redshifts. }
+The end of helium reionization, $z_f^{HeII}$, is constrained by the flux power spectrum data alone to be $z_f^{HeII} < 2.8$. \textbf{Adding the IGM temperature data reinforces this and constrains it to finish by $z=2.6$, so that the IGM temperature can drop at lower redshifts. }
 This is consistent with the He~{\sc{ii}} \lya forest, which suggests an end at $z \leq 2.7$ \cite{2009ApJ...704L..89M, 2011ApJ...733L..24W, 2019ApJ...875..111W}.
-Our constraints on the timing of helium reionization hit our prior volume. However, in this case these are often driven more by the redshift limits of our datasets than our simulation volume. \textbf{The flux power spectrum at $z\geq  2.6$ alone, for example, cannot determine whether the IGM is cooling by $z=2.2$. In addition, the upper prior limit on $z^{HeII}_i$ is $4.1$, which is larger than the highest redshift IGM temperature data.}
+Our constraints on the timing of helium reionization hit our prior volume. \textbf{Note this prior volume is set more by the redshift limits of our datasets than our simulation choices. The flux power spectrum at $z\geq  2.6$ alone, for example, cannot determine whether the IGM is cooling by $z=2.2$. In addition, the upper prior limit on $z^{HeII}_i$ is $4.1$, which is larger than the highest redshift IGM temperature data.}
 
 The most significant effect of the IGM temperature data is on the spectral index during helium reionization, $\alpha_q$.
 Smaller values of $\alpha_q$ correspond to a larger heating rate.
@@ -418,7 +418,7 @@ We show the results from SDSS DR14 \cite{2019JCAP...07..017C}, SDSS DR9 \cite{20
 At $z=2.6$ (and higher redshift bins) all analyses are in reasonably good agreement, given their respective statistical errors.
 However, this is not the case at $z=2.2$, where there is a discrepancy between SDSS (DR14 and DR9), DESI and KODIAQ.
 SDSS DR14 and DR9 are in reasonable agreement.
-In Appendix \ref{sec:dr9_results} we show the posterior parameter constraints for DR9.
+Appendix \ref{sec:dr9_results} shows the posterior parameter constraints for DR9.
 
 The KODIAQ flux power spectrum is lower by around $1-\sigma$ on the smallest scales measured by eBOSS, which could be due to the effect of continuum modelling in the KODIAQ data \cite{2022MNRAS.509.2842K}.
 The DESI EDR data agrees well with eBOSS for $k > 0.01$ s/km, but is discrepant by $> 2 \sigma$ for $k < 0.01$ s/km.
@@ -433,7 +433,7 @@ However, there are a few possible astrophysical explanations.
 Feedback effects from AGN become increasingly important at low redshift.
 It is possible that a stronger AGN feedback prescription than we use, or than is implemented in current cosmological simulation suites, could efficiently disrupt gas at $z < 2.6$ on small scales and explain these results.
 Interestingly, such an AGN feedback model has recently been proposed as an explanation for the low value of $S_8 = \sigma_8 (\Omega_M/0.3)^{0.5}$ preferred by some weak lensing surveys \cite{2022MNRAS.516.5355A}, which matches our results.
-Ref.~\cite{2020MNRAS.495.1825C} found that AGN feedback affects the forest at the $8\%$ level at $z=2$, but their AGN model has a different mean flux to their non-AGN simulation, and once this is corrected for the effect is much smaller. Ref.~\cite{2013MNRAS.429.1734V} finds a $10\%$ effect of AGN feedback, but their AGN model results in a star formation rate which is a factor of $10$ too low at $z=2$ \cite{2010MNRAS.402.1536S}. Existing models of AGN feedback which also match the galaxy stellar mass function thus do not seem able to affect the \Lya~forest at $z \sim 2$ enough to explain this tension. We note, however, that more aggressive models are possible.
+Ref.~\cite{2020MNRAS.495.1825C} found that AGN feedback affects the forest at the $8\%$ level at $z=2$, but their AGN model has a different mean flux to their non-AGN simulation, and once this is corrected for the effect is much smaller. Ref.~\cite{2013MNRAS.429.1734V} finds a $10\%$ effect of AGN feedback, but their AGN model results in a star formation rate which is a factor of $10$ too low at $z=2$ \cite{2010MNRAS.402.1536S}. Existing models of AGN feedback which also match the galaxy stellar mass function thus do not seem able to affect the \Lya forest at $z \sim 2$ enough to explain this tension. We note, however, that more aggressive models are possible.
 %Ref.~\cite{2023AJ....166..228T} examined a wide range of AGN feedback models, including some much more aggressive than those in PRIYA (or ASTRID), finding strong effects at $z < 1$, but the $z=2$ analysis is ongoing.
 
 DLAs are important at low redshift, and do affect the slope of the flux power spectrum.
@@ -487,8 +487,8 @@ We define the mean optical depth relative to the power law $\tau_{eff} = 0.0023 
 \textbf{Their optical depth measurements from $z=2.2 - 4.4$ in DR9 are thus in good agreement with our measurements for the reduced redshift range of $z=2.6 - 4.6$ from DR14. Appendix~\ref{sec:dr9_results} shows that DR14 generally prefers a lower $d\tau_0$ than DR9.}
 Ref.~\cite{2020JCAP...04..038P} do not report a value for $\tau_{eff}(z=3)$ from DR14. A higher $d\tau_0$ implies a lower $n_P$. It is possible that the Ref.~\cite{2020JCAP...04..038P} DR14 value of $d\tau_0$ is large and discrepant with other optical depth measurements, driving the change in $n_P$.
 
-We find $n_P \sim 1.0$ and $\sigma_8 \sim 0.73$ from the reduced redshift flux power alone, a $3.5-\sigma$ tension in $\sigma_8$. Some of the differences between our constraints on $A_P$ and $\sigma_8$ are due to a lever arm effect: for $n_s < 1$ the power spectrum amplitude will be increased on larger scales and measuring $n_s$ will induce a correlation between $n_s$ and $\sigma_8$. \textbf{A direct comparison can be made by comparing our constraints on $\Delta_L^2$ and $n_\mathrm{eff}$ to those of Ref.~\cite{2019JCAP...07..017C}, who found $\Delta_L^2 = 0.31 \pm 0.02$ and $n_\mathrm{eff} = -2.339 \pm 0.006$. Their measurement of $n_\mathrm{eff}$ is about $2.5\sigma$ lower than the maximum posterior from our reduced redshift flux power spectrum chains, a discrepancy of $6-\sigma$ in $n_\mathrm{eff}$ and $4-\sigma$ in $\Delta_L^2$.}
-The largest confirmed discrepancy thus lies in our measurements of the spectral slope. The ultimate source of this tension is not clear, but our simulation suite is substantially larger and more robust than that used by Ref.~\cite{2020JCAP...04..038P}. A possibility is that the splicing correction they use does not fully account for the correlation of small and large scales (for example, the accuracy of the splice may be cosmology dependent). Another possibility is that the emulator used is a polynomial expansion around a `best-fit' simulation, with $n_s = 0.9624$. This is quite far from the posterior constraints, and so the accuracy of the polynomial emulator may be reduced. A third possibility is the lack of an explicit model for LLS. There is a correlation between $n_P$ and $\alpha_{LLS}$, as shown in Appendix~\ref{sec:full_posteriors}, so that fixing $\alpha_{LLS} = 0$ could produce a low $n_P$.
+We find $n_P \sim 1.0$ and $\sigma_8 \sim 0.73$ from the reduced redshift flux power alone, a $3.5-\sigma$ tension in $\sigma_8$. Some of the differences between our constraints on $A_P$ and $\sigma_8$ are due to a lever arm effect: for $n_s < 1$ the power spectrum amplitude will be increased on larger scales and measuring $n_s$ will induce a correlation between $n_s$ and $\sigma_8$. \textbf{A direct comparison can be made by comparing our constraints on $\Delta_L^2$ and $n_\mathrm{eff}$ to those of Ref.~\cite{2019JCAP...07..017C}, who found $\Delta_L^2 = 0.31 \pm 0.02$ and $n_\mathrm{eff} = -2.339 \pm 0.006$. Their measurement of $n_\mathrm{eff}$ is thus $ > 6 \sigma$ lower than the maximum posterior from our reduced redshift flux power spectrum chains, and their measurement of $\Delta_L^2$ is $ > 4\sigma$ higher.}
+The largest discrepancy is between our measurements of the spectral slope. The ultimate source of this tension is not clear, but our simulation suite is substantially larger and more robust than that used by Ref.~\cite{2020JCAP...04..038P}. A possibility is that the splicing correction they use does not fully account for the correlation of small and large scales (for example, the accuracy of the splice may be cosmology dependent). Another possibility is that the emulator used is a polynomial expansion around a `best-fit' simulation, with $n_s = 0.9624$. This is quite far from the posterior constraints, and so the accuracy of the polynomial emulator may be reduced. A third possibility is the lack of an explicit model for LLS. There is a correlation between $n_P$ and $\alpha_{LLS}$, as shown in Appendix~\ref{sec:full_posteriors}, so that fixing $\alpha_{LLS} = 0$ could produce a low $n_P$.
 
 %Our DR9 and DR14 constraints on \textbf{$A_P$} are in good agreement. Our simulations include self-shielding of the gas following Ref.~\cite{Rahmati:2013} and a realistic DLA model, masked from the flux power spectrum in the same way as the observational data.
 %That our posterior values for $\sigma_8$ are not affected by the change in DLA catalogue is reassuring, as it suggests that our analysis is indeed correctly marginalising over the uncertainty from DLAs.
@@ -513,7 +513,7 @@ However, DESI data probes smaller scales, so it is not clear that this will be t
 
 We also considered modifications to the likelihood not shown here.
 First, we increased the observational uncertainty from eBOSS by a uniform factor of two.
-This increased the posterior uncertainties, but did not significantly resolve the internal tension at low redshift (as this is many $\sigma$).
+This increased the posterior uncertainties, but did not significantly resolve the internal tension at low redshift (which is many $\sigma$).
 We also considered removing the high redshift data, with $z > 3.8$, as is done in some earlier analyses \cite{2011MNRAS.413.1717B}.
 We found that this made little difference as the statistical errors in the high redshift data are large and so they provide little information. 
 %We did confirm that the high redshift bins are not in tension with the low redshift data. 

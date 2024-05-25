@@ -50,7 +50,7 @@
 In this Appendix we evaluate the impact of including the Gaussian Process interpolation error, $\boldsymbol{\sigma}_{GP}$, on the posterior parameters, as discussed in Equation~\ref{eq:covariance}.
 Figure~\ref{fig:loo_v_emu} compares the effect of including emulator errors, showing the training samples, GP emulator errors and scale-averaged leave-one-out errors.
 The leave-one-out error is independent of position in parameter space, whereas the GP error is larger towards the edge of parameter space.
-The largest effect is on the matter density $\Omega_M h^2$. With the GP error, helium reionization starts later and finishes earlier, as well as producing more heating. On the other hand, hydrogen reionization happens earlier. However, these shifts are all less than $1.5-\sigma$. The cosmological parameters are unchanged.
+The largest effect is on the matter density $\Omega_M h^2$ and the hydrogen reionization midpoint, \textbf{which are very weakly measured by the data and so end up dominated by the GP error prior. There are smaller shifts in helium reionization, preferring a slightly later start and extra heating, albeit with shifts less than $1.5-\sigma$}. The cosmological parameters are unchanged.
 %\begin{figure}
 %    \centering
 %    \includegraphics[width=\textwidth]{figures/2xboss.pdf}
@@ -111,7 +111,7 @@ Figure~\ref{fig:dr9_corner} shows the posteriors for chains run with DR14, with 
 \textbf{The tension between $z <2.6$ and $z \geq 2.6$ remains in DR9, and the parameter shifts by dropping the lowest redshift bins are similar. DR9 measures a similar $A_P$ to DR14, and thus also implies a low $\sigma_8$.
 The $\tau_0$ posteriors are also similar. The best-fit helium reionization model is similar in both datasets. Although DR14 includes many more quasars, the covariance matrix is often dominated by systematic error. At $z=2.6$ DR14 and DR9 have very similar errors, while DR14 has smaller measurement uncertainty at $z \geq 3$. The posterior uncertainties for DR9 are for most parameters similar to those for DR14.} \textbf{The largest parameter changes are in the posterior values of $d\tau_0$ and $z_i^{HeII}$, although both are less than $1-\sigma$. Particularly, DR9 prefers a low value of $z_i^{HeII}$, plausibly because of the inclusion of high redshift data in DR14. The good consistency between our posterior constraints in DR9 and DR14 is a validation of the robustness of our analysis.}
 
-\section{IGM Temperature at Mean Density Posteriors}\label{sec:t0-only}
+\section{Posterior Constraints from the IGM Temperature Alone}\label{sec:t0-only}
 
 \begin{figure}
     \centering
@@ -126,7 +126,7 @@ The $\tau_0$ posteriors are also similar. The best-fit helium reionization model
 In this section, we present results from chains run using only the IGM temperature likelihood.
 Shown in Figure~\ref{fig:t0_datasets} are four chains, each using one of the observational measurements of the IGM temperature at mean density, derived from different \lya forest summary statistics: the flux power spectrum, the Doppler width distribution, the curvature statistic, and a wavelet decomposition.
 Most of the cosmology parameters are entirely unconstrained by the IGM temperature and are omitted from the Figure.
-We show $A_p$ for reference.
+We show $A_P$ for reference.
 The three He~{\sc ii} reionization parameters are well constrained by the IGM temperature history.
 There is very little difference between the different IGM temperature observations, with the BPDF derived temperature differing the most, specifically preferring a later start to He~{\sc ii} reionization, and less heating, corresponding to a lower IGM temperature.
 However, differences are well within $1\sigma$.

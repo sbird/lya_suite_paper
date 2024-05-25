@@ -93,7 +93,7 @@ We decompose $\boldsymbol{K}$ as:
 Here, $\boldsymbol{K}_\mathrm{BOSS}$ is the covariance matrix from the eBOSS pipeline \cite{2019JCAP...07..017C}, and is the largest term in the covariance matrix on most scales.
 We also add two extra terms which model theoretical error in our model.
 $\boldsymbol{\sigma}_{GP}(\boldsymbol{p})$ is the parameter dependent estimate of the interpolation error from the Gaussian process.
-We found that in some cases when a parameter was poorly constrained this could unphysically drive the chain towards the edge of parameter space where the interpolation error was large.
+\textbf{Using mocks (see Figure~\ref{fig:simdat_posteriors}), we found that the GP error can sometimes} unphysically drive the chain \textbf{away from} the edges of parameter space, where the expected interpolation error is large.
 We thus choose to omit it from the overall covariance matrix.
 Appendix~\ref{sec:loovsgperr} shows that its addition has a small effect on our final results.
 
@@ -119,7 +119,7 @@ These details reveal the physical source of this large-scale variance.
 The relevant scale is close to the $20$ Mpc/h size of the helium reionization bubbles, and the relevant redshift range is when our model performs helium reionization.
 Helium reionization bubbles are placed randomly around rare large halos, which creates sample variance in a finite box. 
 
-Figure~\ref{fig:covariance_loo} also shows the absolute value of the ratio of the flux power spectrum between two LF simulations with different initial structure seeds. If this ratio is consistently larger than $\boldsymbol{\sigma}_{CV}$, it would indicate an extra source of cosmic variance not included by varying $h$. The average flux power spectrum ratio is \textbf{similar to $\boldsymbol{\sigma}_{CV}$ on the largest scales measured, where it is most important.} We have deliberately chosen to show the redshift bins near the ends of helium reionization where the effects of cosmic variance are most important. To evaluate the effect of a potential under-estimation of cosmic variance from these k-bins, we performed two extra chains where the last term in Eq.~\ref{eq:covariance} was $2\times \boldsymbol{\sigma}_{CV}$\textbf{, and where $\boldsymbol{\sigma}_{CV} = 0.02$. Our posterior constraints were almost unchanged in both cases, likely because the measurement uncertainty is in any case generally larger than $2\%$.}
+Figure~\ref{fig:covariance_loo} also shows the absolute value of the ratio of the flux power spectrum between two LF simulations with different initial structure seeds. If this ratio is consistently larger than $\boldsymbol{\sigma}_{CV}$, it would indicate an extra source of cosmic variance not included by varying $h$. The average flux power spectrum ratio is \textbf{similar to $\boldsymbol{\sigma}_{CV}$ on the largest scales measured, where it is most important.} We have deliberately chosen to show the redshift bins near the ends of helium reionization where the effects of cosmic variance are most important. To evaluate the effect of a potential under-estimation of cosmic variance from these k-bins, we performed two extra chains where the last term in Eq.~\ref{eq:covariance} was $2\times \boldsymbol{\sigma}_{CV}$\textbf{, and where $\boldsymbol{\sigma}_{CV} = 0.02$. Our posterior constraints were almost unchanged in both cases, likely because $K_{BOSS}$ is generally larger than $2\%$.}
 
 \subsection{Likelihood}\label{sec:likelihood}
 
@@ -135,7 +135,7 @@ The likelihood for the IGM temperature is similar, but single valued per redshif
 We compute the \lya forest flux power and IGM temperature likelihoods separately and add the log likelihoods. We make use of the Cobaya package \cite{2021JCAP...05..057T, 2019ascl.soft10019T, 2013PhRvD..87j3529L, 2002PhRvD..66j3511L} to run MCMC chains using this likelihood.
 The MCMC sampler uses the Metropolis method discussed in \cite{2013PhRvD..87j3529L}, and uses a Gaussian + exponential proposal distribution that dynamically learns the proposal covariance.
 Convergence is determined using the Gelman-Rubin statistic, $R$, also detailed in \cite{2013PhRvD..87j3529L}.
-The chains presented here were all run until a convergence of $R-1 < 0.01$, with results plotted for those chains for samples at $R-1 < 1$.
+The chains presented here were run until a convergence of $R-1 < 0.01$, with results plotted for those chains for samples at $R-1 < 1$.
 
 \subsubsection{Priors}
 
@@ -177,8 +177,7 @@ We therefore run another chain including constraints from the IGM temperature.
 
 In all three runs, the optical depth parameters, $\tau_0$ and $d\tau_0$, are tightly constrained around the true value in our pipeline, despite the effect of a different structure seed. The GPERR chain increases the uncertainty, especially on $d\tau_0$, but does not bias the measurement.
 The best estimate comes from the flux power spectrum data alone (Seed FPS).
-We also consistently recover the true values of the cosmological parameters $n_P$ and $A_P$, although $A_P$ is about $1-\sigma$ high for the chain which includes the IGM temperature.
-This is not unreasonable as we deliberately constructed our test data, with a different structure seed, to be different from the training data.
+We also consistently recover the true values of the cosmological parameters $n_P$ and $A_P$ \textbf{to better than $1-\sigma$. Note that we deliberately constructed our test data, with a different structure seed, to be different from the training data.}
 $\Omega_M h^2$ is poorly constrained in all chains, as expected given that our prior volume includes only a narrow range for $\Omega_M h^2$, motivated by Planck results.
 All parts of the prior range are within the $1-\sigma$ posteriors.
 
