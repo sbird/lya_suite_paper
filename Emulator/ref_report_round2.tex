@@ -13,7 +13,7 @@ However, there are a few important points that I would still like to see address
 I list them below, differentiating the original comment in my first report with “OC”, the author response with “AR”, and my follow up comment with “FC”.
 I do not mention below the comments that I consider that have been resolved.\\
 
-\textbf{We have included responses to the referee's further comments in bold below.}\\
+\textbf{We have included responses to the referee's further comments in bold below. We thank the referee for their comprehensive and thoughtful report which led us to significantly improve our submission.}\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
@@ -27,7 +27,7 @@ AR: We have clarified in the abstract and text that the 68 \% contours hit the e
 
 FC: Thanks for adding this clarification. However, it is not only the constraints on $n_p$ that are affected by the prior, it is the entire multi-dimensional posterior that is affected, and consequently the constraints on all parameters. This is clearly seen in Fig 4. If it was not for the prior on $n_p$, the posterior would cover larger values of $n_p$, and because of the strong correlations with other parameters the posterior would also cover lower values of $tau_0$; larger values of $dtau_0$; larger values of $A_p$. Therefore, the constraints on derived parameters like $sigma_8$ and $A_s$ would also be affected, so it is important to acknowledge this when discussing these results and comparing them with other results from the literature.\\
 
-\textbf{We have added an additional simulation with a larger value of $n_p$ and run chains incorporating this larger prior range and found . . . We have also run chains with larger cosmic variance and found . . .}\\
+\textbf{We have addressed the referees concern by running $12$ additional simulations which expand the prior volume. The chains now no longer hit the prior on $n_P$. The impact of this on the other parameters was modest. In addition, we ran simulations with an increased $\alpha_q$, which allows us to better understand the preference for a low IGM temperature in our flux power spectrum only chain as coming from the $z=2.6$ bin. As $\alpha_q$ has some degeneracy with $A_P$ and $n_P$ this increased prior volume increases the uncertainty on $A_P$ and the maximum likelihood $n_P$. The constraints on $\sigma_8$ are almost unchanged. We have also run chains with a fixed 2\% cosmic variance, as discussed below. Finally, we added a computation of the derived linear theory power and slope, $\Delta_L^2$ and $n_\mathrm{eff}$, for comparison with other likelihoods in the literature.}\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
@@ -41,7 +41,7 @@ AR: We have clarified this in the text. Our model includes a temperature boost d
 
 FC: is this extra smoothing consistent with measurements from data, like Rorai et al. (2017)?\\
 
-\textbf{The paper in question (\url{https://arxiv.org/pdf/1611.03805.pdf}) reports on a single QSO sightline, so we are consistent with their findings (near mean density IGM temperature), broad though they are.}\\
+\textbf{The constraints from (\url{https://arxiv.org/pdf/1704.08366}) are between $120$ and $60$ kpc at $z=3.6$, and would be affected by the temperature smoothing during helium reionization (which has already started in our models). Constraints are broad and we would be consistent even without the extra temperature boost, which is impulsive at $z \sim 7$ and has a fairly small effect by $z=3.6$. We would be more concerned with agreement without the temperature boost: our reionization model is somewhere between the `late reionisation' and `standard model' curves of Rorai 2017.}\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
@@ -65,7 +65,7 @@ AR: We could build an emulator for gamma, but the constraints from Gaikwad are n
 
 FC: Aren’t the mean flux (or optical depth) and the mean temperature also affected by the inhomogeneous helium reionization? Why is it that you can use a value for $T_0$ that describes the entire box but not for $\gamma$?\\
 
-\textbf{Certainly the mean temperature is affected by the inhomogeneous helium reionization. However it is well-defined to take a mean over a sample, even if the sample exhibits significant internal variation. This is in addition what is done to observationally measure $T_0$: the mean is found over spectra probing a wide range of spatial regions. To estimate an average slope requires more care.}\\
+\textbf{Certainly the mean temperature is affected by the inhomogeneous helium reionization. However it is well-defined to take a mean over a sample, even if the sample exhibits significant internal variation. This is in addition what is done to observationally measure $T_0$: the mean is found over spectra probing a wide range of spatial regions. To estimate an average slope requires more care. We are not claiming that this is impossible, only that it is not worth the effort for the modest existing constraints.}\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
@@ -143,7 +143,7 @@ AR: The p-values are $0.9967$ for $\chi^2 = 0.36$ and $0.9986$ for $\chi^2 = 0.3
 
 FC: The authors are correct that one should not pick a particular value of chi2 and over-interpret it, and that the distribution of chi2 values is probably decent. However, the caption now is a bit confusing. The “21 degrees of freedom” is correct for the fits of individual redshift bins, but the “Total” fit should have a lot degrees of freedom, right? I guess 13*35 – 14?\\
 
-\textbf{The value listed in the ``Total'' column is calculated as $\bar{\chi}^2_{\text{total}} = \sum_i \bar{\chi}^2 / nz = \sum_i \chi^2 /(nz \times (nk - np))$ where $nz = 13$ is the number redshift bins, $nk=35$ is the number of k-bins, $np=14$ is the number of fit parameters, and the bar indicates reduced. This is not the total chi2, but rather the average chi2 over the individual redshift bins. We have clarified this in the table and the caption.}\\
+\textbf{We agree with the referee that this was confusing. On reflection we have decided to simply report the log likelihood ($\chi^2$) of each redshift bin. This reveals which bins are fit better in which chains, without making claims with respect to goodness of fit. Neighbouring k bins in eBOSS are highly correlated, so that the effective number of degrees of freedom is somewhat less than 35 per redshift bin and so the goodness of fit was overstated.}\\
 % total is somewhat bigger than the average, but not too worry -- k bins are significantly correlated
 
 % ------------------------------------------------------------------------
@@ -168,7 +168,7 @@ AR: We have added a discussion of the prior limits to section 4.1\\
 
 FC: As discussed in the main comment above, this is not enough. Other cosmological parameters (including $\sigma_8$) could also be strongly affected by the prior.\\
 
-\textbf{See our response above: we have extended the prior ranges.}\\
+\textbf{See our response above: we have extended the prior ranges and $\sigma_8$ is not affected.}\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
@@ -180,7 +180,7 @@ AR: We do not agree that the finite volume could explain the discrepancy with PD
 
 FC: It might not move the peak of your posterior towards that of PD20, but it could inflate the uncertainties and therefore reduce the tension. Also, I couldn’t see the discussion on priors in the conclusions.\\
 
-\textbf{Apologies, the discussion on the priors in the conclusion was omitted from the previous version and has now been added. \textit{How does this sound for adding to the conclusions: The maximum posteriors from our MCMC analysis are within the prior volume, and several tests (increasing covariance, cosmic variance, expanding prior volume for np) have not significantly altered the location of the max posterior. Increasing the prior volume for other parameters is computationally costly, and is therefore left to future work, though these tests indicate that the posteriors are stable and unlikely to change with an increased prior volume.}}\\
+\textbf{Apologies, the discussion on the priors in the conclusion was omitted from the previous version. However, we have now addressed this concern by expanding the prior volume, as discussed above.}\\
 
 % ------------------------------------------------------------------------
 \hrulefill \newline
@@ -194,7 +194,7 @@ As we discuss in Section 5.2, PD2020 indeed gets significantly different results
 
 FC: I agree that the covariances for both measurements are comparable (due to different characterization of systematic uncertainties. However, it is still true that the datasets are fairly independent ($75\%$ of the quasars in DR14 are not in DR9!), so one would expect large statistical fluctuations between the two measurements. Indeed, you see these fluctuations clearly if you compare the two P1D measurements. These fluctuations must translate into fluctuations in the posteriors, but Fig 11 show *identical* posteriors for some of the key parameters in the analysis. Probably most striking is the comparison of the posteriors for ($n_p$, $A_p$, $\tau_0$).\\
 
-\textbf{We discovered a bug in the code used to run the chain using the DR9 data set and have corrected that. An updated figure 11 now appears in Appendix B, along with updated text.}
+\textbf{We discovered a bug in the code used to run the chain using the DR9 data set and have corrected that. An updated figure 11 now appears in Appendix B, along with updated text, although the differences remain moderate.}
 
 
 \end{document}
